@@ -1,0 +1,14 @@
+/* Write your global styles here, in PostCSS syntax */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.btn {
+	@apply rounded shadow bg-slate-700 text-white px-3 py-1 inline-block;
+	&.btn-block {
+		@apply block w-full;
+	}
+	&.active {
+		@apply bg-green-600;
+	}
+}
