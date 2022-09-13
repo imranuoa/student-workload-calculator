@@ -33,6 +33,7 @@
 	"type": "module",
 	"dependencies": {
 		"deep-clone": "^3.0.3",
-		"svelte-table": "^0.5.0"
+		"svelte-table": "^0.5.0",
+		"svelte-use-click-outside": "^1.0.0"
 	}
 }

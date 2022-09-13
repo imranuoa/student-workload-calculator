@@ -4,7 +4,7 @@
 
 <div class="wrapper">
 	<header>
-		<h1>Course Time Estimator</h1>
+		<h1>Student Workload Calculator</h1>
 		<p>
 			This planning tool is for instructors who wish to estimate the expected student time
 			commitment in a course based on the assigned learning activities. The tool is designed to be
@@ -42,7 +42,7 @@
 			align-self: center;
 		}
 		p {
-			max-width: 70ch;
+			max-width: 85ch;
 			min-width: 40ch;
 			@apply font-light italic text-justify;
 		}

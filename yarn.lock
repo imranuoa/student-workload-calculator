@@ -1380,6 +1380,11 @@ svelte-table@^0.5.0:
   resolved "https://registry.yarnpkg.com/svelte-table/-/svelte-table-0.5.0.tgz#e6728021b5b1cfd2edaa5870e8b9e8d31bd0e7b6"
   integrity sha512-wh4PzJq4R6iA0YCv0tgyc4oR8xVAC2ZwzkzT+tqZTHscH+Vu8srzP4eeIRklKPggSO2yN4sDABVHriVbM5PDQQ==
 
+svelte-use-click-outside@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/svelte-use-click-outside/-/svelte-use-click-outside-1.0.0.tgz#9db6208c314b5cb9cc80a38284a89da176c8075d"
+  integrity sha512-tOWeMPxeIoW9RshS0WbogRhdYdbxcJV0ebkzSh1lwR7Ihl0hSZMmB4YyCHHoXJK4xcbxCCFh0AnQ1vkzGZfLVQ==
+
 svelte@^3.44.0:
   version "3.49.0"
   resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.49.0.tgz#5baee3c672306de1070c3b7888fc2204e36a4029"
