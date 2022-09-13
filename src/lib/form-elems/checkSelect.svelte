@@ -10,45 +10,45 @@
 	let isMouseDown = false;
 	let mouseSelectValue = false;
 
-	const beginSelecting = (e: PointerEvent) => {
-		console.log('beginSelecting', e);
+	const beginSelecting = (e: DragEvent) => {
+		console.log('beginSelecting', e.target);
 		isMouseDown = true;
-		mouseSelectValue =
-			(e.target as HTMLElement).closest('.daySelectLabel')?.querySelector('input')?.checked ||
-			false;
-		selectGroup.setPointerCapture(e.pointerId);
+		mouseSelectValue = (e.target as HTMLElement)?.querySelector('input')?.checked || false;
+		if (!e.dataTransfer) return;
+		e.dataTransfer.effectAllowed = 'move';
+		const blankCanvas = document.createElement('canvas');
+		document.body.appendChild(blankCanvas);
+		e.dataTransfer.setDragImage(blankCanvas, 0, 0);
 	};
 
-	const stopSelecting = (e: PointerEvent) => {
-		console.log('stopSelecting');
+	const stopSelecting = (e: DragEvent) => {
+		if (isMouseDown) console.log('stopSelecting');
 		isMouseDown = false;
-		selectGroup.releasePointerCapture(e.pointerId);
 	};
 
-	const triggerSelect = (e: PointerEvent) => {
-		if (isMouseDown) {
-			const PointTarget = document.elementFromPoint(e.clientX, e.clientY);
-			if (!PointTarget || !selectGroup.contains(PointTarget)) return;
-			const input = PointTarget.closest('.daySelectLabel')?.querySelector('input');
-			if (!input) return;
-			input.checked = !mouseSelectValue;
-			// console.log('triggerSelect', input);
-		}
+	const dragOver = (e: DragEvent) => {
+		e.preventDefault();
+		const input = (e.currentTarget as HTMLElement)?.querySelector('input');
+		if (!input) return;
+		input.checked = !mouseSelectValue;
+		input.dispatchEvent(new Event('change'));
 	};
 </script>
 
 <label class="block" for="rangeInput" style="--numOptions: {options.length}">
-	<span class="text-gray-700"> {label} </span>
-	<div
-		class="daySelectGroup"
-		bind:this={selectGroup}
-		on:pointerdown={beginSelecting}
-		on:pointerup={stopSelecting}
-		on:pointermove={triggerSelect}
-		draggable="false"
-	>
+	<span class="text-gray-700">
+		{label} <i class="text-sm align-baseline">(click or drag to select)</i>
+	</span>
+	<div class="daySelectGroup" bind:this={selectGroup}>
 		{#each options as option}
-			<div class="daySelectLabel">
+			<div
+				class="daySelectLabel"
+				on:dragover={dragOver}
+				on:dragstart={beginSelecting}
+				on:dragend={stopSelecting}
+				on:drop={stopSelecting}
+				draggable="true"
+			>
 				<input type="checkbox" bind:group={value} value={option} id={option} />
 				<label for={option} class="daySelectText">
 					{option}
@@ -77,11 +77,11 @@
 				@apply bg-slate-700 text-white border-opacity-0;
 			}
 			:focus + .daySelectText {
-				@apply outline outline-2 outline-slate-700;
+				@apply outline outline-2 outline-slate-500;
 				outline-offset: -2px;
 			}
 			:focus:checked + .daySelectText {
-				@apply outline outline-2 outline-slate-200;
+				@apply outline outline-2 outline-slate-500;
 				outline-offset: -2px;
 			}
 		}
