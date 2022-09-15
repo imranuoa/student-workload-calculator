@@ -1,24 +1,11 @@
-import deepClone from 'deep-clone';
+import { JsonObject, JsonProperty } from 'typescript-json-serializer';
+import { get, derived, readable, writable, type Readable, type Writable } from 'svelte/store';
 import type { courseMeta } from './course';
-import primaryMeeting from './component-forms/primary-meeting.svelte';
-import { derived, writable, type Writable } from 'svelte/store';
+import { type FormElement, RangeInput, TextInput, CheckSelectInput } from './form';
 
 export enum Frequency {
 	Weekly,
 	Semester
-}
-
-export interface FormElement {
-	id: string;
-	component: any;
-}
-
-// Data for the instance of the component type
-export interface ComponentData {
-	name: string;
-	freq: Frequency;
-	[key: string]: any;
-	calculated?: calculatedResults;
 }
 
 export interface calculatedResults {
@@ -30,29 +17,44 @@ export interface calculatedResults {
 	weeksRunning?: boolean[];
 }
 
-export class componentInstance {
-	data;
-	calculatedData;
-	constructor(public type: Component, data: ComponentData, courseMeta: Writable<courseMeta>) {
-		this.data = writable(data);
-		this.calculatedData = derived([this.data, courseMeta], ([$data, $courseMeta]) => {
-			if (!$data.calculated) return { perWeekI: 0, perWeekS: 0, perSemI: 0, perSemS: 0 };
+export const getComponentClass = (component: Component) => {
+	return <typeof Component>component.constructor;
+};
+
+@JsonObject()
+export abstract class Component {
+	// About the component
+	@JsonProperty() static label: string;
+	@JsonProperty() static icon: string;
+	@JsonProperty() static description: string;
+	@JsonProperty() static freq: Frequency;
+	@JsonProperty() abstract form: FormElement[];
+	@JsonProperty() abstract instanceName: Writable<string>;
+	results: Readable<calculatedResults> = readable({
+		occurences: 0,
+		prepHoursPer: 0,
+		independantHoursPer: 0,
+		scheduledHoursPer: 0,
+		postActivityHoursPer: 0
+	});
+	// Data for the instance of the component type
+	derivedCalculated;
+	constructor(courseMeta: Writable<courseMeta>) {
+		this.derivedCalculated = derived([this.results, courseMeta], ([$results, $courseMeta]) => {
+			if (!$results) return { perWeekI: 0, perWeekS: 0, perSemI: 0, perSemS: 0 };
 			let perWeek, perSem;
-			if ($data.freq === Frequency.Weekly) {
-				perWeek = $data.calculated.occurences;
-				const weeksRunning = $data.calculated.weeksRunning?.filter((x) => x).length;
+			if (this.freq === Frequency.Weekly) {
+				perWeek = $results.occurences;
+				const weeksRunning = $results.weeksRunning?.filter((x) => x).length;
 				perSem =
-					$data.calculated.occurences *
-					(weeksRunning === undefined ? $courseMeta.weeks : weeksRunning);
+					$results.occurences * (weeksRunning === undefined ? $courseMeta.weeks : weeksRunning);
 			} else {
-				perWeek = $data.calculated.occurences / $courseMeta.weeks;
-				perSem = $data.calculated.occurences;
+				perWeek = $results.occurences / $courseMeta.weeks;
+				perSem = $results.occurences;
 			}
 			let IPerOcc =
-				$data.calculated.independantHoursPer +
-				$data.calculated.prepHoursPer +
-				$data.calculated.postActivityHoursPer;
-			let SPerOcc = $data.calculated.scheduledHoursPer;
+				$results.independantHoursPer + $results.prepHoursPer + $results.postActivityHoursPer;
+			let SPerOcc = $results.scheduledHoursPer;
 			return {
 				perWeekI: perWeek * IPerOcc,
 				perWeekS: perWeek * SPerOcc,
@@ -63,34 +65,53 @@ export class componentInstance {
 	}
 }
 
-class Component {
-	constructor(
-		public name: string,
-		public short: string,
-		public icon: string,
-		public description: string,
-		public form: any,
-		private dataTemplate: ComponentData
-	) {}
-	newInstance(courseMeta: Writable<courseMeta>) {
-		return new componentInstance(this, deepClone(this.dataTemplate), courseMeta);
+export class PrimaryMeeting extends Component {
+	static label = 'Primary Meeting';
+	static icon = '🧑‍🏫';
+	static description =
+		'Primary meeting time for the course. This is the time that students are expected to be in class.';
+	static freq = Frequency.Weekly;
+	instanceName = writable('Lecture');
+	@JsonProperty() meetingsPerWeek = writable(1);
+	@JsonProperty() meetingLength = writable(1);
+	@JsonProperty() weeksRunning: Writable<string[]>;
+	readonly weeksList: Readable<string[]>;
+	readonly results: Readable<calculatedResults>;
+	form;
+
+	constructor(courseMeta: Writable<courseMeta>) {
+		super(courseMeta);
+		this.weeksList = derived(courseMeta, ($courseMeta) =>
+			[...Array($courseMeta.weeks).keys()].map((e) => (e + 1).toString())
+		);
+		this.weeksRunning = writable(get(this.weeksList));
+		this.results = derived(
+			[this.meetingsPerWeek, this.meetingLength, this.weeksRunning, this.weeksList],
+			([$meetingsPerWeek, $meetingLength, $weeksRunning, $weeksList]) => {
+				return {
+					occurences: $meetingsPerWeek,
+					prepHoursPer: 0,
+					independantHoursPer: 0,
+					scheduledHoursPer: $meetingLength,
+					postActivityHoursPer: 0,
+					weeksRunning: $weeksList.map((w) => $weeksRunning?.includes(w) || false)
+				};
+			}
+		);
+		this.form = [
+			new TextInput('componentName', this.instanceName, 'Component Name'),
+			new RangeInput('meetingsPerWeek', this.meetingsPerWeek, 'Meetings per week', 0, 14),
+			new RangeInput('meetingLength', this.meetingLength, 'Meeting Duration (Hours)', 0, 12),
+			new CheckSelectInput('weeksRunning', this.weeksRunning, 'Weeks class runs', this.weeksList)
+		];
 	}
 }
 
-
-const components: Component[] = [
-	new Component('Primary Class Meeting', 'Primary Meeting', '🧑‍🏫', ``, primaryMeeting, {
-		name: 'Lectures',
-		freq: Frequency.Weekly,
-		meetingsPerWeek: 1,
-		meetingLength: 1
-	})
-];
-
-const test = components[0].newInstance(writable({name:'',weeks:0}))
-test.data.subscribe(x=>{
-	x.
-})
+// Type to allow the general idea of a component to be used for typing
+export type ComponentSubClass = {
+	new (courseMeta: Writable<courseMeta>): Component;
+} & typeof Component;
+const components: ComponentSubClass[] = [PrimaryMeeting];
 
 components.push(components[0]);
 components.push(components[0]);

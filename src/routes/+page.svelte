@@ -2,64 +2,70 @@
 	import { tick } from 'svelte';
 	import { fade, slide } from 'svelte/transition';
 	import { clickOutside } from 'svelte-use-click-outside';
-	import components from '$lib/components';
-	import { additionalCalculated } from '$lib/components';
-	import type { course } from '$lib/course';
+	import components, { Component, type ComponentSubClass } from '$lib/components';
 	import deepClone from 'deep-clone';
 	import ResultTable from '$lib/resultTable.svelte';
 	import ComponentList from '$lib/add-component/addComponent.svelte';
 	import { courses, activeCourse } from '../store';
+	import { get } from 'svelte/store';
+	import { Course } from '$lib/course';
+	import EditForm from '$lib/editForm.svelte';
 
 	let initialFormEl: HTMLElement;
 
 	let addComponentOpen = false;
 
-	$: activeComponentType =
-		$activeCourse >= 0
-			? $courses[$activeCourse].components[$courses[$activeCourse].openComponent]?.type
-			: undefined;
-	$: activeComponentTypeData = components.find((c) => c.name === activeComponentType);
-	$: openComponent =
-		$activeCourse >= 0 && $courses[$activeCourse].openComponent >= 0
-			? $courses[$activeCourse].components[$courses[$activeCourse].openComponent]
+	$: activeCourseInst = $activeCourse >= 0 ? $courses[$activeCourse] : undefined;
+	$: activeCourseMeta = activeCourseInst?.meta;
+	$: activeCourseComponents = activeCourseInst?.components;
+	$: openComponent = activeCourseInst?.openComponent;
+	$: openComponentInst =
+		$openComponent !== undefined && $openComponent >= 0
+			? $activeCourseComponents?.[$openComponent]
 			: undefined;
 
-	const getComponentModel = (type: string) => {
-		return components.find((c) => c.name === type);
-	};
+	// If openComponent is >0 and doesn't resolve, reset it to -1
+	$: if (
+		$openComponent &&
+		$openComponent > 0 &&
+		$activeCourseComponents &&
+		$activeCourseComponents[$openComponent] === undefined
+	) {
+		$openComponent = -1;
+	}
 
 	const addCourse = () => {
-		$courses = [
-			...$courses,
-			{
-				meta: {
-					name: 'Your Course',
-					weeks: 12
-				},
-				openComponent: -1,
-				components: []
-			}
-		];
+		console.log('Adding Course!');
+		$courses = [...$courses, new Course('Your Course', 12)];
 	};
+	$: console.log($courses);
+	$: console.log(activeCourseInst);
+	$: console.log($activeCourseMeta);
+	$: console.log($activeCourseComponents);
+	$: console.log(openComponentInst);
 
-	const addComponent = async (i: number) => {
+	const addComponent = async (component: ComponentSubClass) => {
 		// TODO: Handle unsaved changes
-		$courses[$activeCourse].components = [
-			...$courses[$activeCourse].components,
-			{
-				type: components[i].name,
-				data: deepClone(components[i].dataTemplate)
-			}
-		];
-		$courses[$activeCourse].openComponent = $courses[$activeCourse].components.length - 1;
+		if (!activeCourseInst) return; // Need to have a course open
+		activeCourseInst.components.set([
+			...get(activeCourseInst.components),
+			new component(activeCourseInst.meta)
+		]);
+		const numCourses = get(activeCourseInst.components).length;
+		activeCourseInst.openComponent.set(numCourses - 1);
 		addComponentOpen = false;
 		await tick();
-		initialFormEl?.focus();
+		// initialFormEl?.focus();
 	};
 	const deleteComponent = async (i: number) => {
-		$courses[$activeCourse].components.splice(i, 1);
+		if (!$activeCourseComponents || !activeCourseInst) return; // Need to have a course open
+		$activeCourseComponents = $activeCourseComponents.splice(i, 1);
 		await tick();
-		$courses[$activeCourse].openComponent = -1;
+		activeCourseInst.openComponent.set(-1);
+	};
+
+	const getComponentClass = (component: Component) => {
+		return <typeof Component>component.constructor;
 	};
 
 	const init = async () => {
@@ -67,9 +73,7 @@
 			addCourse();
 			$activeCourse = 0;
 			await tick();
-			if ($courses[$activeCourse].components.length === 0) {
-				addComponent(0);
-			}
+			addComponent(components[0]);
 		}
 	};
 	init();
@@ -86,23 +90,23 @@
 			addComponentOpen = false;
 		}}
 	>
-		{#if $activeCourse === -1}
+		{#if !activeCourseInst}
 			<h2>Select a Course</h2>
 			{#each $courses as course, i}
 				<button
 					class="btn"
 					on:click={() => {
 						$activeCourse = i;
-					}}>{course.meta.name}</button
+					}}>{get(course.meta).name}</button
 				>
 			{/each}
-		{:else}
+		{:else if $activeCourseMeta && $activeCourseComponents}
 			<label class="block">
 				<span class="text-gray-700">Weeks in Semester</span>
 				<input
 					type="number"
 					class="form-input mt-1 block w-full"
-					bind:value={$courses[$activeCourse].meta.weeks}
+					bind:value={$activeCourseMeta.weeks}
 				/>
 			</label>
 			<h2>
@@ -117,9 +121,9 @@
 				</button>
 			</h2>
 			{#if addComponentOpen}
-				<ComponentList {components} on:add={({ detail }) => addComponent(detail.i)} />
+				<ComponentList {components} on:add={({ detail }) => addComponent(detail)} />
 			{/if}
-			{#if $courses[$activeCourse].components.length === 0 && !addComponentOpen}
+			{#if $activeCourseComponents.length === 0 && !addComponentOpen}
 				<p in:fade class="text-gray-500 text-center italic m-5">
 					You don't have any components to this course yet! Why not <button
 						class="italic font-bold underline"
@@ -130,25 +134,23 @@
 				</p>
 			{:else}
 				<div class="component-instance-list">
-					{#each $courses[$activeCourse].components as component, i}
+					{#each $activeCourseComponents as component, i}
 						<div
 							class="component-row"
-							class:active={i === $courses[$activeCourse].openComponent}
+							class:active={i === $openComponent}
 							role="button"
 							on:click={() => {
-								if (i === $courses[$activeCourse].openComponent)
-									$courses[$activeCourse].openComponent = -1;
-								else $courses[$activeCourse].openComponent = i;
+								if (i === $openComponent) $openComponent = -1;
+								else $openComponent = i;
 							}}
 						>
 							<span class="icon">
-								{getComponentModel(component.type)?.icon}
+								{getComponentClass(component).icon}
 							</span>
-							<span class="name">{component.data.name}</span>
+							<span class="name">{get(component.instanceName)}</span>
 							<span class="hours">
-								{additionalCalculated(component.data, $courses[$activeCourse].meta).perWeekI +
-									additionalCalculated(component.data, $courses[$activeCourse].meta).perWeekS} Hrs per
-								Week
+								{get(component.derivedCalculated).perWeekI +
+									get(component.derivedCalculated).perWeekS} Hrs per Week
 							</span>
 							<button
 								class="btn btn-block"
@@ -165,18 +167,12 @@
 			{/if}
 		{/if}
 	</div>
-	{#if activeComponentTypeData && openComponent}
-		<div class="config">
-			<h2>Configuration</h2>
-			<svelte:component this={activeComponentTypeData.form} bind:initialFormEl />
-		</div>
+	{#if openComponentInst}
+		<EditForm formData={openComponentInst.form} />
 	{/if}
-	<div class="results" class:expandResults={!(activeComponentTypeData && openComponent)}>
-		{#if $activeCourse >= 0}
-			<ResultTable
-				components={$courses[$activeCourse].components}
-				courseInfo={$courses[$activeCourse].meta}
-			/>
+	<div class="results" class:expandResults={!openComponent}>
+		{#if $activeCourseComponents}
+			<ResultTable components={$activeCourseComponents} />
 		{/if}
 	</div>
 </div>

@@ -1,18 +1,21 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
 	import { createEventDispatcher } from 'svelte';
-	import type { Component } from './components';
+	import type { ComponentSubClass } from '../components';
+	import { activeCourse, courses } from '../../store';
+
+	$: courseMeta = $activeCourse >= 0 ? $courses[$activeCourse].meta : undefined;
 
 	const dispatch = createEventDispatcher();
 
-	export let components: Component[];
+	export let components: ComponentSubClass[];
 </script>
 
 <div class="component-grid mb-5" transition:slide>
 	{#each components as component, i}
-		<button class="btn" on:click={() => dispatch('add', { type: components[i].name, i })}>
+		<button class="btn" on:click={() => dispatch('add', component)}>
 			<span class="icon">{component.icon}</span>
-			<span class="label">{component.short}</span>
+			<span class="label">{component.label}</span>
 		</button>
 	{/each}
 </div>

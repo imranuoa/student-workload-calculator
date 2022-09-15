@@ -1,36 +1,35 @@
 <script lang="ts">
 	//@ts-ignore
 	import SvelteTable from 'svelte-table';
-	import { additionalCalculated, type componentInstance } from '$lib/components';
-	import type { courseMeta } from '$lib/course';
-	export let courseInfo: courseMeta;
+	import type { Component } from '$lib/components';
+	import { get } from 'svelte/store';
 
-	export let components: componentInstance[];
+	export let components: Component[];
 	const columns = [
 		{
 			key: 'name',
 			title: 'Name',
-			value: (row: componentInstance) => row.data.name
+			value: (row: Component) => row.name
 		},
 		{
 			key: 'perWeekI',
 			title: 'hrs/wk (I)',
-			value: (row: componentInstance) => additionalCalculated(row.data, courseInfo).perWeekI
+			value: (row: Component) => get(row.derivedCalculated).perWeekI
 		},
 		{
 			key: 'perWeekS',
 			title: 'hrs/wk (S)',
-			value: (row: componentInstance) => additionalCalculated(row.data, courseInfo).perWeekS
+			value: (row: Component) => get(row.derivedCalculated).perWeekS
 		},
 		{
 			key: 'perSemI',
 			title: 'hrs/semester (I)',
-			value: (row: componentInstance) => additionalCalculated(row.data, courseInfo).perSemI
+			value: (row: Component) => get(row.derivedCalculated).perSemI
 		},
 		{
 			key: 'perSemS',
 			title: 'hrs/semester (S)',
-			value: (row: componentInstance) => additionalCalculated(row.data, courseInfo).perSemS
+			value: (row: Component) => get(row.derivedCalculated).perSemS
 		}
 	];
 </script>

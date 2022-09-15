@@ -1,17 +1,16 @@
 <script lang="ts">
 	import './formStyles.postcss';
+	import type { RangeInput } from '../form';
 
-	export let value: number;
-	export let label: string;
-	export let min: number = 0;
-	export let max: number;
+	export let props: RangeInput['props'];
+	let { value, label, min, max, step } = props;
 </script>
 
 <label class="block" for="rangeInput">
 	<span class="text-gray-700"> {label} </span>
 	<div class="rangeInputFlex mt-1">
-		<input type="number" id="rangeInput" class="form-input" bind:value />
-		<input type="range" bind:value class="block w-full" {min} {max} />
+		<input type="number" id="rangeInput" class="form-input" bind:value={$value} />
+		<input type="range" bind:value={$value} class="block w-full" {min} {max} {step} />
 	</div>
 </label>
 

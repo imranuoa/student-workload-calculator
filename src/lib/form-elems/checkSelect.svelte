@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import './formStyles.postcss';
+	import type { CheckSelectInput } from '../form';
 
-	export let options = ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'];
-	export let value: string[] = [];
-	export let label: string;
+	export let props: CheckSelectInput['props'];
+	let { options, value, label } = props;
 
 	let selectGroup: HTMLElement;
 	let isMouseDown = false;
@@ -35,12 +35,12 @@
 	};
 </script>
 
-<label class="block" for="rangeInput" style="--numOptions: {options.length}">
+<label class="block" for="rangeInput" style="--numOptions: {$options.length}">
 	<span class="text-gray-700">
 		{label} <i class="text-sm align-baseline">(click or drag to select)</i>
 	</span>
 	<div class="daySelectGroup" bind:this={selectGroup}>
-		{#each options as option}
+		{#each $options as option}
 			<div
 				class="daySelectLabel"
 				on:dragover={dragOver}
@@ -49,7 +49,7 @@
 				on:drop={stopSelecting}
 				draggable="true"
 			>
-				<input type="checkbox" bind:group={value} value={option} id={option} />
+				<input type="checkbox" bind:group={$value} value={option} id={option} />
 				<label for={option} class="daySelectText">
 					{option}
 				</label>
