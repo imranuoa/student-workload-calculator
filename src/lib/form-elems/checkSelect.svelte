@@ -9,20 +9,26 @@
 	let selectGroup: HTMLElement;
 	let isMouseDown = false;
 	let mouseSelectValue = false;
+	const blankCanvas = document.createElement('canvas');
+	blankCanvas.setAttribute(
+		'style',
+		'opacity:0;position:absolute;top:0;left:0;pointer-events: none;'
+	);
+	blankCanvas.width = 1;
+	blankCanvas.height = 1;
+	document.body.appendChild(blankCanvas);
 
 	const beginSelecting = (e: DragEvent) => {
-		console.log('beginSelecting', e.target);
+		// console.log('beginSelecting', e.target);
 		isMouseDown = true;
 		mouseSelectValue = (e.target as HTMLElement)?.querySelector('input')?.checked || false;
 		if (!e.dataTransfer) return;
 		e.dataTransfer.effectAllowed = 'move';
-		const blankCanvas = document.createElement('canvas');
-		document.body.appendChild(blankCanvas);
 		e.dataTransfer.setDragImage(blankCanvas, 0, 0);
 	};
 
 	const stopSelecting = (e: DragEvent) => {
-		if (isMouseDown) console.log('stopSelecting');
+		// if (isMouseDown) console.log('stopSelecting');
 		isMouseDown = false;
 	};
 
@@ -30,8 +36,11 @@
 		e.preventDefault();
 		const input = (e.currentTarget as HTMLElement)?.querySelector('input');
 		if (!input) return;
-		input.checked = !mouseSelectValue;
-		input.dispatchEvent(new Event('change'));
+		// Only set variable if we need to, to avoid unnessasary updates
+		if (input.checked !== !mouseSelectValue) {
+			input.checked = !mouseSelectValue;
+			input.dispatchEvent(new Event('change'));
+		}
 	};
 </script>
 

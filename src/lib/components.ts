@@ -17,6 +17,13 @@ export interface calculatedResults {
 	weeksRunning?: boolean[];
 }
 
+export interface derivedCalculated {
+	perWeekI: number;
+	perWeekS: number;
+	perSemI: number;
+	perSemS: number;
+}
+
 export const getComponentClass = (component: Component) => {
 	return <typeof Component>component.constructor;
 };
@@ -30,20 +37,14 @@ export abstract class Component {
 	@JsonProperty() static freq: Frequency;
 	@JsonProperty() abstract form: FormElement[];
 	@JsonProperty() abstract instanceName: Writable<string>;
-	results: Readable<calculatedResults> = readable({
-		occurences: 0,
-		prepHoursPer: 0,
-		independantHoursPer: 0,
-		scheduledHoursPer: 0,
-		postActivityHoursPer: 0
-	});
+	abstract readonly results: Readable<calculatedResults>;
+	abstract derivedCalculated: Readable<derivedCalculated>;
 	// Data for the instance of the component type
-	derivedCalculated;
-	constructor(courseMeta: Writable<courseMeta>) {
-		this.derivedCalculated = derived([this.results, courseMeta], ([$results, $courseMeta]) => {
+	setDerived(courseMeta: Readable<courseMeta>) {
+		return derived([this.results, courseMeta], ([$results, $courseMeta]) => {
 			if (!$results) return { perWeekI: 0, perWeekS: 0, perSemI: 0, perSemS: 0 };
 			let perWeek, perSem;
-			if (this.freq === Frequency.Weekly) {
+			if (getComponentClass(this).freq === Frequency.Weekly) {
 				perWeek = $results.occurences;
 				const weeksRunning = $results.weeksRunning?.filter((x) => x).length;
 				perSem =
@@ -63,6 +64,7 @@ export abstract class Component {
 			};
 		});
 	}
+	constructor(courseMeta: Writable<courseMeta>) {}
 }
 
 export class PrimaryMeeting extends Component {
@@ -78,6 +80,7 @@ export class PrimaryMeeting extends Component {
 	readonly weeksList: Readable<string[]>;
 	readonly results: Readable<calculatedResults>;
 	form;
+	derivedCalculated: Readable<derivedCalculated>;
 
 	constructor(courseMeta: Writable<courseMeta>) {
 		super(courseMeta);
@@ -85,6 +88,12 @@ export class PrimaryMeeting extends Component {
 			[...Array($courseMeta.weeks).keys()].map((e) => (e + 1).toString())
 		);
 		this.weeksRunning = writable(get(this.weeksList));
+		this.form = [
+			new TextInput('componentName', this.instanceName, 'Component Name'),
+			new RangeInput('meetingsPerWeek', this.meetingsPerWeek, 'Meetings per week', 0, 14),
+			new RangeInput('meetingLength', this.meetingLength, 'Meeting Duration (Hours)', 0, 12),
+			new CheckSelectInput('weeksRunning', this.weeksRunning, 'Weeks class runs', this.weeksList)
+		];
 		this.results = derived(
 			[this.meetingsPerWeek, this.meetingLength, this.weeksRunning, this.weeksList],
 			([$meetingsPerWeek, $meetingLength, $weeksRunning, $weeksList]) => {
@@ -98,12 +107,7 @@ export class PrimaryMeeting extends Component {
 				};
 			}
 		);
-		this.form = [
-			new TextInput('componentName', this.instanceName, 'Component Name'),
-			new RangeInput('meetingsPerWeek', this.meetingsPerWeek, 'Meetings per week', 0, 14),
-			new RangeInput('meetingLength', this.meetingLength, 'Meeting Duration (Hours)', 0, 12),
-			new CheckSelectInput('weeksRunning', this.weeksRunning, 'Weeks class runs', this.weeksList)
-		];
+		this.derivedCalculated = this.setDerived(courseMeta);
 	}
 }
 
@@ -112,6 +116,10 @@ export type ComponentSubClass = {
 	new (courseMeta: Writable<courseMeta>): Component;
 } & typeof Component;
 const components: ComponentSubClass[] = [PrimaryMeeting];
+
+components.push(components[0]);
+components.push(components[0]);
+components.push(components[0]);
 
 components.push(components[0]);
 components.push(components[0]);
