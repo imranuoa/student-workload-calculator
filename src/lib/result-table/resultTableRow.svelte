@@ -20,8 +20,8 @@
 	$: perSemS = $derivedCalculated.perSemS;
 </script>
 
-<tr on:click={() => dispatch('click', component)} class:clickable={active !== null} class:active>
-	<td>{$instanceName}</td>
+<tr class:active class:clickable={active !== null}>
+	<td class="name" on:click={() => dispatch('click', component)}>{$instanceName}</td>
 	<td
 		class:warning={perWeekI > 4}
 		class:danger={perWeekI > 10}
@@ -60,7 +60,7 @@
 	tr {
 		@apply h-10 text-center relative;
 		@apply border-b border-slate-300;
-		&.clickable {
+		&.clickable .name {
 			@apply cursor-pointer;
 		}
 		&:last-child {
