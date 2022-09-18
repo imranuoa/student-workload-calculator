@@ -22,32 +22,36 @@
 
 		return sorted[middle];
 	};
-	const perWeekMedian = derived(
-		components.map((c) => c.derivedCalculated),
-		(values) => median(values.map((v) => v.perWeekI + v.perWeekS))
-	);
-	const perWeekIMedian = derived(
-		components.map((c) => c.derivedCalculated),
-		(values) => median(values.map((v) => v.perWeekI))
-	);
-	const perWeekSMedian = derived(
-		components.map((c) => c.derivedCalculated),
-		(values) => median(values.map((v) => v.perWeekS))
-	);
-	const perSemMedian = derived(
-		components.map((c) => c.derivedCalculated),
-		(values) => median(values.map((v) => v.perSemI + v.perSemS))
-	);
-	const perSemIMedian = derived(
-		components.map((c) => c.derivedCalculated),
-		(values) => median(values.map((v) => v.perSemI))
-	);
-	const perSemSMedian = derived(
-		components.map((c) => c.derivedCalculated),
-		(values) => median(values.map((v) => v.perSemS))
-	);
 
-	$: console.log($perWeekMedian);
+	$: totals = derived(
+		components.map((c) => c.derivedCalculated),
+		(values) => ({
+			perWeekI: {
+				median: median(values.map((v) => v.perWeekI)),
+				total: values.reduce((a, v) => a + v.perWeekI, 0)
+			},
+			perWeekS: {
+				median: median(values.map((v) => v.perWeekS)),
+				total: values.reduce((a, v) => a + v.perWeekS, 0)
+			},
+			perSemI: {
+				median: median(values.map((v) => v.perSemI)),
+				total: values.reduce((a, v) => a + v.perSemI, 0)
+			},
+			perSemS: {
+				median: median(values.map((v) => v.perSemS)),
+				total: values.reduce((a, v) => a + v.perSemS, 0)
+			},
+			perSem: {
+				median: median(values.map((v) => v.perSemI + v.perSemS)),
+				total: values.reduce((a, v) => a + v.perSemI + v.perSemS, 0)
+			},
+			perWeek: {
+				median: median(values.map((v) => v.perWeekI + v.perWeekS)),
+				total: values.reduce((a, v) => a + v.perSemI + v.perSemS, 0)
+			}
+		})
+	);
 </script>
 
 <table>
@@ -62,8 +66,7 @@
 		{#each components as component}
 			<ResultTableRow
 				{component}
-				{perWeekMedian}
-				{perSemMedian}
+				totals={$totals}
 				{courseWeeks}
 				active={openComponent === null ? null : components[openComponent] === component}
 				on:click={() => dispatch('selectComponent', component)}
@@ -72,11 +75,11 @@
 	</tbody>
 	<tfoot>
 		<tr class="foot">
-			<td>Median</td>
-			<td>{$perWeekIMedian}</td>
-			<td>{$perWeekSMedian}</td>
-			<td>{$perSemIMedian}</td>
-			<td>{$perSemSMedian}</td>
+			<td>Median / Total</td>
+			<td>{$totals.perWeekI.median} / {$totals.perWeekI.total}</td>
+			<td>{$totals.perWeekS.median} / {$totals.perWeekS.total}</td>
+			<td>{$totals.perSemI.median} / {$totals.perSemI.total}</td>
+			<td>{$totals.perSemS.median} / {$totals.perSemS.total}</td>
 		</tr>
 	</tfoot>
 </table>

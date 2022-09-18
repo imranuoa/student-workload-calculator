@@ -6,8 +6,14 @@
 	const dispatch = createEventDispatcher();
 
 	export let component: Component;
-	export let perWeekMedian: Readable<number>;
-	export let perSemMedian: Readable<number>;
+	export let totals: {
+		perWeekI: { median: number; total: number };
+		perWeekS: { median: number; total: number };
+		perSemI: { median: number; total: number };
+		perSemS: { median: number; total: number };
+		perSem: { median: number; total: number };
+		perWeek: { median: number; total: number };
+	};
 	export let courseWeeks: number;
 	export let active: boolean | null = null;
 
@@ -25,7 +31,7 @@
 	<td
 		class:warning={perWeekI > 4}
 		class:danger={perWeekI > 10}
-		style="--comparison: {(perWeekI / $perWeekMedian) * 100}%"
+		style="--comparison: {(perWeekI / totals.perWeek.median) * 100}%"
 	>
 		{perWeekI}
 		<div class="comparison" />
@@ -33,7 +39,7 @@
 	<td
 		class:warning={perWeekS > 4}
 		class:danger={perWeekS > 10}
-		style="--comparison: {(perWeekS / $perWeekMedian) * 100}%"
+		style="--comparison: {(perWeekS / totals.perWeek.median) * 100}%"
 	>
 		{perWeekS}
 		<div class="comparison" />
@@ -41,7 +47,7 @@
 	<td
 		class:warning={perSemI / courseWeeks > 4}
 		class:danger={perSemI / courseWeeks > 10}
-		style="--comparison: {(perSemI / $perSemMedian) * 100}%"
+		style="--comparison: {(perSemI / totals.perSem.median) * 100}%"
 	>
 		{perSemI}
 		<div class="comparison" />
@@ -49,7 +55,7 @@
 	<td
 		class:warning={perSemS / courseWeeks > 4}
 		class:danger={perSemS / courseWeeks > 10}
-		style="--comparison: {(perSemS / $perSemMedian) * 100}%"
+		style="--comparison: {(perSemS / totals.perSem.median) * 100}%"
 	>
 		{perSemS}
 		<div class="comparison" />
