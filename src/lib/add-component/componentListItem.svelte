@@ -39,7 +39,7 @@
 
 <style lang="postcss">
 	.component-row {
-		@apply grid p-1 items-center rounded;
+		@apply grid p-1 items-center rounded transition;
 		grid-template-columns: 4ch 1fr auto auto;
 		&.active {
 			@apply bg-gray-200;

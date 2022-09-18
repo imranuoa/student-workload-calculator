@@ -1,11 +1,15 @@
 <script lang="ts">
-	import type { Component } from '$lib/components';
 	import type { Readable } from 'svelte/store';
+	import { createEventDispatcher } from 'svelte';
+	import type { Component } from '$lib/components';
+
+	const dispatch = createEventDispatcher();
 
 	export let component: Component;
 	export let perWeekMedian: Readable<number>;
 	export let perSemMedian: Readable<number>;
 	export let courseWeeks: number;
+	export let active: boolean | null = null;
 
 	$: derivedCalculated = component.derivedCalculated;
 	$: instanceName = component.instanceName;
@@ -14,11 +18,9 @@
 	$: perWeekS = $derivedCalculated.perWeekS;
 	$: perSemI = $derivedCalculated.perSemI;
 	$: perSemS = $derivedCalculated.perSemS;
-
-	// $: console.log($perSemMedian, $perWeekMedian);
 </script>
 
-<tr>
+<tr on:click={() => dispatch('click', component)} class:clickable={active !== null} class:active>
 	<td>{$instanceName}</td>
 	<td
 		class:warning={perWeekI > 4}
@@ -56,10 +58,25 @@
 
 <style lang="postcss">
 	tr {
-		@apply h-10 text-center;
+		@apply h-10 text-center relative;
 		@apply border-b border-slate-300;
+		&.clickable {
+			@apply cursor-pointer;
+		}
 		&:last-child {
 			@apply border-b-0;
+		}
+		&:hover {
+			@apply bg-gray-200;
+		}
+
+		&::after {
+			content: ' ';
+			@apply block absolute w-1 h-0 rounded-full top-0 bottom-0 left-0 m-auto;
+			@apply transition-all duration-300 opacity-0 bg-slate-700;
+		}
+		&.active::after {
+			@apply opacity-100 h-full;
 		}
 	}
 	td {

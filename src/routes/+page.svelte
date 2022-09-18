@@ -85,7 +85,16 @@
 	</div>
 	<div class="results">
 		{#if $activeCourseComponents && $activeCourseMeta}
-			<ResultTable components={$activeCourseComponents} courseWeeks={$activeCourseMeta.weeks} />
+			<ResultTable
+				components={$activeCourseComponents}
+				courseWeeks={$activeCourseMeta.weeks}
+				bind:openComponent={$openComponent}
+				on:selectComponent={({ detail }) => {
+					const matchedIndex = $activeCourseComponents?.findIndex((c) => c == detail);
+					if (matchedIndex === $openComponent) $openComponent = -1;
+					else if (matchedIndex !== -1) $openComponent = matchedIndex;
+				}}
+			/>
 		{/if}
 	</div>
 </div>
