@@ -9,14 +9,8 @@
 	let selectGroup: HTMLElement;
 	let isMouseDown = false;
 	let mouseSelectValue = false;
-	const blankCanvas = document.createElement('canvas');
-	blankCanvas.setAttribute(
-		'style',
-		'opacity:0;position:absolute;top:0;left:0;pointer-events: none;'
-	);
-	blankCanvas.width = 1;
-	blankCanvas.height = 1;
-	document.body.appendChild(blankCanvas);
+
+	let blankCanvas: HTMLCanvasElement;
 
 	const beginSelecting = (e: DragEvent) => {
 		// console.log('beginSelecting', e.target);
@@ -42,6 +36,17 @@
 			input.dispatchEvent(new Event('change'));
 		}
 	};
+
+	onMount(() => {
+		blankCanvas = document.createElement('canvas');
+		blankCanvas.setAttribute(
+			'style',
+			'opacity:0;position:absolute;top:0;left:0;pointer-events: none;'
+		);
+		blankCanvas.width = 1;
+		blankCanvas.height = 1;
+		document.body.appendChild(blankCanvas);
+	});
 </script>
 
 <label class="block" for="rangeInput" style="--numOptions: {$options.length}">
