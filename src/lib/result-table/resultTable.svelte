@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { derived, get } from 'svelte/store';
+	import { onMount } from 'svelte';
+	import csvDownload from 'json-to-csv-export';
 	import type { Component } from '$lib/components';
 	import ResultTableRow from './resultTableRow.svelte';
 
@@ -10,7 +12,13 @@
 	export let courseWeeks: number;
 	export let openComponent: number | null = null;
 
-	const columns = ['Name', 'hrs/wk (I)', 'hrs/wk (S)', 'hrs/semester (I)', 'hrs/semester (S)'];
+	const columns = [
+		{ name: 'Name', detail: 'Name' },
+		{ name: 'hrs/wk (I)', detail: 'Independant Hours per Week' },
+		{ name: 'hrs/wk (S)', detail: 'Scheduled Hours per Week' },
+		{ name: 'hrs/semester (I)', detail: 'Independant Hours per Semester' },
+		{ name: 'hrs/semester (S)', detail: 'Scheduled Hours per Semester' }
+	];
 
 	const median = (numbers: number[]) => {
 		const sorted = Array.from(numbers).sort((a, b) => a - b);
@@ -52,13 +60,47 @@
 			}
 		})
 	);
+
+	const buildData = () =>
+		components.map((c) => ({
+			name: get(c.instanceName),
+			results: get(c.results),
+			derived: get(c.derivedCalculated)
+		}));
+
+	let downloadJSON: Function;
+	let downloadXLSX: Function;
+	onMount(() => {
+		downloadJSON = () => {
+			const data = buildData();
+			console.log('download files');
+			const json = JSON.stringify(data, null, 2);
+			const blob = new Blob([json], { type: 'application/json' });
+			const url = URL.createObjectURL(blob);
+			const link = document.createElement('a');
+			link.href = url;
+			link.download = 'components.json';
+			link.click();
+		};
+		downloadXLSX = () => {
+			const data = buildData();
+			csvDownload({
+				data: data.map((c) => ({
+					name: c.name,
+					...c.derived,
+					...c.results
+				})),
+				filename: 'components.csv'
+			});
+		};
+	});
 </script>
 
 <table>
 	<thead>
 		<tr class="head">
 			{#each columns as column}
-				<th>{column}</th>
+				<th title={column.detail}>{column.name}</th>
 			{/each}
 		</tr>
 	</thead>
@@ -83,6 +125,12 @@
 		</tr>
 	</tfoot>
 </table>
+
+<div class="mt-4">
+	<!-- Download -->
+	<button class="btn" on:click={() => downloadJSON()}>Download (JSON)</button>
+	<button class="btn" on:click={() => downloadXLSX()}>Download (XLSX)</button>
+</div>
 
 <style lang="postcss">
 	table {

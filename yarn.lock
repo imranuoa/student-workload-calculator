@@ -827,6 +827,11 @@ is-number@^7.0.0:
   resolved "https://registry.yarnpkg.com/is-number/-/is-number-7.0.0.tgz#7535345b896734d5f80c4d06c50955527a14f12b"
   integrity sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==
 
+json-to-csv-export@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/json-to-csv-export/-/json-to-csv-export-2.0.2.tgz#3acc1dc89e1a5452ab696d94092550dd142b42d5"
+  integrity sha512-LYuRCAQzNCocKIgwIcL9c6mBTAQuGXcehXejRCTXCf39zTNgS9TuqObX8DsKFnBHGaOZkQDXOVUzAvH3KqSymw==
+
 kleur@^4.1.4, kleur@^4.1.5:
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-4.1.5.tgz#95106101795f7050c6c650f350c683febddb1780"
