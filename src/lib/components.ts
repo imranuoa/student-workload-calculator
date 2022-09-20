@@ -1,4 +1,5 @@
 import { JsonObject, JsonProperty } from 'typescript-json-serializer';
+import { formArraySerialize, writableSerialize } from '$lib/serialize';
 import { get, derived, readable, writable, type Readable, type Writable } from 'svelte/store';
 import type { courseMeta } from './course';
 import { type FormElement, RangeInput, TextInput, CheckSelectInput } from './form';
@@ -35,8 +36,8 @@ export abstract class Component {
 	@JsonProperty() static icon: string;
 	@JsonProperty() static description: string;
 	@JsonProperty() static freq: Frequency;
-	@JsonProperty() abstract form: FormElement[];
-	@JsonProperty() abstract instanceName: Writable<string>;
+	@JsonProperty(formArraySerialize) abstract form: FormElement[];
+	@JsonProperty(writableSerialize) abstract instanceName: Writable<string>;
 	abstract readonly results: Readable<calculatedResults>;
 	abstract derivedCalculated: Readable<derivedCalculated>;
 	// Data for the instance of the component type
@@ -67,6 +68,7 @@ export abstract class Component {
 	constructor(courseMeta: Writable<courseMeta>) {}
 }
 
+@JsonObject()
 export class PrimaryMeeting extends Component {
 	static label = 'Primary Meeting';
 	static icon = '🧑‍🏫';
@@ -74,9 +76,9 @@ export class PrimaryMeeting extends Component {
 		'Primary meeting time for the course. This is the time that students are expected to be in class.';
 	static freq = Frequency.Weekly;
 	instanceName = writable('Lecture');
-	@JsonProperty() meetingsPerWeek = writable(1);
-	@JsonProperty() meetingLength = writable(1);
-	@JsonProperty() weeksRunning: Writable<string[]>;
+	@JsonProperty(writableSerialize) meetingsPerWeek = writable(1);
+	@JsonProperty(writableSerialize) meetingLength = writable(1);
+	@JsonProperty(writableSerialize) weeksRunning: Writable<string[]>;
 	readonly weeksList: Readable<string[]>;
 	readonly results: Readable<calculatedResults>;
 	form;
@@ -90,9 +92,17 @@ export class PrimaryMeeting extends Component {
 		this.weeksRunning = writable(get(this.weeksList));
 		this.form = [
 			new TextInput('componentName', this.instanceName, 'Component Name'),
-			new RangeInput('meetingsPerWeek', this.meetingsPerWeek, 'Meetings per week', 0, 14),
-			new RangeInput('meetingLength', this.meetingLength, 'Meeting Duration (Hours)', 0, 12),
-			new CheckSelectInput('weeksRunning', this.weeksRunning, 'Weeks class runs', this.weeksList)
+			new RangeInput('meetingsPerWeek', this.meetingsPerWeek, 'Meetings per week', {
+				min: 0,
+				max: 14
+			}),
+			new RangeInput('meetingLength', this.meetingLength, 'Meeting Duration (Hours)', {
+				min: 0,
+				max: 12
+			}),
+			new CheckSelectInput('weeksRunning', this.weeksRunning, 'Weeks class runs', {
+				options: this.weeksList
+			})
 		];
 		this.results = derived(
 			[this.meetingsPerWeek, this.meetingLength, this.weeksRunning, this.weeksList],

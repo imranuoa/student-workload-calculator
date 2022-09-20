@@ -3,10 +3,12 @@ import rangeInput from './form-elems/rangeInput.svelte';
 import checkSelect from './form-elems/checkSelect.svelte';
 import textInput from './form-elems/textInput.svelte';
 
+export type formProps = { id: string; label: string; value: Writable<any>; [key: string]: any };
+
 export abstract class FormElement {
 	abstract component: any;
-	abstract props: { id: string; label: string; value: Writable<any>; [key: string]: any };
-	constructor(id: string, value: Writable<any>, label: string) {}
+	abstract props: formProps;
+	constructor(id: string, value: Writable<any>, label: string, props?: object) {}
 }
 
 export class TextInput extends FormElement {
@@ -25,20 +27,29 @@ export class RangeInput extends FormElement {
 		id: string,
 		value: Writable<number>,
 		label: string,
-		min: number,
-		max: number,
-		step?: number
+		props: {
+			min: number;
+			max: number;
+			step?: number;
+		}
 	) {
 		super(id, value, label);
-		this.props = { id, label, value, min, max, step };
+		this.props = { id, label, value, ...props };
 	}
 }
 
 export class CheckSelectInput extends FormElement {
 	props;
 	component = checkSelect;
-	constructor(id: string, value: Writable<string[]>, label: string, options: Readable<string[]>) {
+	constructor(
+		id: string,
+		value: Writable<string[]>,
+		label: string,
+		props: { options: Readable<string[]> }
+	) {
 		super(id, value, label);
-		this.props = { id, label, value, options };
+		this.props = { id, label, value, ...props };
 	}
 }
+
+export const formTypes = [TextInput, RangeInput, CheckSelectInput];
