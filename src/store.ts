@@ -33,7 +33,6 @@ export const activeCourse: Writable<number> = localStorageStore('activeCourse', 
 
 export const addCourse = (course = new Course('Your Course', 12)) => {
 	console.log('Adding Course!');
-	course.addComponent(new PrimaryMeeting(course.meta));
 	course.subscribe(notifyStore);
 	courses.update((c) => [...c, course]);
 	activeCourse.set(get(courses).length - 1);
