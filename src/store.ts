@@ -1,27 +1,15 @@
-import { JsonSerializer, throwError } from 'typescript-json-serializer';
 import { writable } from 'svelte-local-storage-store';
 import { Course } from '$lib/course';
 import type { Writable } from 'svelte/store';
 // import { writable } from 'svelte/store';
 
-const defaultSerializer = new JsonSerializer({
-	nullishPolicy: {
-		undefined: 'remove',
-		null: 'allow'
-	},
-	errorCallback: (error) => console.log(error)
-});
-
 const serializer = {
 	stringify(value: Course[]) {
-		const serialized = defaultSerializer.serialize(value);
+		const serialized = value.map((c) => Course.serialize(c));
 		console.log(serialized);
 		return JSON.stringify(serialized);
 	},
 	parse(value: string) {
-		const courses = defaultSerializer.deserializeObjectArray(value, Course);
-		if (!courses) return [];
-		// return courses.filter((c) => c) as Course[];
 		return [];
 	}
 };

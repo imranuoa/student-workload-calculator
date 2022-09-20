@@ -1,4 +1,3 @@
-import type { JsonProperty } from 'typescript-json-serializer';
 import { get, readable, writable, type Readable, type Writable } from 'svelte/store';
 import { formTypes, type FormElement, type formProps, type TextInput } from './form';
 

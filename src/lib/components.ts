@@ -1,4 +1,3 @@
-import { JsonObject, JsonProperty } from 'typescript-json-serializer';
 import { formArraySerialize, writableSerialize } from '$lib/serialize';
 import { get, derived, readable, writable, type Readable, type Writable } from 'svelte/store';
 import type { courseMeta } from './course';
@@ -29,15 +28,25 @@ export const getComponentClass = (component: Component) => {
 	return <typeof Component>component.constructor;
 };
 
-@JsonObject()
+export interface serializedComponent {
+	type: string;
+	props: Object;
+}
+
 export abstract class Component {
+	static serialize(component: Component): serializedComponent {
+		throw new Error("Method 'serialize' not implemented.");
+	}
+	static deserialize(obj: serializedComponent): Component {
+		throw new Error("Method 'deserialize' not implemented.");
+	}
 	// About the component
-	@JsonProperty() static label: string;
-	@JsonProperty() static icon: string;
-	@JsonProperty() static description: string;
-	@JsonProperty() static freq: Frequency;
-	@JsonProperty(formArraySerialize) abstract form: FormElement[];
-	@JsonProperty(writableSerialize) abstract instanceName: Writable<string>;
+	static label: string;
+	static icon: string;
+	static description: string;
+	static freq: Frequency;
+	abstract form: FormElement[];
+	abstract instanceName: Writable<string>;
 	abstract readonly results: Readable<calculatedResults>;
 	abstract derivedCalculated: Readable<derivedCalculated>;
 	// Data for the instance of the component type
@@ -66,19 +75,40 @@ export abstract class Component {
 		});
 	}
 	constructor(courseMeta: Writable<courseMeta>) {}
+	updated = 0;
+	watchDerived() {
+		console.log('Watching component:', this);
+		this.derivedCalculated.subscribe(
+			(() => {
+				console.log('Triggering update on:', this);
+				this = this;
+				return true;
+			}).bind(this)
+		);
+	}
 }
 
-@JsonObject()
 export class PrimaryMeeting extends Component {
+	static serialize(instance: PrimaryMeeting): serializedComponent {
+		return {
+			type: 'PrimaryMeeting',
+			props: {
+				instanceName: get(instance.instanceName),
+				meetingsPerWeek: get(instance.meetingsPerWeek),
+				meetingLength: get(instance.meetingLength),
+				weeksRunning: get(instance.weeksRunning)
+			}
+		};
+	}
 	static label = 'Primary Meeting';
 	static icon = '🧑‍🏫';
 	static description =
 		'Primary meeting time for the course. This is the time that students are expected to be in class.';
 	static freq = Frequency.Weekly;
 	instanceName = writable('Lecture');
-	@JsonProperty(writableSerialize) meetingsPerWeek = writable(1);
-	@JsonProperty(writableSerialize) meetingLength = writable(1);
-	@JsonProperty(writableSerialize) weeksRunning: Writable<string[]>;
+	meetingsPerWeek = writable(1);
+	meetingLength = writable(1);
+	weeksRunning: Writable<string[]>;
 	readonly weeksList: Readable<string[]>;
 	readonly results: Readable<calculatedResults>;
 	form;
@@ -118,6 +148,7 @@ export class PrimaryMeeting extends Component {
 			}
 		);
 		this.derivedCalculated = this.setDerived(courseMeta);
+		this.watchDerived();
 	}
 }
 
