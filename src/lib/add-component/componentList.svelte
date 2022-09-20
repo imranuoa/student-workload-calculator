@@ -20,7 +20,7 @@
 	<h2>
 		<span> Components: </span>
 		<button
-			class="btn"
+			class="btn add-component"
 			title="Add Component"
 			on:click={() => {
 				addComponentOpen = !addComponentOpen;

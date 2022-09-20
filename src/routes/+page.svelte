@@ -7,6 +7,8 @@
 	import ComponentList from '$lib/add-component/componentList.svelte';
 	import CourseSelect from '$lib/add-course/courseSelect.svelte';
 	import CreateCourse from '$lib/add-course/createCourse.svelte';
+	import { fade } from 'svelte/transition';
+	// import arrowPattern from '$lib/assets/arrow-left.svg';
 
 	let addComponentOpen: boolean;
 
@@ -35,7 +37,8 @@
 		<div
 			class="calculator-layout"
 			class:expandComponents={addComponentOpen}
-			class:expandResults={!openComponentInst}
+			class:hideConfig={!openComponentInst}
+			class:noComponents={$activeCourseComponents.length === 0}
 		>
 			<div
 				class="components"
@@ -53,7 +56,7 @@
 					<EditForm bind:components={$activeCourseComponents} {openComponent} />
 				</div>
 				<div class="results">
-					{#if $activeCourseComponents && $activeCourseMeta}
+					{#if $activeCourseComponents && $activeCourseMeta && $activeCourseComponents.length > 0}
 						<ResultTable
 							components={$activeCourseComponents}
 							courseWeeks={$activeCourseMeta.weeks}
@@ -64,6 +67,20 @@
 								else if (matchedIndex !== -1) $openComponent = matchedIndex;
 							}}
 						/>
+					{:else}
+						<div class="no-components-results" in:fade>
+							<div class="arrows-wrap">
+								<div class="arrows" />
+							</div>
+							<p class="hint">
+								This course doesn't have anything in it! To get started, use the menu to the left to <button
+									class="italic font-bold underline"
+									on:click={() => {
+										addComponentOpen = !addComponentOpen;
+									}}>add a component</button
+								>.
+							</p>
+						</div>
 					{/if}
 				</div>
 			{/if}
@@ -84,6 +101,29 @@
 			width: var(--components-pane-default-width);
 		}
 
+		.config,
+		.results {
+			@apply duration-150 ease-in-out z-0;
+			transition-property: margin-left;
+			margin-left: 0;
+		}
+		.config {
+			width: 25rem;
+		}
+		&.hideConfig {
+			.components {
+				@apply shadow-xl;
+				width: 30rem;
+				z-index: 10;
+			}
+			.config {
+				margin-left: -15rem;
+			}
+			.results {
+				margin-left: -2.5rem;
+			}
+		}
+
 		&.expandComponents {
 			.components {
 				@apply shadow-xl;
@@ -96,26 +136,8 @@
 			}
 		}
 
-		.config,
-		.results {
-			@apply duration-150 ease-in-out z-0;
-			transition-property: margin-left;
-			margin-left: 0;
-		}
-		.config {
-			width: 25rem;
-		}
-		&.expandResults {
-			.config {
-				margin-left: -25rem;
-			}
+		@media screen and (max-width: 60rem) {
 			.results {
-				margin-left: -2.5rem;
-			}
-		}
-
-		.results {
-			@media screen and (max-width: 60rem) {
 				grid-row-start: 2;
 				grid-column: 1 / -1;
 			}
@@ -124,6 +146,53 @@
 		.config,
 		.results {
 			@apply pt-4;
+		}
+		&.noComponents {
+			.components {
+				@apply shadow-2xl pulsehint;
+				:global(.add-component) {
+					@apply pulsehint;
+				}
+			}
+		}
+		.no-components-results {
+			@apply w-full h-96 flex items-center justify-center text-2xl relative overflow-clip;
+			.arrows-wrap {
+				@apply absolute top-0 bottom-0 m-auto right-0 z-0 opacity-20 w-full;
+				height: calc(3rem * 6);
+				.arrows {
+					@apply absolute top-0 right-0 h-full;
+					width: calc(100% + 3rem);
+					background-image: url('$lib/assets/arrow-left.svg');
+					background-repeat: repeat;
+					background-size: 3rem;
+					animation: shiftBackground 6s linear infinite;
+				}
+				mask-image: linear-gradient(to left, transparent, black, transparent);
+			}
+			.hint {
+				@apply text-center italic m-5 max-w-lg bg-white p-10 rounded shadow border-dashed border-4 border-slate-200 z-10;
+			}
+		}
+	}
+	.pulsehint {
+		animation: pulseHint 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+		animation-direction: alternate;
+	}
+	@keyframes pulseHint {
+		from {
+			box-shadow: 0 0 10px 3px #4daafb;
+		}
+		to {
+			box-shadow: 0 0 10px -6px #4daafb;
+		}
+	}
+	@keyframes shiftBackground {
+		from {
+			transform: translateX(3rem);
+		}
+		to {
+			transform: translateX(0);
 		}
 	}
 </style>
