@@ -73,12 +73,8 @@
 								<div class="arrows" />
 							</div>
 							<p class="hint">
-								This course doesn't have anything in it! To get started, use the menu to the left to <button
-									class="italic font-bold underline"
-									on:click={() => {
-										addComponentOpen = !addComponentOpen;
-									}}>add a component</button
-								>.
+								This course doesn't have anything in it! To get started, use the menu to the left to
+								add a component.
 							</p>
 						</div>
 					{/if}
@@ -104,7 +100,7 @@
 		.config,
 		.results {
 			@apply duration-150 ease-in-out z-0;
-			transition-property: margin-left;
+			transition-property: margin-left, opacity;
 			margin-left: 0;
 		}
 		.config {
@@ -156,16 +152,18 @@
 			}
 		}
 		.no-components-results {
-			@apply w-full h-96 flex items-center justify-center text-2xl relative overflow-clip;
+			@apply w-full h-96 flex items-center justify-center  relative overflow-clip;
 			.arrows-wrap {
 				@apply absolute top-0 bottom-0 m-auto right-0 z-0 opacity-20 w-full;
-				height: calc(3rem * 6);
+				--arrow-size: 3rem;
+				--num-arrows: 4;
+				height: calc(var(--arrow-size) * var(--num-arrows));
 				.arrows {
 					@apply absolute top-0 right-0 h-full;
-					width: calc(100% + 3rem);
+					width: calc(100% + var(--arrow-size));
 					background-image: url('$lib/assets/arrow-left.svg');
 					background-repeat: repeat;
-					background-size: 3rem;
+					background-size: var(--arrow-size);
 					animation: shiftBackground 6s linear infinite;
 				}
 				mask-image: linear-gradient(to left, transparent, black, transparent);

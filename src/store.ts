@@ -3,6 +3,8 @@ import { Course } from '$lib/course';
 import { get, writable, type Writable } from 'svelte/store';
 import { PrimaryMeeting } from '$lib/components';
 
+const storeVersion = '1.0.0';
+
 const serializer = {
 	stringify(value: Course[]) {
 		const serialized = value.map((c) => Course.serialize(c));
@@ -26,8 +28,10 @@ const notifyStore = () => {
 	courses.update((c) => c);
 };
 
-export const courses: Writable<Course[]> = localStorageStore('courses', [], { serializer });
-export const activeCourse: Writable<number> = localStorageStore('activeCourse', -1);
+export const courses: Writable<Course[]> = localStorageStore(`${storeVersion}-courses`, [], {
+	serializer
+});
+export const activeCourse: Writable<number> = localStorageStore(`${storeVersion}-activeCourse`, -1);
 // export const courses: Writable<Course[]> = writable([]);
 // export const activeCourse: Writable<number> = writable(0);
 
