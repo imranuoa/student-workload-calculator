@@ -175,11 +175,4 @@ export type ComponentSubClass = {
 } & { [K in keyof typeof Component]: typeof Component[K] };
 const components: ComponentSubClass[] = [PrimaryMeeting];
 
-components.push(components[0]);
-components.push(components[0]);
-components.push(components[0]);
-components.push(components[0]);
-components.push(components[0]);
-components.push(components[0]);
-
 export default components;
