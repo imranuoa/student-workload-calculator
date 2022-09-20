@@ -5,7 +5,6 @@ import components, {
 	type serializedComponent
 } from '$lib/components';
 import { derived, get, writable, type Writable } from 'svelte/store';
-import { writableSerialize } from '$lib/serialize';
 
 export interface courseMeta {
 	name: string;
@@ -32,39 +31,66 @@ export class Course {
 		};
 	}
 	static deserialize(c: serializedCourse) {
-		const componentList = c.components.map((component) => {
-			const componentClass = components.find((cClass) => cClass.name === component.type);
+		const course = new Course(c.meta.name, c.meta.weeks, [], c.openComponent);
+		c.components.forEach((component) => {
+			const componentClass = components.find(
+				(cClass) => cClass.name === component.type || cClass.name === `_${component.type}`
+			);
 			if (!componentClass) throw new Error(`Component type ${component.type} not found`);
-			return componentClass.deserialize(component);
+			course.addComponent(componentClass.deserialize(component, course.meta));
 		});
-		return new Course(c.meta.name, c.meta.weeks, componentList, c.openComponent);
+		return course;
 	}
 	openComponent: Writable<number>;
 	meta: Writable<courseMeta>;
-	components: Writable<Component[]>;
-	updated = 0;
-	watchDerived() {
-		const watcher = derived(
-			[this.openComponent, this.meta, this.components],
-			(() => {
-				console.log('Triggering course update on:', this);
-				this.updated += 1;
-				return true;
-			}).bind(this)
-		);
-		this.components.subscribe(
-			(() => {
-				console.log('Triggering course update on:', this);
-				this.updated += 1;
-				return true;
-			}).bind(this)
-		);
-		console.log('Watching course:', this, watcher);
+	private _components: Writable<Component[]> = writable([]);
+	public get components(): Writable<Component[]> {
+		return this._components;
 	}
-	constructor(name = '', weeks = 0, components: Component[] = [], openComponent = 0) {
+	watchDerived() {
+		const d = derived([this.openComponent, this.meta, this._components], (e) => e);
+		d.subscribe(this.notify);
+	}
+	subscribe(f: Function) {
+		this.subscribers.push(f);
+		return () => {
+			const index = this.subscribers.indexOf(f);
+			if (index !== -1) {
+				this.subscribers.splice(index, 1);
+			}
+		};
+	}
+	notify = () => this.subscribers.forEach((f) => f());
+	addComponent(component: Component, open = true) {
+		component.subscribe(() => {
+			this.notify();
+		});
+		this._components.update((c) => {
+			return [...c, component];
+		});
+		if (open) this.openComponent.set(get(this.components).length - 1);
+	}
+	removeComponent(i: number) {
+		if (get(this.components).length === 1) {
+			this._components.set([]);
+		} else {
+			this._components.update((c) => {
+				c.splice(i, 1);
+				return c;
+			});
+		}
+		this.openComponent.set(-1);
+	}
+	constructor(
+		name = '',
+		weeks = 0,
+		components: Component[] = [],
+		openComponent = 0,
+		private subscribers: Function[] = []
+	) {
 		this.openComponent = writable(openComponent);
 		this.meta = writable({ name, weeks });
-		this.components = writable(components);
+		components.forEach((c) => this.addComponent(c));
 		this.watchDerived();
 	}
 }

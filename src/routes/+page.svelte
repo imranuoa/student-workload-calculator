@@ -1,17 +1,12 @@
 <script lang="ts">
-	import { tick } from 'svelte';
-	import { fade, slide } from 'svelte/transition';
 	import { clickOutside } from 'svelte-use-click-outside';
-	import components, { Component, type ComponentSubClass } from '$lib/components';
-	import deepClone from 'deep-clone';
 	import ResultTable from '$lib/result-table/resultTable.svelte';
-	import { courses, activeCourse } from '../store';
-	import { get } from 'svelte/store';
+	import { courses, activeCourse, addCourse } from '../store';
 	import { Course } from '$lib/course';
 	import EditForm from '$lib/editForm.svelte';
 	import ComponentList from '$lib/add-component/componentList.svelte';
-
-	let initialFormEl: HTMLElement;
+	import CourseSelect from '$lib/add-course/courseSelect.svelte';
+	import CreateCourse from '$lib/add-course/createCourse.svelte';
 
 	let addComponentOpen: boolean;
 
@@ -33,71 +28,50 @@
 	) {
 		$openComponent = -1;
 	}
-
-	const addCourse = () => {
-		console.log('Adding Course!');
-		const course = new Course('Your Course', 12);
-		course.components.set([new components[0](course.meta)]);
-		$courses = [...$courses, course];
-	};
-	// $: console.log($courses);
-	// $: console.log(activeCourseInst);
-	// $: console.log($activeCourseMeta);
-	// $: console.log($activeCourseComponents);
-
-	const init = async () => {
-		if ($courses.length === 0) {
-			addCourse();
-			$activeCourse = 0;
-			await tick();
-		}
-	};
-	init();
 </script>
 
-<div
-	class="calculator-layout"
-	class:expandComponents={addComponentOpen}
-	class:expandResults={!openComponentInst}
->
-	<div
-		class="components"
-		use:clickOutside={() => {
-			addComponentOpen = false;
-		}}
-	>
-		{#if !activeCourseInst}
-			<h2>Select a Course</h2>
-			{#each $courses as course, i}
-				<button
-					class="btn"
-					on:click={() => {
-						$activeCourse = i;
-					}}>{get(course.meta).name}</button
-				>
-			{/each}
-		{:else if $activeCourseMeta && $activeCourseComponents}
-			<ComponentList bind:activeCourse={activeCourseInst} bind:addComponentOpen />
-		{/if}
-	</div>
-	<div class="config">
-		<EditForm bind:components={$activeCourseComponents} {openComponent} />
-	</div>
-	<div class="results">
-		{#if $activeCourseComponents && $activeCourseMeta}
-			<ResultTable
-				components={$activeCourseComponents}
-				courseWeeks={$activeCourseMeta.weeks}
-				bind:openComponent={$openComponent}
-				on:selectComponent={({ detail }) => {
-					const matchedIndex = $activeCourseComponents?.findIndex((c) => c == detail);
-					if (matchedIndex === $openComponent) $openComponent = -1;
-					else if (matchedIndex !== -1) $openComponent = matchedIndex;
+{#if activeCourseInst && $activeCourseMeta && $activeCourseComponents}
+	{#key $activeCourse}
+		<div
+			class="calculator-layout"
+			class:expandComponents={addComponentOpen}
+			class:expandResults={!openComponentInst}
+		>
+			<div
+				class="components"
+				use:clickOutside={() => {
+					addComponentOpen = false;
 				}}
-			/>
-		{/if}
-	</div>
-</div>
+			>
+				<CourseSelect {courses} {activeCourse} />
+
+				<hr />
+				<ComponentList bind:activeCourse={activeCourseInst} bind:addComponentOpen />
+			</div>
+			{#if activeCourseInst}
+				<div class="config">
+					<EditForm bind:components={$activeCourseComponents} {openComponent} />
+				</div>
+				<div class="results">
+					{#if $activeCourseComponents && $activeCourseMeta}
+						<ResultTable
+							components={$activeCourseComponents}
+							courseWeeks={$activeCourseMeta.weeks}
+							bind:openComponent={$openComponent}
+							on:selectComponent={({ detail }) => {
+								const matchedIndex = $activeCourseComponents?.findIndex((c) => c == detail);
+								if (matchedIndex === $openComponent) $openComponent = -1;
+								else if (matchedIndex !== -1) $openComponent = matchedIndex;
+							}}
+						/>
+					{/if}
+				</div>
+			{/if}
+		</div>
+	{/key}
+{:else}
+	<CreateCourse />
+{/if}
 
 <style lang="postcss">
 	.calculator-layout {

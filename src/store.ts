@@ -1,7 +1,7 @@
-import { writable } from 'svelte-local-storage-store';
+import { writable as localStorageStore } from 'svelte-local-storage-store';
 import { Course } from '$lib/course';
-import type { Writable } from 'svelte/store';
-// import { writable } from 'svelte/store';
+import { get, writable, type Writable } from 'svelte/store';
+import { PrimaryMeeting } from '$lib/components';
 
 const serializer = {
 	stringify(value: Course[]) {
@@ -10,11 +10,31 @@ const serializer = {
 		return JSON.stringify(serialized);
 	},
 	parse(value: string) {
-		return [];
+		const parsed: object[] = JSON.parse(value);
+		const courseList: Course[] = [];
+		parsed.forEach((c: any) => {
+			const course = Course.deserialize(c);
+			course.subscribe(notifyStore);
+			courseList.push(course);
+		});
+		console.log(parsed);
+		return courseList;
 	}
 };
 
-export const courses: Writable<Course[]> = writable('courses', [], { serializer });
-export const activeCourse: Writable<number> = writable('activeCourse', 0);
+const notifyStore = () => {
+	courses.update((c) => c);
+};
+
+export const courses: Writable<Course[]> = localStorageStore('courses', [], { serializer });
+export const activeCourse: Writable<number> = localStorageStore('activeCourse', -1);
 // export const courses: Writable<Course[]> = writable([]);
 // export const activeCourse: Writable<number> = writable(0);
+
+export const addCourse = (course = new Course('Your Course', 12)) => {
+	console.log('Adding Course!');
+	course.addComponent(new PrimaryMeeting(course.meta));
+	course.subscribe(notifyStore);
+	courses.update((c) => [...c, course]);
+	activeCourse.set(get(courses).length - 1);
+};

@@ -2,6 +2,7 @@ import type { Readable, Writable } from 'svelte/store';
 import rangeInput from './form-elems/rangeInput.svelte';
 import checkSelect from './form-elems/checkSelect.svelte';
 import textInput from './form-elems/textInput.svelte';
+import SingleSelect from './form-elems/singleSelect.svelte';
 
 export type formProps = { id: string; label: string; value: Writable<any>; [key: string]: any };
 
@@ -52,4 +53,21 @@ export class CheckSelectInput extends FormElement {
 	}
 }
 
-export const formTypes = [TextInput, RangeInput, CheckSelectInput];
+export class SingleSelectInput extends FormElement {
+	props;
+	component = SingleSelect;
+	constructor(
+		id: string,
+		value: Writable<number>, // Index
+		label: string,
+		props: {
+			options: Readable<string[] | any[]>;
+			key?: (option: any) => string;
+		}
+	) {
+		super(id, value, label);
+		this.props = { id, label, value, ...props };
+	}
+}
+
+export const formTypes = [TextInput, RangeInput, CheckSelectInput, SingleSelectInput];

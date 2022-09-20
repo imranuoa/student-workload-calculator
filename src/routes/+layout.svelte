@@ -1,5 +1,8 @@
 <script lang="ts">
+	import { BarLoader } from 'svelte-loading-spinners';
+
 	import '../app.postcss';
+	import { fade } from 'svelte/transition';
 </script>
 
 <div class="wrapper">
@@ -16,6 +19,11 @@
 		</p>
 	</header>
 	<div class="page">
+		<!-- {#if !$hasLoaded}
+			<div class="absolute top-0 left-0 w-full h-full text-center flex justify-center items-center">
+				<BarLoader size="60" color="#000" unit="px" />
+			</div>
+		{/if} -->
 		<slot />
 	</div>
 </div>

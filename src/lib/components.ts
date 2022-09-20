@@ -1,4 +1,3 @@
-import { formArraySerialize, writableSerialize } from '$lib/serialize';
 import { get, derived, readable, writable, type Readable, type Writable } from 'svelte/store';
 import type { courseMeta } from './course';
 import { type FormElement, RangeInput, TextInput, CheckSelectInput } from './form';
@@ -30,14 +29,16 @@ export const getComponentClass = (component: Component) => {
 
 export interface serializedComponent {
 	type: string;
-	props: Object;
+	props: {
+		[key: string]: any;
+	};
 }
 
 export abstract class Component {
 	static serialize(component: Component): serializedComponent {
 		throw new Error("Method 'serialize' not implemented.");
 	}
-	static deserialize(obj: serializedComponent): Component {
+	static deserialize(obj: serializedComponent, courseMeta: Writable<courseMeta>): Component {
 		throw new Error("Method 'deserialize' not implemented.");
 	}
 	// About the component
@@ -74,17 +75,19 @@ export abstract class Component {
 			};
 		});
 	}
-	constructor(courseMeta: Writable<courseMeta>) {}
-	updated = 0;
+	constructor(courseMeta: Writable<courseMeta>, private subscribers: Function[] = []) {}
+	subscribe(f: Function) {
+		this.subscribers.push(f);
+		return () => {
+			const index = this.subscribers.indexOf(f);
+			if (index !== -1) {
+				this.subscribers.splice(index, 1);
+			}
+		};
+	}
+	notify = () => this.subscribers.forEach((f) => f());
 	watchDerived() {
-		console.log('Watching component:', this);
-		this.derivedCalculated.subscribe(
-			(() => {
-				console.log('Triggering update on:', this);
-				this = this;
-				return true;
-			}).bind(this)
-		);
+		this.derivedCalculated.subscribe(this.notify);
 	}
 }
 
@@ -99,6 +102,18 @@ export class PrimaryMeeting extends Component {
 				weeksRunning: get(instance.weeksRunning)
 			}
 		};
+	}
+	static deserialize(obj: serializedComponent, courseMeta: Writable<courseMeta>): PrimaryMeeting {
+		const component = new PrimaryMeeting(courseMeta);
+		if (obj.props.hasOwnProperty('instanceName'))
+			component.instanceName.set(obj.props.instanceName);
+		if (obj.props.hasOwnProperty('meetingsPerWeek'))
+			component.meetingsPerWeek.set(obj.props.meetingsPerWeek);
+		if (obj.props.hasOwnProperty('meetingLength'))
+			component.meetingLength.set(obj.props.meetingLength);
+		if (obj.props.hasOwnProperty('weeksRunning'))
+			component.weeksRunning.set(obj.props.weeksRunning);
+		return component;
 	}
 	static label = 'Primary Meeting';
 	static icon = '🧑‍🏫';
@@ -155,13 +170,12 @@ export class PrimaryMeeting extends Component {
 // Type to allow the general idea of a component to be used for typing
 export type ComponentSubClass = {
 	new (courseMeta: Writable<courseMeta>): Component;
-} & typeof Component;
+} & { [K in keyof typeof Component]: typeof Component[K] };
 const components: ComponentSubClass[] = [PrimaryMeeting];
 
 components.push(components[0]);
 components.push(components[0]);
 components.push(components[0]);
-
 components.push(components[0]);
 components.push(components[0]);
 components.push(components[0]);
