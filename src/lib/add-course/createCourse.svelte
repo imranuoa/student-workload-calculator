@@ -3,7 +3,7 @@
 	import { courses, activeCourse, addCourse } from '../../store';
 
 	const newCourseData = {
-		name: 'New Course',
+		name: 'Your Course',
 		weeks: 12
 	};
 </script>

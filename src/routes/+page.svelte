@@ -45,7 +45,7 @@
 			>
 				<CourseSelect {courses} {activeCourse} />
 
-				<hr />
+				<hr class="my-2" />
 				<ComponentList bind:activeCourse={activeCourseInst} bind:addComponentOpen />
 			</div>
 			{#if activeCourseInst}

@@ -14,7 +14,7 @@
 		<h2>{$activeCourseMeta.name}</h2>
 	{/if}
 	<!-- Select list of courses -->
-	<label class="block">
+	<label class="block mt-2">
 		<span class="text-gray-700">Select Course</span>
 		<select class="form-select block w-full" bind:value={$activeCourse} on:change>
 			{#each $courses as option, i}
@@ -25,7 +25,7 @@
 		</select>
 	</label>
 
-	<label class="block">
+	<label class="block mt-2">
 		<span class="text-gray-700">Weeks in Semester</span>
 		<input
 			type="number"
