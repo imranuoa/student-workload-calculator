@@ -41,3 +41,11 @@ export const addCourse = (course = new Course('Your Course', 12)) => {
 	courses.update((c) => [...c, course]);
 	activeCourse.set(get(courses).length - 1);
 };
+
+export const deleteCourse = (i: number) => {
+	courses.update((c) => {
+		c.splice(i, 1);
+		return c;
+	});
+	activeCourse.set(-1);
+};

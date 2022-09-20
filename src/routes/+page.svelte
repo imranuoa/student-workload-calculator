@@ -6,7 +6,7 @@
 	import EditForm from '$lib/editForm.svelte';
 	import ComponentList from '$lib/add-component/componentList.svelte';
 	import CourseSelect from '$lib/add-course/courseSelect.svelte';
-	import CreateCourse from '$lib/add-course/createCourse.svelte';
+	import ManageCourses from '$lib/add-course/manageCourses.svelte';
 	import { fade } from 'svelte/transition';
 	// import arrowPattern from '$lib/assets/arrow-left.svg';
 
@@ -83,7 +83,7 @@
 		</div>
 	{/key}
 {:else}
-	<CreateCourse />
+	<ManageCourses />
 {/if}
 
 <style lang="postcss">
