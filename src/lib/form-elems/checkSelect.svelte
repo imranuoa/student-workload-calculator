@@ -82,20 +82,36 @@
 				@apply absolute opacity-0 pointer-events-none;
 			}
 			.daySelectText {
-				@apply grow py-2 text-center bg-slate-50 text-sm border-r border-slate-200 cursor-pointer transition;
+				@apply grow py-2 text-center bg-white text-sm cursor-pointer transition opacity-50;
+				@apply border-l border-r border-black border-opacity-10 scale-90;
+				@apply relative overflow-clip;
+				&:after {
+					@apply absolute top-0 bottom-0 left-0 right-0 m-auto pointer-events-none transition-all duration-300 delay-100;
+					@apply bg-red-500;
+					content: ' ';
+					width: 1px;
+					height: 141.42%;
+					transform: rotate(41deg);
+				}
 			}
 			&:last-child .daySelectText {
 				@apply border-r-0;
 			}
 			:checked + .daySelectText {
-				@apply bg-slate-700 text-white border-opacity-0;
+				@apply bg-white opacity-100 scale-100 text-green-700;
+				&:hover {
+					@apply bg-slate-100;
+				}
+				&:after {
+					@apply h-0 transition-none;
+				}
 			}
 			:focus + .daySelectText {
-				@apply outline outline-2 outline-slate-500;
+				@apply outline outline-2 outline-slate-300;
 				outline-offset: -2px;
 			}
 			:focus:checked + .daySelectText {
-				@apply outline outline-2 outline-slate-500;
+				@apply outline outline-2 outline-slate-300;
 				outline-offset: -2px;
 			}
 		}
