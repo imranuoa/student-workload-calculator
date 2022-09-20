@@ -33,9 +33,7 @@ export class Course {
 	static deserialize(c: serializedCourse) {
 		const course = new Course(c.meta.name, c.meta.weeks, [], c.openComponent);
 		c.components.forEach((component) => {
-			const componentClass = components.find(
-				(cClass) => cClass.name === component.type || cClass.name === `_${component.type}`
-			);
+			const componentClass = components.find((cClass) => cClass.type === component.type);
 			if (!componentClass) throw new Error(`Component type ${component.type} not found`);
 			course.addComponent(componentClass.deserialize(component, course.meta));
 		});

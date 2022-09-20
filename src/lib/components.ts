@@ -42,6 +42,7 @@ export abstract class Component {
 		throw new Error("Method 'deserialize' not implemented.");
 	}
 	// About the component
+	static type = 'Component';
 	static label: string;
 	static icon: string;
 	static description: string;
@@ -115,6 +116,7 @@ export class PrimaryMeeting extends Component {
 			component.weeksRunning.set(obj.props.weeksRunning);
 		return component;
 	}
+	static type = 'PrimaryMeeting';
 	static label = 'Primary Meeting';
 	static icon = '🧑‍🏫';
 	static description =
