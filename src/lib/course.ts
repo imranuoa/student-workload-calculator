@@ -1,20 +1,96 @@
-import { JsonObject, JsonProperty } from 'typescript-json-serializer';
-import type { Component } from '$lib/components';
-import { writable, type Writable } from 'svelte/store';
+import components, {
+	PrimaryMeeting,
+	Component,
+	getComponentClass,
+	type serializedComponent
+} from '$lib/components';
+import { derived, get, writable, type Writable } from 'svelte/store';
 
 export interface courseMeta {
 	name: string;
 	weeks: number;
 }
 
-@JsonObject()
+export interface serializedCourse {
+	meta: courseMeta;
+	openComponent: number;
+	components: serializedComponent[];
+}
+
 export class Course {
-	@JsonProperty() openComponent: Writable<number>;
-	@JsonProperty() meta: Writable<courseMeta>;
-	@JsonProperty() components: Writable<Component[]>;
-	constructor(name = '', weeks = 0, components = [], openComponent = 0) {
+	static serialize(c: Course): serializedCourse {
+		const components = get(c.components).map((component) => {
+			const compClass = getComponentClass(component);
+			return compClass.serialize(component);
+		});
+
+		return {
+			meta: get(c.meta),
+			openComponent: get(c.openComponent),
+			components
+		};
+	}
+	static deserialize(c: serializedCourse) {
+		const course = new Course(c.meta.name, c.meta.weeks, [], c.openComponent);
+		c.components.forEach((component) => {
+			const componentClass = components.find(
+				(cClass) => cClass.name === component.type || cClass.name === `_${component.type}`
+			);
+			if (!componentClass) throw new Error(`Component type ${component.type} not found`);
+			course.addComponent(componentClass.deserialize(component, course.meta));
+		});
+		return course;
+	}
+	openComponent: Writable<number>;
+	meta: Writable<courseMeta>;
+	private _components: Writable<Component[]> = writable([]);
+	public get components(): Writable<Component[]> {
+		return this._components;
+	}
+	watchDerived() {
+		const d = derived([this.openComponent, this.meta, this._components], (e) => e);
+		d.subscribe(this.notify);
+	}
+	subscribe(f: Function) {
+		this.subscribers.push(f);
+		return () => {
+			const index = this.subscribers.indexOf(f);
+			if (index !== -1) {
+				this.subscribers.splice(index, 1);
+			}
+		};
+	}
+	notify = () => this.subscribers.forEach((f) => f());
+	addComponent(component: Component, open = true) {
+		component.subscribe(() => {
+			this.notify();
+		});
+		this._components.update((c) => {
+			return [...c, component];
+		});
+		if (open) this.openComponent.set(get(this.components).length - 1);
+	}
+	removeComponent(i: number) {
+		if (get(this.components).length === 1) {
+			this._components.set([]);
+		} else {
+			this._components.update((c) => {
+				c.splice(i, 1);
+				return c;
+			});
+		}
+		this.openComponent.set(-1);
+	}
+	constructor(
+		name = '',
+		weeks = 0,
+		components: Component[] = [],
+		openComponent = 0,
+		private subscribers: Function[] = []
+	) {
 		this.openComponent = writable(openComponent);
 		this.meta = writable({ name, weeks });
-		this.components = writable(components);
+		components.forEach((c) => this.addComponent(c));
+		this.watchDerived();
 	}
 }

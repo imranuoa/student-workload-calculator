@@ -14,33 +14,9 @@
 	$: courseMeta = activeCourse.meta;
 	$: courseComponents = activeCourse.components;
 	$: courseOpenComponent = activeCourse.openComponent;
-
-	const addComponent = async (component: ComponentSubClass) => {
-		// TODO: Handle unsaved changes
-		if (!activeCourse) return; // Need to have a course open
-		$courseComponents = [...$courseComponents, new component(activeCourse.meta)];
-		const numCourses = $courseComponents.length;
-		activeCourse.openComponent.set(numCourses - 1);
-		addComponentOpen = false;
-		await tick();
-		// initialFormEl?.focus();
-	};
-	const deleteComponent = async (i: number) => {
-		if ($courseComponents.length === 1) {
-			$courseComponents = [];
-		} else {
-			$courseComponents = $courseComponents.splice(i, 1);
-		}
-		await tick();
-		activeCourse.openComponent.set(-1);
-	};
 </script>
 
 <div class="componentList">
-	<label class="block">
-		<span class="text-gray-700">Weeks in Semester</span>
-		<input type="number" class="form-input mt-1 block w-full" bind:value={$courseMeta.weeks} />
-	</label>
 	<h2>
 		<span> Components: </span>
 		<button
@@ -54,7 +30,13 @@
 		</button>
 	</h2>
 	{#if addComponentOpen}
-		<AddComponentMenu {components} on:add={({ detail }) => addComponent(detail)} />
+		<AddComponentMenu
+			{components}
+			on:add={({ detail }) => {
+				activeCourse?.addComponent(new detail(activeCourse.meta));
+				addComponentOpen = false;
+			}}
+		/>
 	{/if}
 	{#if $courseComponents.length === 0 && !addComponentOpen}
 		<p in:fade class="text-gray-500 text-center italic m-5">
@@ -71,7 +53,7 @@
 				<ComponentListItem
 					{component}
 					active={$courseOpenComponent === i}
-					on:delete={() => deleteComponent(i)}
+					on:delete={() => activeCourse?.removeComponent(i)}
 					on:select={() => {
 						if ($courseOpenComponent === i) activeCourse.openComponent.set(-1);
 						else activeCourse.openComponent.set(i);

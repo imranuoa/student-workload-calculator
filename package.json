@@ -26,6 +26,7 @@
 		"prettier-plugin-svelte": "^2.7.0",
 		"svelte": "^3.44.0",
 		"svelte-check": "^2.7.1",
+		"svelte-loading-spinners": "^0.1.7",
 		"svelte-local-storage-store": "^0.3.1",
 		"svelte-preprocess": "^4.10.7",
 		"tailwindcss": "^3.1.5",
@@ -37,7 +38,6 @@
 	"dependencies": {
 		"deep-clone": "^3.0.3",
 		"svelte-table": "^0.5.0",
-		"svelte-use-click-outside": "^1.0.0",
-		"typescript-json-serializer": "^4.3.0"
+		"svelte-use-click-outside": "^1.0.0"
 	}
 }
