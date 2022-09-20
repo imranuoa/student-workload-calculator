@@ -147,29 +147,29 @@
 			.components {
 				@apply shadow-2xl pulsehint;
 				:global(.add-component) {
-					@apply pulsehint;
+					@apply pulsehint transition;
 				}
 			}
-		}
-		.no-components-results {
-			@apply w-full h-96 flex items-center justify-center  relative overflow-clip;
-			.arrows-wrap {
-				@apply absolute top-0 bottom-0 m-auto right-0 z-0 opacity-20 w-full;
-				--arrow-size: 3rem;
-				--num-arrows: 4;
-				height: calc(var(--arrow-size) * var(--num-arrows));
-				.arrows {
-					@apply absolute top-0 right-0 h-full;
-					width: calc(100% + var(--arrow-size));
-					background-image: url('$lib/assets/arrow-left.svg');
-					background-repeat: repeat;
-					background-size: var(--arrow-size);
-					animation: shiftBackground 6s linear infinite;
+			.no-components-results {
+				@apply w-full h-96 flex items-center justify-center  relative overflow-clip;
+				.arrows-wrap {
+					@apply absolute top-0 bottom-0 m-auto right-0 z-0 opacity-20 w-full;
+					--arrow-size: 3rem;
+					--num-arrows: 4;
+					height: calc(var(--arrow-size) * var(--num-arrows));
+					.arrows {
+						@apply absolute top-0 right-0 h-full;
+						width: calc(100% + var(--arrow-size));
+						background-image: url('$lib/assets/arrow-left.svg');
+						background-repeat: repeat;
+						background-size: var(--arrow-size);
+						animation: shiftBackground 6s linear infinite;
+					}
+					mask-image: linear-gradient(to left, transparent, black, transparent);
 				}
-				mask-image: linear-gradient(to left, transparent, black, transparent);
-			}
-			.hint {
-				@apply text-center italic m-5 max-w-lg bg-white p-10 rounded shadow border-dashed border-4 border-slate-200 z-10;
+				.hint {
+					@apply text-center italic m-5 max-w-lg bg-white p-10 rounded shadow border-dashed border-4 border-slate-200 z-10;
+				}
 			}
 		}
 	}

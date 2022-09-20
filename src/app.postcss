@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 .btn {
-	@apply rounded shadow bg-slate-700 text-white px-3 py-1 inline-block;
+	@apply rounded shadow bg-slate-700 text-white px-3 py-1 inline-block transition;
 	&.btn-block {
 		@apply block w-full;
 	}
@@ -16,6 +16,9 @@
 	}
 	&.btn-primary {
 		@apply bg-blue-600;
+	}
+	&:hover {
+		transform: scale(1.03);
 	}
 }
 
