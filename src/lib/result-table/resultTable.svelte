@@ -138,7 +138,7 @@
 		tr.head {
 			@apply h-10 bg-slate-700 text-white shadow;
 			th {
-				@apply border-l border-slate-600;
+				@apply border-l border-slate-600 px-3;
 			}
 			th:first-child {
 				@apply rounded-tl rounded-bl border-l-0;
@@ -151,7 +151,7 @@
 			tr.foot {
 				@apply h-10 text-center text-gray-700 font-bold border-slate-300 border-t;
 				td {
-					@apply border-l border-slate-300;
+					@apply border-l border-slate-300 px-3;
 				}
 				td:first-child {
 					@apply rounded-tl rounded-bl border-l-0;

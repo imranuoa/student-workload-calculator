@@ -13,7 +13,7 @@
 
 <div class="component-grid mb-5" transition:slide>
 	{#each components as component, i}
-		<button class="btn" on:click={() => dispatch('add', component)}>
+		<button class="btn btn-primary" on:click={() => dispatch('add', component)}>
 			<span class="icon">{component.icon}</span>
 			<span class="label">{component.label}</span>
 		</button>
@@ -25,7 +25,7 @@
 		@apply grid grid-cols-5 gap-2;
 		.btn {
 			/* Default */
-			@apply flex flex-col items-center justify-center w-full relative rounded-lg bg-gray-100 text-gray-700 outline-gray-400 outline-0 outline overflow-hidden;
+			@apply flex flex-col items-center justify-center w-full relative rounded-lg  outline-blue-400 outline-0 outline overflow-hidden;
 			/* On Hover */
 			@apply transition hover:shadow-md hover:outline-2;
 			.icon {

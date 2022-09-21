@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { Course } from '$lib/course';
 	import { courses, activeCourse, addCourse, deleteCourse } from '../../store';
-	import CoursePickerOption from './coursePickerOption.svelte';
+	import CoursePickerOption from '$lib/add-course/coursePickerOption.svelte';
+	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 
 	let editingCourse = 0;
 
@@ -10,6 +12,11 @@
 	const newCourseData = {
 		name: 'Your Course',
 		weeks: 12
+	};
+
+	const openCourse = (i: number = editingCourse) => {
+		$activeCourse = i;
+		goto('/');
 	};
 </script>
 
@@ -44,22 +51,13 @@
 				</div>
 			</label>
 			<br />
-			<button class="btn btn-lg btn-primary" on:click={() => ($activeCourse = editingCourse)}
-				>Go to Course</button
-			>
+			<button class="btn btn-lg btn-primary" on:click={() => openCourse()}>Go to Course</button>
 			<button
 				class="btn btn-lg btn-danger"
 				on:click={() => {
 					deleteCourse(editingCourse);
 					editingCourse = 0;
 				}}>Delete Course</button
-			>
-			<button
-				class="btn btn-lg btn-danger"
-				on:click={() => {
-					deleteCourse(editingCourse);
-					editingCourse = 0;
-				}}>Export Course</button
 			>
 		{/if}
 	</div>

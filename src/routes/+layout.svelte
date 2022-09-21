@@ -3,6 +3,13 @@
 
 	import '../app.postcss';
 	import { fade } from 'svelte/transition';
+
+	const resetPrompt = () => {
+		if (confirm('Are you sure you want to reset the calculator?')) {
+			localStorage.clear();
+			location.reload();
+		}
+	};
 </script>
 
 <div class="wrapper">
@@ -26,12 +33,17 @@
 		{/if} -->
 		<slot />
 	</div>
+	<div class="footer-push" />
+</div>
+<div class="footer">
+	<div class="reset-data">
+		<button on:click={() => resetPrompt()}>Reset Data</button>
+	</div>
 </div>
 
 <style lang="postcss">
 	.wrapper {
-		@apply grid gap-5;
-		height: 100vh;
+		@apply grid gap-5 -mb-24 min-h-screen;
 		grid-template-rows: auto 1fr;
 		grid-template-areas:
 			'header'
@@ -40,7 +52,7 @@
 	}
 	header {
 		@apply flex gap-5 pt-5 pl-5 pr-5;
-		grid-area: 'header';
+		grid-area: header;
 		justify-content: space-evenly;
 		flex-wrap: wrap;
 		h1 {
@@ -56,6 +68,24 @@
 		}
 	}
 	.page {
-		grid-area: 'page';
+		grid-area: page;
+		overflow-x: auto;
+		height: fit-content;
+	}
+
+	.footer-push,
+	.footer {
+		@apply h-24;
+	}
+
+	.footer {
+		@apply w-full relative;
+		.reset-data {
+			@apply absolute bottom-0 right-0 p-6 max-h-24;
+			button {
+				@apply text-red-700 border-red-700;
+				@apply border-b border-dashed leading-4;
+			}
+		}
 	}
 </style>

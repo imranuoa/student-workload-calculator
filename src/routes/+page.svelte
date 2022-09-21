@@ -2,12 +2,11 @@
 	import { clickOutside } from 'svelte-use-click-outside';
 	import ResultTable from '$lib/result-table/resultTable.svelte';
 	import { courses, activeCourse, addCourse } from '../store';
-	import { Course } from '$lib/course';
 	import EditForm from '$lib/editForm.svelte';
 	import ComponentList from '$lib/add-component/manageComponents.svelte';
-	import CourseSelect from '$lib/add-course/courseSelect.svelte';
-	import ManageCourses from '$lib/add-course/manageCourses.svelte';
 	import { fade } from 'svelte/transition';
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	// import arrowPattern from '$lib/assets/arrow-left.svg';
 
 	let addComponentOpen: boolean;
@@ -30,6 +29,17 @@
 	) {
 		$openComponent = -1;
 	}
+
+	onMount(async () => {
+		if ($activeCourse === -1 || $courses.length === 0) {
+			$activeCourse = -1;
+			openCourseConfig();
+		}
+	});
+
+	const openCourseConfig = () => {
+		goto('/configure');
+	};
 </script>
 
 {#if activeCourseInst && $activeCourseMeta && $activeCourseComponents}
@@ -39,6 +49,7 @@
 			class:expandComponents={addComponentOpen}
 			class:hideConfig={!openComponentInst}
 			class:noComponents={$activeCourseComponents.length === 0}
+			class:hasComponents={$activeCourseComponents.length > 0}
 		>
 			<div
 				class="components"
@@ -46,7 +57,10 @@
 					addComponentOpen = false;
 				}}
 			>
-				<CourseSelect {courses} {activeCourse} />
+				<a href="/configure" class="btn float-right">Manage</a>
+				{#if activeCourseMeta}
+					<h2>{$activeCourseMeta.name}</h2>
+				{/if}
 
 				<hr class="my-2" />
 				<ComponentList bind:activeCourse={activeCourseInst} bind:addComponentOpen />
@@ -82,38 +96,50 @@
 			{/if}
 		</div>
 	{/key}
-{:else}
-	<ManageCourses />
 {/if}
 
 <style lang="postcss">
 	.calculator-layout {
-		@apply grid gap-10 mr-10 h-full pb-5 grid-cols-3;
-		--components-pane-default-width: 20rem;
-		grid-template-columns: var(--components-pane-default-width) auto 3fr;
+		@apply flex gap-8 m-8 min-h-full pb-5 flex-wrap;
+		--components-pane-width: 20rem;
+		--components-pane-extra-width: 0rem;
+		--config-pane-width: 25rem;
 
 		.components {
-			@apply shadow-lg bg-white p-4 rounded-r-lg h-full transition-all z-10;
-			width: var(--components-pane-default-width);
+			@apply shadow-lg bg-white p-4 rounded-r-lg transition-all z-10 -ml-8;
+			width: calc(var(--components-pane-width) + var(--components-pane-extra-width));
 		}
 
 		.config,
 		.results {
 			@apply duration-150 ease-in-out z-0;
+			@apply pt-4;
 			transition-property: margin-left, opacity;
 			margin-left: 0;
 		}
+		.results {
+			@apply basis-0;
+			flex-grow: 999;
+		}
 		.config {
-			width: 25rem;
+			@apply flex-grow;
+			flex-basis: var(--config-pane-width);
 		}
 		&.hideConfig {
 			.components {
 				@apply shadow-xl;
-				width: 30rem;
+				--components-pane-extra-width: 10rem;
 				z-index: 10;
 			}
+			&.expandComponents {
+				.components {
+					@apply shadow-2xl;
+					--components-pane-extra-width: 20rem;
+					margin-right: -10rem;
+				}
+			}
 			.config {
-				margin-left: -15rem;
+				margin-left: calc(var(--config-pane-width) * -1);
 			}
 			.results {
 				margin-left: -2.5rem;
@@ -123,7 +149,7 @@
 		&.expandComponents {
 			.components {
 				@apply shadow-xl;
-				width: 40rem;
+				--components-pane-extra-width: 20rem;
 				z-index: 10;
 			}
 			.config,
@@ -132,17 +158,6 @@
 			}
 		}
 
-		@media screen and (max-width: 60rem) {
-			.results {
-				grid-row-start: 2;
-				grid-column: 1 / -1;
-			}
-		}
-
-		.config,
-		.results {
-			@apply pt-4;
-		}
 		&.noComponents {
 			.components {
 				@apply shadow-2xl pulsehint;
@@ -152,7 +167,7 @@
 				}
 			}
 			.no-components-results {
-				@apply w-full h-96 flex items-center justify-center  relative overflow-clip;
+				@apply h-96 flex items-center justify-center  relative overflow-clip;
 				.arrows-wrap {
 					@apply absolute top-0 bottom-0 m-auto right-0 z-0 opacity-20 w-full;
 					--arrow-size: 3rem;
@@ -169,7 +184,7 @@
 					mask-image: linear-gradient(to left, transparent, black, transparent);
 				}
 				.hint {
-					@apply text-center italic m-5 max-w-lg bg-white p-10 rounded shadow border-dashed border-4 border-slate-200 z-10;
+					@apply text-center italic max-w-lg bg-white px-6 py-4 rounded shadow border-dashed border-4 border-slate-200 z-10;
 				}
 			}
 		}
@@ -178,6 +193,43 @@
 		animation: pulseHint 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 		animation-direction: alternate;
 	}
+
+	@media screen and (max-width: 1024px) {
+		.calculator-layout.hasComponents {
+			.components,
+			.config {
+				@apply grow ml-0 rounded-lg basis-80;
+				width: 50%;
+			}
+			.results {
+				@apply basis-full overflow-x-auto;
+			}
+			&.hideConfig {
+				.components {
+					@apply shadow-lg;
+				}
+				.components,
+				.config,
+				.results {
+					@apply mx-0;
+				}
+				.config {
+					@apply hidden;
+				}
+			}
+		}
+	}
+	@media screen and (max-width: 53rem) {
+		.calculator-layout.noComponents {
+			.no-components-results {
+				@apply hidden;
+			}
+			.components {
+				@apply ml-0 rounded-lg w-full;
+			}
+		}
+	}
+
 	@keyframes pulseHint {
 		from {
 			box-shadow: 0 0 10px 3px #4daafb;

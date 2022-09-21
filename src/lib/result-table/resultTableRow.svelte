@@ -86,7 +86,7 @@
 		}
 	}
 	td {
-		@apply border-l border-slate-300 relative transition;
+		@apply border-l border-slate-300 relative transition px-3;
 		&.warning {
 			@apply bg-yellow-200;
 		}
