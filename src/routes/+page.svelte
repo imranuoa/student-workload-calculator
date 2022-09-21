@@ -4,7 +4,7 @@
 	import { courses, activeCourse, addCourse } from '../store';
 	import { Course } from '$lib/course';
 	import EditForm from '$lib/editForm.svelte';
-	import ComponentList from '$lib/add-component/componentList.svelte';
+	import ComponentList from '$lib/add-component/manageComponents.svelte';
 	import CourseSelect from '$lib/add-course/courseSelect.svelte';
 	import ManageCourses from '$lib/add-course/manageCourses.svelte';
 	import { fade } from 'svelte/transition';
@@ -148,6 +148,7 @@
 				@apply shadow-2xl pulsehint;
 				:global(.add-component) {
 					@apply pulsehint transition;
+					@apply bg-blue-600;
 				}
 			}
 			.no-components-results {

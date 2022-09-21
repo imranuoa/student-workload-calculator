@@ -27,7 +27,7 @@
 		{$derivedCalculated.perWeekI + $derivedCalculated.perWeekS} Hrs per Week
 	</span>
 	<button
-		class="btn btn-block"
+		class="btn btn-block btn-danger"
 		aria-label="delete"
 		on:click={() => {
 			dispatch('delete', component);
