@@ -14,7 +14,7 @@
 
 <div class="wrapper">
 	<header>
-		<h1>Student Workload Calculator</h1>
+		<a href="/"><h1>Student Workload Calculator</h1></a>
 		<p>
 			This planning tool is for instructors who wish to estimate the expected student time
 			commitment in a course based on the assigned learning activities. The tool is designed to be
