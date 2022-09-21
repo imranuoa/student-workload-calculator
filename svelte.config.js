@@ -11,10 +11,9 @@ const config = {
 		})
 	],
 
-	trailingSlash: 'always',
-
 	kit: {
-		adapter: adapter()
+		trailingSlash: 'always',
+		adapter: adapter({})
 	}
 };
 
