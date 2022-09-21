@@ -13,41 +13,44 @@
 </script>
 
 <div class="wrapper">
-	<header>
-		<a href="/"><h1>Student Workload Calculator</h1></a>
-		<p>
-			This planning tool is for instructors who wish to estimate the expected student time
-			commitment in a course based on the assigned learning activities. The tool is designed to be
-			used for courses that represent the blended learning spectrum from face-to-face to fully
-			online. Based on the input provided, the tool calculates the total time commitment expected,
-			and allocates activities into scheduled (set by the institution, typically live meetings) and
-			independent (at the discretion of the student within the parameters set by course deadlines)
-			activities.
-		</p>
-	</header>
-	<div class="page">
-		<!-- {#if !$hasLoaded}
-			<div class="absolute top-0 left-0 w-full h-full text-center flex justify-center items-center">
-				<BarLoader size="60" color="#000" unit="px" />
-			</div>
-		{/if} -->
-		<slot />
+	<div class="layout">
+		<header>
+			<a href="/"><h1>Student Workload Calculator</h1></a>
+			<p>
+				This planning tool is for instructors who wish to estimate the expected student time
+				commitment in a course based on the assigned learning activities. The tool is designed to be
+				used for courses that represent the blended learning spectrum from face-to-face to fully
+				online. Based on the input provided, the tool calculates the total time commitment expected,
+				and allocates activities into scheduled (set by the institution, typically live meetings)
+				and independent (at the discretion of the student within the parameters set by course
+				deadlines) activities.
+			</p>
+		</header>
+		<div class="page">
+			<!-- {#if !$hasLoaded}
+				<div class="absolute top-0 left-0 w-full h-full text-center flex justify-center items-center">
+					<BarLoader size="60" color="#000" unit="px" />
+				</div>
+			{/if} -->
+			<slot />
+		</div>
+		<div class="footer-push" />
 	</div>
-	<div class="footer-push" />
-</div>
-<div class="footer">
-	<div class="reset-data">
-		<button on:click={() => resetPrompt()}>Reset Data</button>
+	<div class="footer">
+		<div class="reset-data">
+			<button on:click={() => resetPrompt()}>Reset Data</button>
+		</div>
 	</div>
 </div>
 
 <style lang="postcss">
-	.wrapper {
+	.layout {
 		@apply grid gap-5 -mb-24 min-h-screen;
-		grid-template-rows: auto 1fr;
+		grid-template-rows: auto 1fr auto;
 		grid-template-areas:
 			'header'
-			'page';
+			'page'
+			'footer';
 		background: linear-gradient(180deg, #f5f5f5 0%, #e5e5e5 100%);
 	}
 	header {
@@ -63,14 +66,14 @@
 		}
 		p {
 			max-width: 85ch;
-			min-width: 40ch;
+			/* min-width: 40ch; */
 			@apply font-light italic text-justify;
 		}
 	}
 	.page {
 		grid-area: page;
 		overflow-x: auto;
-		height: fit-content;
+		height: 100%;
 	}
 
 	.footer-push,

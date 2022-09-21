@@ -100,7 +100,7 @@
 
 <style lang="postcss">
 	.calculator-layout {
-		@apply flex gap-8 m-8 min-h-full pb-5 flex-wrap;
+		@apply flex gap-8 p-8 min-h-full pb-5 flex-wrap;
 		--components-pane-width: 20rem;
 		--components-pane-extra-width: 0rem;
 		--config-pane-width: 25rem;
