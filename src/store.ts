@@ -2,6 +2,7 @@ import { writable as localStorageStore } from 'svelte-local-storage-store';
 import { Course } from '$lib/course';
 import { get, writable, type Writable } from 'svelte/store';
 import { PrimaryMeeting } from '$lib/components';
+import { goto } from '$app/navigation';
 
 const storeVersion = '1.0.0';
 
@@ -40,6 +41,7 @@ export const addCourse = (course = new Course('Your Course', 12)) => {
 	course.subscribe(notifyStore);
 	courses.update((c) => [...c, course]);
 	activeCourse.set(get(courses).length - 1);
+	goto('/');
 };
 
 export const deleteCourse = (i: number) => {
