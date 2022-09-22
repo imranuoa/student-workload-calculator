@@ -5,29 +5,7 @@ import { Component, Frequency } from '$lib/course-components/genericComponent';
 import type { serializedComponent, calculatedResults, derivedCalculated } from '../components';
 
 export class PrimaryMeeting extends Component {
-	static serialize(instance: PrimaryMeeting): serializedComponent {
-		return {
-			type: 'PrimaryMeeting',
-			props: {
-				instanceName: get(instance.instanceName),
-				meetingsPerWeek: get(instance.meetingsPerWeek),
-				meetingLength: get(instance.meetingLength),
-				weeksRunning: get(instance.weeksRunning)
-			}
-		};
-	}
-	static deserialize(obj: serializedComponent, courseMeta: Writable<courseMeta>): PrimaryMeeting {
-		const component = new PrimaryMeeting(courseMeta);
-		if (obj.props.hasOwnProperty('instanceName'))
-			component.instanceName.set(obj.props.instanceName);
-		if (obj.props.hasOwnProperty('meetingsPerWeek'))
-			component.meetingsPerWeek.set(obj.props.meetingsPerWeek);
-		if (obj.props.hasOwnProperty('meetingLength'))
-			component.meetingLength.set(obj.props.meetingLength);
-		if (obj.props.hasOwnProperty('weeksRunning'))
-			component.weeksRunning.set(obj.props.weeksRunning);
-		return component;
-	}
+	static readonly writables = ['instanceName', 'meetingsPerWeek', 'meetingLength', 'weeksRunning'];
 	static type = 'PrimaryMeeting';
 	static label = 'Primary Meeting';
 	static icon = '🧑‍🏫';

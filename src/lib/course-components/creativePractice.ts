@@ -5,31 +5,14 @@ import { Component, Frequency } from '$lib/course-components/genericComponent';
 import type { serializedComponent, calculatedResults, derivedCalculated } from '../components';
 
 export class CreativePractice extends Component {
-	static serialize(instance: CreativePractice): serializedComponent {
-		return {
-			type: 'CreativePractice',
-			props: {
-				instanceName: get(instance.instanceName),
-				sessionsPerSem: get(instance.sessionsPerSem),
-				prepLength: get(instance.prepLength),
-				sessionLength: get(instance.sessionLength),
-				postLength: get(instance.postLength),
-				scheduled: get(instance.scheduled)
-			}
-		};
-	}
-	static deserialize(obj: serializedComponent, courseMeta: Writable<courseMeta>): CreativePractice {
-		const component = new CreativePractice(courseMeta);
-		if (obj.props.hasOwnProperty('instanceName'))
-			component.instanceName.set(obj.props.instanceName);
-		if (obj.props.hasOwnProperty('sessionsPerSem'))
-			component.sessionsPerSem.set(obj.props.sessionsPerSem);
-		if (obj.props.hasOwnProperty('prepLength')) component.prepLength.set(obj.props.prepLength);
-		if (obj.props.hasOwnProperty('sessionLength'))
-			component.sessionLength.set(obj.props.sessionLength);
-		if (obj.props.hasOwnProperty('postLength')) component.postLength.set(obj.props.postLength);
-		return component;
-	}
+	static readonly writables = [
+		'instanceName',
+		'sessionsPerSem',
+		'prepLength',
+		'sessionLength',
+		'postLength',
+		'scheduled'
+	];
 	static type = 'CreativePractice';
 	static label = 'Creative Practice';
 	static icon = '🎨';

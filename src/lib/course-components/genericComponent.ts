@@ -1,7 +1,7 @@
-import { derived, type Readable, type Writable } from 'svelte/store';
+import { derived, get, type Readable, type Writable } from 'svelte/store';
 import type { courseMeta } from '../course';
 import type { FormElement } from '../form';
-import { getComponentClass } from '../components';
+import { getComponentClass, type ComponentSubClass } from '../components';
 import type { serializedComponent, calculatedResults, derivedCalculated } from '../components';
 
 export enum Frequency {
@@ -9,12 +9,28 @@ export enum Frequency {
 	Semester
 }
 
+export type writableProperties = string[];
+
 export abstract class Component {
-	static serialize(component: Component): serializedComponent {
-		throw new Error("Method 'serialize' not implemented.");
+	static readonly writables: writableProperties = ['instanceName'];
+	static serialize(instance: Component): serializedComponent {
+		return {
+			type: 'Discussion',
+			props: this.writables.reduce((acc, cur) => {
+				acc[cur] = get((instance as any)[cur] as Readable<any>);
+				return acc;
+			}, {} as Record<string, any>)
+		};
 	}
 	static deserialize(obj: serializedComponent, courseMeta: Writable<courseMeta>): Component {
-		throw new Error("Method 'deserialize' not implemented.");
+		const component = new (this as ComponentSubClass)(courseMeta);
+
+		for (const prop of this.writables) {
+			if (obj.props[prop] !== undefined) {
+				((component as any)[prop] as Writable<any>).set(obj.props[prop]);
+			}
+		}
+		return component;
 	}
 	// About the component
 	static type = 'Component';

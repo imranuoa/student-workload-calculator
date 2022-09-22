@@ -10,7 +10,7 @@ import {
 	CheckboxInput
 } from '../form';
 import { Component, Frequency } from '$lib/course-components/genericComponent';
-import type { serializedComponent, calculatedResults, derivedCalculated } from '../components';
+import type { calculatedResults, derivedCalculated } from '../components';
 
 enum isSync {
 	Asynchronous = 0,
@@ -18,20 +18,18 @@ enum isSync {
 }
 
 export class Discussion extends Component {
-	static serialize(instance: Discussion): serializedComponent {
-		return {
-			type: 'Discussion',
-			props: {
-				instanceName: get(instance.instanceName)
-			}
-		};
-	}
-	static deserialize(obj: serializedComponent, courseMeta: Writable<courseMeta>): Discussion {
-		const component = new Discussion(courseMeta);
-		if (obj.props.hasOwnProperty('instanceName'))
-			component.instanceName.set(obj.props.instanceName);
-		return component;
-	}
+	static readonly writables = [
+		'instanceName',
+		'perSem',
+		'originalPosts',
+		'postLength',
+		'responses',
+		'responseLength',
+		'prepTime',
+		'isManual',
+		'manualTime',
+		'isSynchronous'
+	];
 	static type = 'Discussion';
 	static label = 'Discussion';
 	static icon = '💬';
@@ -115,10 +113,10 @@ export class Discussion extends Component {
 			),
 			new RangeInput('prepTime', this.prepTime, 'Prep Time (minutes)', {
 				min: 0,
-				max: 400
+				max: 300,
+				step: 15
 			})
 		];
-		// ((posts * postlength) / 250 + (responses * resplength) / 250) * numDisc
 		this.results = derived(
 			[
 				this.perSem,
