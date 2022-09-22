@@ -2,6 +2,8 @@ import type { Writable } from 'svelte/store';
 import type { courseMeta } from './course';
 import type { Component } from '$lib/course-components/genericComponent';
 import { PrimaryMeeting } from '$lib/course-components/primaryMeeting';
+import { CreativePractice } from '$lib/course-components/creativePractice';
+import { Discussion } from '$lib/course-components/discussion';
 
 export interface calculatedResults {
 	occurences: number;
@@ -35,6 +37,6 @@ export type ComponentSubClass = {
 	new (courseMeta: Writable<courseMeta>): Component;
 } & { [K in keyof typeof Component]: typeof Component[K] };
 
-export const components: ComponentSubClass[] = [PrimaryMeeting];
+export const components: ComponentSubClass[] = [PrimaryMeeting, CreativePractice, Discussion];
 
 export default components;

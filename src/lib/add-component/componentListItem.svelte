@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getComponentClass } from '$lib/components';
-	import type { Component } from '$lib/course-components/genericComponent';
+	import { Frequency, type Component } from '$lib/course-components/genericComponent';
 	import { createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher();
@@ -9,6 +9,7 @@
 	export let component: Component;
 
 	$: instanceName = component.instanceName;
+	$: freq = getComponentClass(component).freq;
 	$: derivedCalculated = component.derivedCalculated;
 </script>
 
@@ -25,7 +26,11 @@
 	</span>
 	<span class="name">{$instanceName}</span>
 	<span class="hours">
-		{$derivedCalculated.perWeekI + $derivedCalculated.perWeekS} Hrs per Week
+		{#if freq == Frequency.Weekly}
+			{$derivedCalculated.perWeekI + $derivedCalculated.perWeekS} Hrs per Week
+		{:else}
+			{$derivedCalculated.perSemI + $derivedCalculated.perSemS} Hrs per Sem
+		{/if}
 	</span>
 	<button
 		class="btn btn-block btn-danger"
