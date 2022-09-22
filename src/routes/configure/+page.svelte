@@ -106,14 +106,14 @@
 
 <style lang="postcss">
 	.layout {
-		@apply flex min-h-full flex-wrap justify-center p-8 gap-8;
+		@apply grid xl:grid-cols-3 grid-cols-1 min-h-full justify-center justify-items-center p-8 gap-8;
 		.createPane {
-			@apply max-w-xl flex flex-col gap-8;
+			@apply flex flex-col gap-8 order-2 xl:order-none;
 		}
 		.editPane {
-			@apply max-w-5xl grow;
+			@apply grow order-1 xl:order-none lg:col-span-2 w-full;
 			.editPane-items {
-				@apply gap-8 grid grid-cols-1 lg:grid-cols-2 items-start;
+				@apply gap-8 grid grid-cols-1 md:grid-cols-2 items-center md:items-start;
 			}
 		}
 	}

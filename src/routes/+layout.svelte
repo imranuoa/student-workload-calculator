@@ -3,6 +3,7 @@
 
 	import '../app.postcss';
 	import { fade } from 'svelte/transition';
+	import { courses, activeCourse } from '../store';
 
 	const resetPrompt = () => {
 		if (
@@ -14,12 +15,17 @@
 			location.reload();
 		}
 	};
+
+	$: activeCourseInst = $activeCourse >= 0 ? $courses[$activeCourse] : undefined;
+	$: activeCourseMeta = activeCourseInst?.meta;
 </script>
 
 <div class="wrapper">
 	<div class="layout">
 		<header>
-			<a href="/"><h1>Student Workload Calculator</h1></a>
+			<div class="title flex">
+				<a href="/"><h1>Student Workload Calculator</h1></a>
+			</div>
 			<p>
 				This planning tool is for instructors who wish to estimate the expected student time
 				commitment in a course based on the assigned learning activities. The tool is designed to be
@@ -82,13 +88,12 @@
 
 	.footer-push,
 	.footer {
-		@apply h-24;
+		@apply h-12;
 	}
 
 	.footer {
-		@apply w-full relative;
+		@apply fixed bottom-0 flex justify-end p-5 pt-0 w-full h-12 items-end;
 		.reset-data {
-			@apply absolute bottom-0 right-0 p-6 max-h-24;
 			button {
 				@apply text-red-700 border-red-700;
 				@apply border-b border-dashed leading-4;

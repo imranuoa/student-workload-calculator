@@ -41,6 +41,9 @@
 	.component-row {
 		@apply grid p-1 items-center rounded transition;
 		grid-template-columns: 4ch 1fr auto auto;
+		&:hover {
+			@apply bg-gray-100;
+		}
 		&.active {
 			@apply bg-gray-200;
 		}

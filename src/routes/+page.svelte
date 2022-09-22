@@ -57,11 +57,12 @@
 					addComponentOpen = false;
 				}}
 			>
-				<a href="/configure" class="btn float-right">Manage</a>
-				{#if activeCourseMeta}
-					<h2>{$activeCourseMeta.name}</h2>
-				{/if}
-
+				<div class="title">
+					<a href="/configure" class="btn configure" title="return to course list">&leftarrow;</a>
+					{#if activeCourseMeta}
+						<h2>{$activeCourseMeta.name}</h2>
+					{/if}
+				</div>
 				<hr class="my-2" />
 				<ComponentList bind:activeCourse={activeCourseInst} bind:addComponentOpen />
 			</div>
@@ -108,6 +109,17 @@
 		.components {
 			@apply shadow-lg bg-white p-4 rounded-r-lg transition-all z-10 -ml-8;
 			width: calc(var(--components-pane-width) + var(--components-pane-extra-width));
+			.title {
+				@apply grid items-center gap-4;
+				grid-template-columns: auto 1fr;
+				grid-template-areas: 'button title';
+				.h1 {
+					grid-area: title;
+				}
+				.btn {
+					grid-area: button;
+				}
+			}
 		}
 
 		.config,
@@ -147,14 +159,17 @@
 		}
 
 		&.expandComponents {
+			--components-pane-extra-width: 20rem;
 			.components {
 				@apply shadow-xl;
-				--components-pane-extra-width: 20rem;
 				z-index: 10;
 			}
 			.config,
 			.results {
-				@apply opacity-30;
+				@apply opacity-30 pointer-events-none;
+			}
+			.config {
+				margin-left: calc(var(--components-pane-extra-width) * -1);
 			}
 		}
 
