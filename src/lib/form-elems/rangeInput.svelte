@@ -18,7 +18,7 @@
 	.rangeInputFlex {
 		@apply flex gap-4;
 		input[type='number'] {
-			@apply w-16;
+			@apply w-20;
 		}
 		input[type='range'] {
 			@apply flex-grow;

@@ -118,10 +118,26 @@
 	<tfoot>
 		<tr class="foot">
 			<td>Median / Total</td>
-			<td>{$totals.perWeekI.median} / {$totals.perWeekI.total}</td>
-			<td>{$totals.perWeekS.median} / {$totals.perWeekS.total}</td>
-			<td>{$totals.perSemI.median} / {$totals.perSemI.total}</td>
-			<td>{$totals.perSemS.median} / {$totals.perSemS.total}</td>
+			<td
+				>{Math.round($totals.perWeekI.median * 100) / 100} / {Math.round(
+					$totals.perWeekI.total * 100
+				) / 100}</td
+			>
+			<td
+				>{Math.round($totals.perWeekS.median * 100) / 100} / {Math.round(
+					$totals.perWeekS.total * 100
+				) / 100}</td
+			>
+			<td
+				>{Math.round($totals.perSemI.median * 100) / 100} / {Math.round(
+					$totals.perSemI.total * 100
+				) / 100}</td
+			>
+			<td
+				>{Math.round($totals.perSemS.median * 100) / 100} / {Math.round(
+					$totals.perSemS.total * 100
+				) / 100}</td
+			>
 		</tr>
 	</tfoot>
 </table>

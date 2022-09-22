@@ -4,13 +4,31 @@ import checkSelect from './form-elems/checkSelect.svelte';
 import textInput from './form-elems/textInput.svelte';
 import SingleSelect from './form-elems/singleSelect.svelte';
 import numberInput from './form-elems/numberInput.svelte';
+import conditionalInputs from './form-elems/conditionalInputs.svelte';
+import checkboxInput from './form-elems/checkboxInput.svelte';
 
-export type formProps = { id: string; label: string; value: Writable<any>; [key: string]: any };
+export type formProps = { id: string; label: string; value: Readable<any>; [key: string]: any };
 
 export abstract class FormElement {
 	abstract component: any;
 	abstract props: formProps;
-	constructor(id: string, value: Writable<any>, label: string, props?: object) {}
+	constructor(id: string, value: Readable<any>, label: string, props?: object) {}
+}
+
+export class ConditionalInput extends FormElement {
+	component = conditionalInputs;
+	props;
+	constructor(
+		id: string,
+		value: Readable<boolean>,
+		label: string,
+		props: {
+			elements: FormElement[];
+		}
+	) {
+		super(id, value, label);
+		this.props = { id, label, value, elements: props.elements };
+	}
 }
 
 export class TextInput extends FormElement {
@@ -26,6 +44,15 @@ export class NumberInput extends FormElement {
 	component = numberInput;
 	props;
 	constructor(id: string, value: Writable<number>, label: string) {
+		super(id, value, label);
+		this.props = { id, label, value };
+	}
+}
+
+export class CheckboxInput extends FormElement {
+	component = checkboxInput;
+	props;
+	constructor(id: string, value: Writable<boolean>, label: string) {
 		super(id, value, label);
 		this.props = { id, label, value };
 	}
@@ -80,4 +107,11 @@ export class SingleSelectInput extends FormElement {
 	}
 }
 
-export const formTypes = [TextInput, NumberInput, RangeInput, CheckSelectInput, SingleSelectInput];
+export const formTypes = [
+	TextInput,
+	NumberInput,
+	RangeInput,
+	CheckSelectInput,
+	SingleSelectInput,
+	conditionalInputs
+];

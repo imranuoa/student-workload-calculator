@@ -50,7 +50,7 @@ export class CreativePractice extends Component {
 		super(courseMeta);
 		this.form = [
 			new TextInput('componentName', this.instanceName, 'Component Name'),
-			new NumberInput('sessionsPerSem', this.sessionsPerSem, 'Meetings per week'),
+			new NumberInput('sessionsPerSem', this.sessionsPerSem, 'Sessions Per Semester'),
 			new RangeInput('prepLength', this.prepLength, 'Session Prep Time (Hours)', {
 				min: 0,
 				max: 14
