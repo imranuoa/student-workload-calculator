@@ -44,10 +44,10 @@ export abstract class Component {
 				$results.independantHoursPer + $results.prepHoursPer + $results.postActivityHoursPer;
 			let SPerOcc = $results.scheduledHoursPer;
 			return {
-				perWeekI: perWeek * IPerOcc,
-				perWeekS: perWeek * SPerOcc,
-				perSemI: perSem * IPerOcc,
-				perSemS: perSem * SPerOcc
+				perWeekI: Math.round(perWeek * IPerOcc * 100) / 100,
+				perWeekS: Math.round(perWeek * SPerOcc * 100) / 100,
+				perSemI: Math.round(perSem * IPerOcc * 100) / 100,
+				perSemS: Math.round(perSem * SPerOcc * 100) / 100
 			};
 		});
 	}
@@ -64,5 +64,6 @@ export abstract class Component {
 	notify = () => this.subscribers.forEach((f) => f());
 	watchDerived() {
 		this.derivedCalculated.subscribe(this.notify);
+		this.instanceName.subscribe(this.notify);
 	}
 }

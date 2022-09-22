@@ -3,6 +3,7 @@ import rangeInput from './form-elems/rangeInput.svelte';
 import checkSelect from './form-elems/checkSelect.svelte';
 import textInput from './form-elems/textInput.svelte';
 import SingleSelect from './form-elems/singleSelect.svelte';
+import numberInput from './form-elems/numberInput.svelte';
 
 export type formProps = { id: string; label: string; value: Writable<any>; [key: string]: any };
 
@@ -16,6 +17,15 @@ export class TextInput extends FormElement {
 	component = textInput;
 	props;
 	constructor(id: string, value: Writable<string>, label: string) {
+		super(id, value, label);
+		this.props = { id, label, value };
+	}
+}
+
+export class NumberInput extends FormElement {
+	component = numberInput;
+	props;
+	constructor(id: string, value: Writable<number>, label: string) {
 		super(id, value, label);
 		this.props = { id, label, value };
 	}
@@ -70,4 +80,4 @@ export class SingleSelectInput extends FormElement {
 	}
 }
 
-export const formTypes = [TextInput, RangeInput, CheckSelectInput, SingleSelectInput];
+export const formTypes = [TextInput, NumberInput, RangeInput, CheckSelectInput, SingleSelectInput];
