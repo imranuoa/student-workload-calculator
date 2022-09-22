@@ -3,7 +3,7 @@
 	import { derived, get } from 'svelte/store';
 	import { onMount } from 'svelte';
 	import csvDownload from 'json-to-csv-export';
-	import type { Component } from '$lib/components';
+	import type { Component } from '$lib/course-components/genericComponent';
 	import ResultTableRow from './resultTableRow.svelte';
 
 	const dispatch = createEventDispatcher();

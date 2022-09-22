@@ -27,16 +27,11 @@
 		input.type = 'file';
 		input.multiple = false;
 		input.accept = 'application/json';
-		input.onchange = () => {
+		input.onchange = async () => {
 			if (!input.files?.length) return;
 			const file = input.files[0];
-			var reader = new FileReader();
-			reader.readAsText(file, 'UTF-8');
-			reader.onload = (readerEvent) => {
-				if (!readerEvent.target?.result) return;
-				var content = readerEvent.target.result; // this is the content!
-				importCourseData(content);
-			};
+			const content = await file.text();
+			importCourseData(content);
 		};
 		input.click();
 	};

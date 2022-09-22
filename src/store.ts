@@ -1,7 +1,7 @@
 import { writable as localStorageStore } from 'svelte-local-storage-store';
 import { Course } from '$lib/course';
 import { get, writable, type Writable } from 'svelte/store';
-import { PrimaryMeeting } from '$lib/components';
+import { PrimaryMeeting } from '$lib/course-components/primaryMeeting';
 import { goto } from '$app/navigation';
 
 const storeVersion = '1.0.0';
@@ -69,10 +69,14 @@ export const exportCourseData = () => {
 };
 
 export const importCourseData = (data: string) => {
-	const courseData = JSON.parse(data);
-	courseData.forEach((c: any) => {
-		const course = Course.deserialize(c);
-		course.subscribe(notifyStore);
-		courses.update((c) => [...c, course]);
-	});
+	try {
+		const courseData = JSON.parse(data);
+		courseData.forEach((c: any) => {
+			const course = Course.deserialize(c);
+			course.subscribe(notifyStore);
+			courses.update((c) => [...c, course]);
+		});
+	} catch (error) {
+		console.error(error);
+	}
 };

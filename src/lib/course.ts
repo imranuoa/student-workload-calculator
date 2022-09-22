@@ -1,9 +1,5 @@
-import components, {
-	PrimaryMeeting,
-	Component,
-	getComponentClass,
-	type serializedComponent
-} from '$lib/components';
+import components, { getComponentClass, type serializedComponent } from '$lib/components';
+import type { Component } from '$lib/course-components/genericComponent';
 import { derived, get, writable, type Writable } from 'svelte/store';
 
 export interface courseMeta {

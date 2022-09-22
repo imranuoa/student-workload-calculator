@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Readable } from 'svelte/store';
 	import { createEventDispatcher } from 'svelte';
-	import type { Component } from '$lib/components';
+	import type { Component } from '$lib/course-components/genericComponent';
 
 	const dispatch = createEventDispatcher();
 

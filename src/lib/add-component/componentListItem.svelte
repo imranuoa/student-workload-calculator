@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { Component, getComponentClass } from '$lib/components';
+	import { getComponentClass } from '$lib/components';
+	import type { Component } from '$lib/course-components/genericComponent';
 	import { createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher();

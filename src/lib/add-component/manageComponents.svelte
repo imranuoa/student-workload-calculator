@@ -1,10 +1,7 @@
 <script lang="ts">
 	import AddComponentMenu from '$lib/add-component/addComponent.svelte';
-	import components, { Component, getComponentClass } from '$lib/components';
-	import type { ComponentSubClass } from '$lib/components';
-	import type { Course, courseMeta as courseMetaType } from '$lib/course';
-	import type { Writable } from 'svelte/store';
-	import { tick } from 'svelte';
+	import type { Course } from '$lib/course';
+	import { components } from '$lib/components';
 	import { fade } from 'svelte/transition';
 	import ComponentListItem from './componentListItem.svelte';
 

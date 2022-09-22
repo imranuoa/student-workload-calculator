@@ -1,11 +1,7 @@
 <script lang="ts">
 	import type { Readable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
-	import type { Component } from './components';
-	import type { FormElement } from './form';
-	import CheckSelect from './form-elems/checkSelect.svelte';
-	import RangeInput from './form-elems/rangeInput.svelte';
-	import TextInput from './form-elems/textInput.svelte';
+	import type { Component } from '$lib/course-components/genericComponent';
 
 	export let components: Component[] | undefined;
 	export let openComponent: Readable<number> | undefined;
