@@ -5,7 +5,11 @@
 	import { fade } from 'svelte/transition';
 
 	const resetPrompt = () => {
-		if (confirm('Are you sure you want to reset the calculator?')) {
+		if (
+			confirm(
+				'WARNING: This is for testing purposes. It wipes all data across ALL courses. Are you sure you want to do this? This cannot be undone.'
+			)
+		) {
 			localStorage.clear();
 			location.reload();
 		}
