@@ -9,7 +9,7 @@
 	export let component: Component;
 
 	$: instanceName = component.instanceName;
-	$: freq = getComponentClass(component).freq;
+	$: freq = component.freq;
 	$: derivedCalculated = component.derivedCalculated;
 </script>
 
@@ -26,7 +26,7 @@
 	</span>
 	<span class="name">{$instanceName}</span>
 	<span class="hours">
-		{#if freq == Frequency.Weekly}
+		{#if $freq == Frequency.Weekly}
 			{$derivedCalculated.perWeekI + $derivedCalculated.perWeekS} Hrs per Week
 		{:else}
 			{$derivedCalculated.perSemI + $derivedCalculated.perSemS} Hrs per Sem

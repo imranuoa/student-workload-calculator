@@ -10,8 +10,10 @@
 {#if $components?.length && $openComponent !== undefined && $openComponent >= 0}
 	<div transition:fade={{ duration: 150 }}>
 		<h2>Configuration</h2>
-		{#each $components[$openComponent].form as formElem}
-			<svelte:component this={formElem && formElem.component} props={formElem.props} />
-		{/each}
+		{#key $openComponent}
+			{#each $components[$openComponent].form as formElem}
+				<svelte:component this={formElem && formElem.component} props={formElem.props} />
+			{/each}
+		{/key}
 	</div>
 {/if}
