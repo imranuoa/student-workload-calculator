@@ -35,7 +35,7 @@ export class Discussion extends Component {
 	static icon = '💬';
 	static description =
 		'This component is focused on discussions, which can be either be held in an asynchronous (typically online) or synchronous (within a live session) manner.';
-	static freq = Frequency.Semester;
+	freq = readable(Frequency.Semester);
 	instanceName = writable('Discussion');
 	perSem = writable(1);
 	originalPosts = writable(1);

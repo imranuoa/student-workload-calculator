@@ -1,4 +1,4 @@
-import { get, derived, writable, type Readable, type Writable } from 'svelte/store';
+import { get, derived, writable, type Readable, type Writable, readable } from 'svelte/store';
 import type { courseMeta } from '../course';
 import { RangeInput, TextInput, CheckSelectInput, NumberInput } from '../form';
 import { Component, Frequency } from '$lib/course-components/genericComponent';
@@ -18,7 +18,7 @@ export class CreativePractice extends Component {
 	static icon = '🎨';
 	static description =
 		'This component is focused on Creative Practice Sessions, which include activities that fall within the creative arts. This component can have scheduled and independent activities. When the scheduled box is checked (the default state), the Preparation per Session portion is added to scheduled hours; preparation and post-session inputs are added to independent hours. If the check is removed, all hours are assigned to the independent category and reflected in workload summary accordingly.';
-	static freq = Frequency.Semester;
+	freq = readable(Frequency.Semester);
 	instanceName = writable('Creative Practice Sessions');
 	sessionsPerSem = writable(1);
 	prepLength = writable(1);

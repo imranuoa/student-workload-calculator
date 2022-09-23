@@ -11,7 +11,7 @@ export class FinalExam extends Component {
 	static icon = '🕰';
 	static description =
 		'This is the Final Exam component where you can choose to either include your exam within your allocated class weeks or independent of them. The Final Exam hours will be tracked seperately so that you are easily able to differentiate between the two.';
-	static freq = Frequency.Semester;
+	freq = readable(Frequency.Semester);
 	instanceName = writable('Final Exam');
 	perSem = writable(1);
 	prepLength = writable(0);

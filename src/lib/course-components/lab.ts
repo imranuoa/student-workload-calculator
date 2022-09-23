@@ -1,4 +1,4 @@
-import { get, derived, writable, type Readable, type Writable } from 'svelte/store';
+import { get, derived, writable, type Readable, type Writable, readable } from 'svelte/store';
 import type { courseMeta } from '../course';
 import { RangeInput, TextInput, CheckSelectInput, CheckboxInput } from '../form';
 import { Component, Frequency } from '$lib/course-components/genericComponent';
@@ -19,7 +19,7 @@ export class Lab extends Component {
 	static icon = '🥼';
 	static description =
 		'This component is focused on the Laboratory portion of courses. Labs can have scheduled and independent activities. When the scheduled box is checked (the default state), the hours per lab portion is added to scheduled hours; preparation and post-lab inputs are added to independent hours. If the check is removed, all hours are assigned to the independent category and reflected in workload summary accordingly.';
-	static freq = Frequency.Weekly;
+	freq = readable(Frequency.Weekly);
 	instanceName = writable('Lab');
 	labsPerWeek = writable(1);
 	labLength = writable(1);

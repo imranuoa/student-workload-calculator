@@ -1,12 +1,16 @@
 import { derived, get, type Readable, type Writable } from 'svelte/store';
 import type { courseMeta } from '../course';
 import type { FormElement } from '../form';
-import { getComponentClass, type ComponentSubClass } from '../components';
-import type { serializedComponent, calculatedResults, derivedCalculated } from '../components';
+import type {
+	serializedComponent,
+	calculatedResults,
+	derivedCalculated,
+	ComponentSubClass
+} from '../components';
 
 export enum Frequency {
-	Weekly,
-	Semester
+	Weekly = 0,
+	Semester = 1
 }
 
 export type writableProperties = string[];
@@ -49,17 +53,17 @@ export abstract class Component {
 	static label: string;
 	static icon: string;
 	static description: string;
-	static freq: Frequency;
 	abstract form: FormElement[];
 	abstract instanceName: Writable<string>;
+	abstract freq: Readable<Frequency>;
 	abstract readonly results: Readable<calculatedResults>;
 	abstract derivedCalculated: Readable<derivedCalculated>;
 	// Data for the instance of the component type
 	setDerived(courseMeta: Readable<courseMeta>) {
-		return derived([this.results, courseMeta], ([$results, $courseMeta]) => {
+		return derived([this.results, courseMeta, this.freq], ([$results, $courseMeta, $freq]) => {
 			if (!$results) return { perWeekI: 0, perWeekS: 0, perSemI: 0, perSemS: 0 };
 			let perWeek, perSem;
-			if (getComponentClass(this).freq === Frequency.Weekly) {
+			if ($freq === Frequency.Weekly) {
 				perWeek = $results.occurences;
 				const weeksRunning = $results.weeksRunning?.filter((x) => x).length;
 				perSem =

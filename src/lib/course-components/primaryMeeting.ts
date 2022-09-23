@@ -11,7 +11,7 @@ export class PrimaryMeeting extends Component {
 	static icon = '🧑‍🏫';
 	static description =
 		'Primary meeting time for the course. This is the time that students are expected to be in class.';
-	static freq = Frequency.Weekly;
+	freq = readable(Frequency.Weekly);
 	instanceName = writable('Lecture');
 	meetingsPerWeek = writable(1);
 	meetingLength = writable(1);

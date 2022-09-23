@@ -38,7 +38,7 @@ export class ReadingAssignment extends Component {
 	static icon = '📚';
 	static description =
 		'This component is focused on independent readings such as assigned textbook readings, readings of short stories, novel excerpts, etc. The hours from this component will be assigned to the independent category and reflected in workload summary accordingly.';
-	static freq = Frequency.Weekly;
+	freq = readable(Frequency.Weekly);
 	instanceName = writable('Reading Assignment');
 	pagesPerWeek = writable(0);
 	pageDensity = writable(pageDensity.low);

@@ -4,14 +4,15 @@ import type { Component } from '$lib/course-components/genericComponent';
 import { PrimaryMeeting } from '$lib/course-components/primaryMeeting';
 import { CreativePractice } from '$lib/course-components/creativePractice';
 import { Discussion } from '$lib/course-components/discussion';
-import { Exam } from './course-components/exam';
-import { FinalExam } from './course-components/finalExam';
-import { Quiz } from './course-components/quiz';
-import { ReadingAssignment } from './course-components/readingAssignment';
-import { Lab } from './course-components/lab';
-import { Tutorial } from './course-components/tutorial';
-import { VideoOrPodcast } from './course-components/videoOrPodcast';
-import { WritingAssignment } from './course-components/writingAssignment';
+import { Exam } from '$lib/course-components/exam';
+import { FinalExam } from '$lib/course-components/finalExam';
+import { Quiz } from '$lib/course-components/quiz';
+import { ReadingAssignment } from '$lib/course-components/readingAssignment';
+import { Lab } from '$lib/course-components/lab';
+import { Tutorial } from '$lib/course-components/tutorial';
+import { VideoOrPodcast } from '$lib/course-components/videoOrPodcast';
+import { WritingAssignment } from '$lib/course-components/writingAssignment';
+import { CustomAssignment } from '$lib/course-components/customAssignment';
 
 export interface calculatedResults {
 	occurences: number;
@@ -56,7 +57,8 @@ export const components: ComponentSubClass[] = [
 	ReadingAssignment,
 	Tutorial,
 	VideoOrPodcast,
-	WritingAssignment
+	WritingAssignment,
+	CustomAssignment
 ];
 
 export default components;

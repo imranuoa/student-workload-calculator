@@ -11,7 +11,7 @@ export class VideoOrPodcast extends Component {
 	static icon = '📼';
 	static description =
 		'This component accommodates the time involved in watching or listening to media (e.g., recorded lectures, assigned films). The hours from this component are assigned to the independent category and reflected in workload summary accordingly.';
-	static freq = Frequency.Semester;
+	freq = readable(Frequency.Semester);
 	instanceName = writable('Video / Podcast');
 	perSem = writable(1);
 	length = writable(60);

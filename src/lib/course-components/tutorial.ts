@@ -18,7 +18,7 @@ export class Tutorial extends Component {
 	static icon = '🙋';
 	static description =
 		'This component is focused on the tutorial portion of courses; these sessions are commonly focused on providing students with an opportunity to practice and/or reinforce learning. The Tutorial component has both scheduled and independent components. When the scheduled box is checked (the default state), the hours per tutorial portion is added to scheduled hours; and the preparation time is added to independent hours. If the check is removed, all hours are assigned to the independent category and reflected in workload summary accordingly.';
-	static freq = Frequency.Weekly;
+	freq = readable(Frequency.Weekly);
 	instanceName = writable('Tutorial');
 	tutorialsPerWeek = writable(1);
 	tutorialLength = writable(1);

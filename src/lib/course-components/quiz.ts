@@ -16,7 +16,7 @@ export class Quiz extends Component {
 	static icon = '⁉️';
 	static description =
 		'This component is focused on quizzes, which can be either be held in an asynchronous (typically online) or synchronous (within a Primary Class Meeting) manner.';
-	static freq = Frequency.Semester;
+	freq = readable(Frequency.Semester);
 	instanceName = writable('Quiz');
 	format: Writable<format> = writable(format.Independant);
 	perSem = writable(1);
