@@ -2,7 +2,7 @@
 	import { clickOutside } from 'svelte-use-click-outside';
 	import ResultTable from '$lib/result-table/resultTable.svelte';
 	import { courses, activeCourse, addCourse } from '../store';
-	import EditForm from '$lib/editForm.svelte';
+	import Config from '$lib/edit-component/config.svelte';
 	import ComponentList from '$lib/add-component/manageComponents.svelte';
 	import { fade } from 'svelte/transition';
 	import { onMount } from 'svelte';
@@ -68,7 +68,7 @@
 			</div>
 			{#if activeCourseInst}
 				<div class="config">
-					<EditForm components={activeCourseComponents} {openComponent} />
+					<Config components={activeCourseComponents} {openComponent} />
 				</div>
 				<div class="results">
 					{#if $activeCourseComponents && $activeCourseMeta && $activeCourseComponents.length > 0}
@@ -113,9 +113,6 @@
 				@apply grid items-center gap-4;
 				grid-template-columns: auto 1fr;
 				grid-template-areas: 'button title';
-				.h1 {
-					grid-area: title;
-				}
 				.btn {
 					grid-area: button;
 				}
@@ -204,11 +201,19 @@
 			}
 		}
 	}
-	.pulsehint {
+
+	:global(.pulsehint) {
 		animation: pulseHint 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 		animation-direction: alternate;
 	}
-
+	@keyframes pulseHint {
+		from {
+			box-shadow: 0 0 10px 3px #4daafb;
+		}
+		to {
+			box-shadow: 0 0 10px -6px #4daafb;
+		}
+	}
 	@media screen and (max-width: 1024px) {
 		.calculator-layout.hasComponents {
 			.components,
@@ -242,15 +247,6 @@
 			.components {
 				@apply ml-0 rounded-lg w-full;
 			}
-		}
-	}
-
-	@keyframes pulseHint {
-		from {
-			box-shadow: 0 0 10px 3px #4daafb;
-		}
-		to {
-			box-shadow: 0 0 10px -6px #4daafb;
 		}
 	}
 	@keyframes shiftBackground {

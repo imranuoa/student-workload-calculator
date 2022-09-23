@@ -1,11 +1,15 @@
 <script lang="ts">
 	import type { Readable } from 'svelte/store';
 	import { createEventDispatcher } from 'svelte';
-	import type { Component } from '$lib/course-components/genericComponent';
+	import { Frequency, type Component } from '$lib/course-components/genericComponent';
+	import { getComponentClass } from '$lib/components';
 
 	const dispatch = createEventDispatcher();
 
 	export let component: Component;
+
+	$: freq = component.freq;
+
 	export let totals: {
 		perWeekI: { median: number; total: number };
 		perWeekS: { median: number; total: number };
@@ -27,7 +31,17 @@
 </script>
 
 <tr class:active class:clickable={active !== null}>
-	<td class="name" on:click={() => dispatch('click', component)}>{$instanceName}</td>
+	<td class="name" on:click={() => dispatch('click', component)}>
+		{#if $freq == Frequency.Weekly}
+			<span class="pill weekly"> W </span>
+		{:else}
+			<span class="pill semesterly"> S </span>
+		{/if}
+		{$instanceName}
+		<span class="icon">
+			{getComponentClass(component).icon}
+		</span>
+	</td>
 	<td
 		class:warning={perWeekI > 4}
 		class:danger={perWeekI > 10}
@@ -67,6 +81,16 @@
 </tr>
 
 <style lang="postcss">
+	.pill {
+		@apply rounded-full text-xs p-1 mr-1 bg-white inline-block w-6 h-6 align-middle text-center font-bold leading-4 float-left;
+		&.weekly {
+			@apply bg-blue-300;
+		}
+		&.semesterly {
+			@apply bg-green-400;
+		}
+	}
+
 	tr {
 		@apply h-10 text-center relative;
 		@apply border-b border-slate-300;
