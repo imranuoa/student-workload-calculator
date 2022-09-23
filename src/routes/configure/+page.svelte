@@ -1,21 +1,9 @@
 <script lang="ts">
 	import { Course } from '$lib/course';
-	import {
-		courses,
-		activeCourse,
-		addCourse,
-		deleteCourse,
-		openCourse,
-		exportCourseData,
-		importCourseData
-	} from '../../store';
+	import { courses, addCourse, exportCourseData, importCourseData } from '../../store';
 	import CourseEditCard from '$lib/add-course/courseEditCard.svelte';
-	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
 
 	let editingCourse = 0;
-
-	$: activeCourseMeta = $courses[editingCourse]?.meta;
 
 	const newCourseData = {
 		name: 'Your Course',
@@ -96,6 +84,7 @@
 				{/each}
 			</div>
 		</div>
+		<div class="divider" />
 	{/if}
 </div>
 
@@ -103,10 +92,21 @@
 	.layout {
 		@apply grid xl:grid-cols-3 grid-cols-1 min-h-full justify-center justify-items-center p-8 gap-8;
 		.createPane {
-			@apply flex flex-col gap-8 order-2 xl:order-none;
+			@apply flex flex-col gap-8 order-3 xl:order-none;
+			@apply bg-white rounded-lg shadow-lg p-6;
+			.card {
+				@apply shadow-inner  border-blue-500 border-2;
+			}
+		}
+		.divider {
+			@apply block xl:hidden col-span-2 order-2;
+			@apply h-1 w-full rounded-full bg-black bg-opacity-20;
 		}
 		.editPane {
 			@apply grow order-1 xl:order-none lg:col-span-2 w-full;
+			h2 {
+				@apply text-3xl;
+			}
 			.editPane-items {
 				@apply gap-8 grid grid-cols-1 md:grid-cols-2 items-center md:items-start;
 			}

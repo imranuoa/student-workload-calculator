@@ -41,3 +41,8 @@
 		>
 	{/if}
 </div>
+
+<style lang="postcss">
+	.card {
+	}
+</style>
