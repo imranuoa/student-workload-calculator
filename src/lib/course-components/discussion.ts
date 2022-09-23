@@ -20,7 +20,7 @@ enum isSync {
 export class Discussion extends Component {
 	static readonly writables = [
 		'instanceName',
-		'perSem',
+		'perCourse',
 		'originalPosts',
 		'postLength',
 		'responses',
@@ -35,9 +35,9 @@ export class Discussion extends Component {
 	static icon = '💬';
 	static description =
 		'This component is focused on discussions, which can be either be held in an asynchronous (typically online) or synchronous (within a live session) manner.';
-	freq = readable(Frequency.Semester);
+	freq = readable(Frequency.Course);
 	instanceName = writable('Discussion');
-	perSem = writable(1);
+	perCourse = writable(1);
 	originalPosts = writable(1);
 	postLength = writable(250);
 	responses = writable(1);
@@ -54,7 +54,7 @@ export class Discussion extends Component {
 		super(courseMeta);
 		this.form = [
 			new TextInput('componentName', this.instanceName, 'Discussion Name'),
-			new RangeInput('perSem', this.perSem, 'Discussions Per Course', {
+			new RangeInput('perCourse', this.perCourse, 'Discussions Per Course', {
 				min: 0,
 				max: 20
 			}),
@@ -119,7 +119,7 @@ export class Discussion extends Component {
 		];
 		this.results = derived(
 			[
-				this.perSem,
+				this.perCourse,
 				this.originalPosts,
 				this.postLength,
 				this.responses,
@@ -130,7 +130,7 @@ export class Discussion extends Component {
 				this.isSynchronous
 			],
 			([
-				$perSem,
+				$perCourse,
 				$originalPosts,
 				$postLength,
 				$responses,
@@ -149,7 +149,7 @@ export class Discussion extends Component {
 					totalTime = $responseLength / 250;
 				}
 				return {
-					occurences: $perSem,
+					occurences: $perCourse,
 					prepHoursPer: $prepTime / 60,
 					IndependentHoursPer: $isSynchronous ? 0 : totalTime,
 					scheduledHoursPer: $isSynchronous ? totalTime : 0,

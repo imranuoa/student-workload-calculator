@@ -10,16 +10,16 @@ enum format {
 }
 
 export class Quiz extends Component {
-	static readonly writables = ['instanceName', 'format', 'perSem', 'prepLength', 'QuizLength'];
+	static readonly writables = ['instanceName', 'format', 'perCourse', 'prepLength', 'QuizLength'];
 	static type = 'Quiz';
 	static label = 'Quiz';
 	static icon = '⁉️';
 	static description =
 		'This component is focused on quizzes, which can be either be held in an asynchronous (typically online) or synchronous (within a Primary Class Meeting) manner.';
-	freq = readable(Frequency.Semester);
+	freq = readable(Frequency.Course);
 	instanceName = writable('Quiz');
 	format: Writable<format> = writable(format.Independent);
-	perSem = writable(1);
+	perCourse = writable(1);
 	prepLength = writable(0);
 	QuizLength = writable(30);
 
@@ -33,7 +33,7 @@ export class Quiz extends Component {
 			new form.SingleSelectInput('format', this.format, 'Quiz Format', {
 				options: readable(['Independent', 'Scheduled'])
 			}),
-			new form.RangeInput('perSem', this.perSem, 'Quizzes Per Course', {
+			new form.RangeInput('perCourse', this.perCourse, 'Quizzes Per Course', {
 				min: 0,
 				max: 10
 			}),
@@ -57,10 +57,10 @@ export class Quiz extends Component {
 			)
 		];
 		this.results = derived(
-			[this.format, this.perSem, this.prepLength, this.QuizLength],
-			([$format, $perSem, $prepLength, $QuizLength]) => {
+			[this.format, this.perCourse, this.prepLength, this.QuizLength],
+			([$format, $perCourse, $prepLength, $QuizLength]) => {
 				return {
-					occurences: $perSem,
+					occurences: $perCourse,
 					prepHoursPer: $prepLength,
 					IndependentHoursPer: $format === format.Independent ? $QuizLength / 60 : 0,
 					scheduledHoursPer: 0,

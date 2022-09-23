@@ -10,7 +10,7 @@ import type {
 
 export enum Frequency {
 	Weekly = 0,
-	Semester = 1
+	Course = 1
 }
 
 export type writableProperties = string[];
@@ -61,16 +61,16 @@ export abstract class Component {
 	// Data for the instance of the component type
 	setDerived(courseMeta: Readable<courseMeta>) {
 		return derived([this.results, courseMeta, this.freq], ([$results, $courseMeta, $freq]) => {
-			if (!$results) return { perWeekI: 0, perWeekS: 0, perSemI: 0, perSemS: 0 };
-			let perWeek, perSem;
+			if (!$results) return { perWeekI: 0, perWeekS: 0, perCourseI: 0, perCourseS: 0 };
+			let perWeek, perCourse;
 			if ($freq === Frequency.Weekly) {
 				perWeek = $results.occurences;
 				const weeksRunning = $results.weeksRunning?.filter((x) => x).length;
-				perSem =
+				perCourse =
 					$results.occurences * (weeksRunning === undefined ? $courseMeta.weeks : weeksRunning);
 			} else {
 				perWeek = $results.occurences / $courseMeta.weeks;
-				perSem = $results.occurences;
+				perCourse = $results.occurences;
 			}
 			let IPerOcc =
 				$results.IndependentHoursPer + $results.prepHoursPer + $results.postActivityHoursPer;
@@ -78,8 +78,8 @@ export abstract class Component {
 			return {
 				perWeekI: Math.round(perWeek * IPerOcc * 100) / 100,
 				perWeekS: Math.round(perWeek * SPerOcc * 100) / 100,
-				perSemI: Math.round(perSem * IPerOcc * 100) / 100,
-				perSemS: Math.round(perSem * SPerOcc * 100) / 100
+				perCourseI: Math.round(perCourse * IPerOcc * 100) / 100,
+				perCourseS: Math.round(perCourse * SPerOcc * 100) / 100
 			};
 		});
 	}

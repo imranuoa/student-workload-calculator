@@ -29,7 +29,7 @@
 		{#if $freq == Frequency.Weekly}
 			{$derivedCalculated.perWeekI + $derivedCalculated.perWeekS} Hrs per Week
 		{:else}
-			{$derivedCalculated.perSemI + $derivedCalculated.perSemS} Hrs per Sem
+			{$derivedCalculated.perCourseI + $derivedCalculated.perCourseS} Hrs per Course
 		{/if}
 	</span>
 	<button

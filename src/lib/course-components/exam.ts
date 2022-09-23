@@ -10,16 +10,16 @@ enum format {
 }
 
 export class Exam extends Component {
-	static readonly writables = ['instanceName', 'format', 'perSem', 'prepLength', 'examLength'];
+	static readonly writables = ['instanceName', 'format', 'perCourse', 'prepLength', 'examLength'];
 	static type = 'Exam';
 	static label = 'Exam';
 	static icon = '⏰';
 	static description =
 		'This component is focused on major assessments, which can be either be held in an asynchronous (typically online) or synchronous (within a Primary Class Meeting) manner.';
-	freq = readable(Frequency.Semester);
+	freq = readable(Frequency.Course);
 	instanceName = writable('Exam');
 	format: Writable<format> = writable(format.Independent);
-	perSem = writable(1);
+	perCourse = writable(1);
 	prepLength = writable(0);
 	examLength = writable(60);
 
@@ -33,7 +33,7 @@ export class Exam extends Component {
 			new form.SingleSelectInput('format', this.format, 'Exam Format', {
 				options: readable(['Independent', 'Scheduled'])
 			}),
-			new form.RangeInput('perSem', this.perSem, 'Exams Per Course', {
+			new form.RangeInput('perCourse', this.perCourse, 'Exams Per Course', {
 				min: 0,
 				max: 10
 			}),
@@ -57,10 +57,10 @@ export class Exam extends Component {
 			)
 		];
 		this.results = derived(
-			[this.format, this.perSem, this.prepLength, this.examLength],
-			([$format, $perSem, $prepLength, $examLength]) => {
+			[this.format, this.perCourse, this.prepLength, this.examLength],
+			([$format, $perCourse, $prepLength, $examLength]) => {
 				return {
-					occurences: $perSem,
+					occurences: $perCourse,
 					prepHoursPer: $prepLength,
 					IndependentHoursPer: $format === format.Independent ? $examLength / 60 : 0,
 					scheduledHoursPer: 0,

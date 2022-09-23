@@ -13,9 +13,9 @@
 	export let totals: {
 		perWeekI: { median: number; total: number };
 		perWeekS: { median: number; total: number };
-		perSemI: { median: number; total: number };
-		perSemS: { median: number; total: number };
-		perSem: { median: number; total: number };
+		perCourseI: { median: number; total: number };
+		perCourseS: { median: number; total: number };
+		perCourse: { median: number; total: number };
 		perWeek: { median: number; total: number };
 	};
 	export let courseWeeks: number;
@@ -26,8 +26,8 @@
 
 	$: perWeekI = $derivedCalculated.perWeekI;
 	$: perWeekS = $derivedCalculated.perWeekS;
-	$: perSemI = $derivedCalculated.perSemI;
-	$: perSemS = $derivedCalculated.perSemS;
+	$: perCourseI = $derivedCalculated.perCourseI;
+	$: perCourseS = $derivedCalculated.perCourseS;
 </script>
 
 <tr class:active class:clickable={active !== null}>
@@ -35,7 +35,7 @@
 		{#if $freq == Frequency.Weekly}
 			<span class="pill weekly" title="Occurs Weekly"> W </span>
 		{:else}
-			<span class="pill semesterly" title="Occurs once"> C </span>
+			<span class="pill coursely" title="Occurs once"> C </span>
 		{/if}
 		{$instanceName}
 		<span class="icon">
@@ -63,19 +63,23 @@
 		<div class="comparison" />
 	</td>
 	<td
-		class:warning={perSemI / courseWeeks > 4}
-		class:danger={perSemI / courseWeeks > 10}
-		style="--comparison: {totals.perSem.median ? (perSemI / totals.perSem.median) * 100 : 100}%"
+		class:warning={perCourseI / courseWeeks > 4}
+		class:danger={perCourseI / courseWeeks > 10}
+		style="--comparison: {totals.perCourse.median
+			? (perCourseI / totals.perCourse.median) * 100
+			: 100}%"
 	>
-		{perSemI}
+		{perCourseI}
 		<div class="comparison" />
 	</td>
 	<td
-		class:warning={perSemS / courseWeeks > 4}
-		class:danger={perSemS / courseWeeks > 10}
-		style="--comparison: {totals.perSem.median ? (perSemS / totals.perSem.median) * 100 : 100}%"
+		class:warning={perCourseS / courseWeeks > 4}
+		class:danger={perCourseS / courseWeeks > 10}
+		style="--comparison: {totals.perCourse.median
+			? (perCourseS / totals.perCourse.median) * 100
+			: 100}%"
 	>
-		{perSemS}
+		{perCourseS}
 		<div class="comparison" />
 	</td>
 </tr>
@@ -86,7 +90,7 @@
 		&.weekly {
 			@apply bg-blue-300;
 		}
-		&.semesterly {
+		&.coursely {
 			@apply bg-green-400;
 		}
 	}

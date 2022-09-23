@@ -20,7 +20,7 @@ export class CustomAssignment extends Component {
 	static description =
 		'This component may be used for assignments that fall outside of the categories above such as group work, projects, and discipline-specific assignments. The hours in this component can be assigned to either the scheduled or independent categories based on whether the scheduled checkbox is checked. When the scheduled box is checked (the default state), the hours are assigned to the scheduled totals. If the check is removed, all hours are assigned to the independent category and reflected in workload summary accordingly. Note that you may optionally add preparation time (e.g., for group meetings) and post-assignment time (e.g., a reflection).';
 	instanceName = writable('Custom Assignment');
-	freq = writable(Frequency.Semester);
+	freq = writable(Frequency.Course);
 	occurences = writable(1);
 	prepHoursPer = writable(0);
 	IndependentHoursPer = writable(0);
@@ -35,12 +35,12 @@ export class CustomAssignment extends Component {
 		this.form = [
 			new form.TextInput('componentName', this.instanceName, 'Assignment Name'),
 			new form.SingleSelectInput('freq', this.freq, 'Frequency', {
-				options: readable(['Weekly', 'Semester'])
+				options: readable(['Weekly', 'Course'])
 			}),
 			new form.NumberInput(
 				'occurences',
 				this.occurences,
-				'Number of Assignments Per week / semester'
+				'Number of Assignments Per week / course'
 			),
 			new form.NumberInput('prepHoursPer', this.prepHoursPer, 'Preparation Time (Hours)'),
 			new form.NumberInput('IndependentHoursPer', this.IndependentHoursPer, 'Independent Hours'),

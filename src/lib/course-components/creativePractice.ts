@@ -18,7 +18,7 @@ export class CreativePractice extends Component {
 	static icon = '🎨';
 	static description =
 		'This component is focused on Creative Practice Sessions, which include activities that fall within the creative arts. This component can have scheduled and independent activities. When the scheduled box is checked (the default state), the Preparation per Session portion is added to scheduled hours; preparation and post-session inputs are added to independent hours. If the check is removed, all hours are assigned to the independent category and reflected in workload summary accordingly.';
-	freq = readable(Frequency.Semester);
+	freq = readable(Frequency.Course);
 	instanceName = writable('Creative Practice Sessions');
 	sessionsPerSem = writable(1);
 	prepLength = writable(1);

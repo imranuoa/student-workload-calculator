@@ -42,7 +42,7 @@ export class WritingAssignment extends Component {
 	static icon = '📝';
 	static description =
 		'This component is focused on writing assignments or activities such as essays, creating short stories, and research papers. A writing assignment may be independent or scheduled (for in-class writing assignments).';
-	freq = readable(Frequency.Semester);
+	freq = readable(Frequency.Course);
 	instanceName = writable('Writing Assignment');
 	format: Writable<format> = writable(format.Independent);
 	perCourse = writable(1);

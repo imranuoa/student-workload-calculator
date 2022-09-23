@@ -16,8 +16,8 @@
 		{ name: 'Name', detail: 'Name' },
 		{ name: 'hrs/wk (I)', detail: 'Independent Hours per Week' },
 		{ name: 'hrs/wk (S)', detail: 'Scheduled Hours per Week' },
-		{ name: 'hrs/semester (I)', detail: 'Independent Hours Per Course' },
-		{ name: 'hrs/semester (S)', detail: 'Scheduled Hours Per Course' }
+		{ name: 'hrs/course (I)', detail: 'Independent Hours Per Course' },
+		{ name: 'hrs/course (S)', detail: 'Scheduled Hours Per Course' }
 	];
 
 	const median = (numbers: number[]) => {
@@ -42,21 +42,21 @@
 				median: median(values.map((v) => v.perWeekS)),
 				total: values.reduce((a, v) => a + v.perWeekS, 0)
 			},
-			perSemI: {
-				median: median(values.map((v) => v.perSemI)),
-				total: values.reduce((a, v) => a + v.perSemI, 0)
+			perCourseI: {
+				median: median(values.map((v) => v.perCourseI)),
+				total: values.reduce((a, v) => a + v.perCourseI, 0)
 			},
-			perSemS: {
-				median: median(values.map((v) => v.perSemS)),
-				total: values.reduce((a, v) => a + v.perSemS, 0)
+			perCourseS: {
+				median: median(values.map((v) => v.perCourseS)),
+				total: values.reduce((a, v) => a + v.perCourseS, 0)
 			},
-			perSem: {
-				median: median(values.map((v) => v.perSemI + v.perSemS)),
-				total: values.reduce((a, v) => a + v.perSemI + v.perSemS, 0)
+			perCourse: {
+				median: median(values.map((v) => v.perCourseI + v.perCourseS)),
+				total: values.reduce((a, v) => a + v.perCourseI + v.perCourseS, 0)
 			},
 			perWeek: {
 				median: median(values.map((v) => v.perWeekI + v.perWeekS)),
-				total: values.reduce((a, v) => a + v.perSemI + v.perSemS, 0)
+				total: values.reduce((a, v) => a + v.perCourseI + v.perCourseS, 0)
 			}
 		})
 	);
@@ -129,13 +129,13 @@
 				) / 100}</td
 			>
 			<td
-				>{Math.round($totals.perSemI.median * 100) / 100} / {Math.round(
-					$totals.perSemI.total * 100
+				>{Math.round($totals.perCourseI.median * 100) / 100} / {Math.round(
+					$totals.perCourseI.total * 100
 				) / 100}</td
 			>
 			<td
-				>{Math.round($totals.perSemS.median * 100) / 100} / {Math.round(
-					$totals.perSemS.total * 100
+				>{Math.round($totals.perCourseS.median * 100) / 100} / {Math.round(
+					$totals.perCourseS.total * 100
 				) / 100}</td
 			>
 		</tr>

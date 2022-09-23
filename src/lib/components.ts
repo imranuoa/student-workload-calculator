@@ -26,8 +26,8 @@ export interface calculatedResults {
 export interface derivedCalculated {
 	perWeekI: number;
 	perWeekS: number;
-	perSemI: number;
-	perSemS: number;
+	perCourseI: number;
+	perCourseS: number;
 }
 
 export const getComponentClass = (component: Component) => {

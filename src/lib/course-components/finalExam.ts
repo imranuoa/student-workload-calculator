@@ -5,15 +5,15 @@ import { Component, Frequency } from '$lib/course-components/genericComponent';
 import type { calculatedResults, derivedCalculated } from '../components';
 
 export class FinalExam extends Component {
-	static readonly writables = ['instanceName', 'perSem', 'prepLength', 'examLength'];
+	static readonly writables = ['instanceName', 'perCourse', 'prepLength', 'examLength'];
 	static type = 'FinalExam';
 	static label = 'Final Exam';
 	static icon = '🕰';
 	static description =
 		'This is the Final Exam component where you can choose to either include your exam within your allocated class weeks or independent of them. The Final Exam hours will be tracked seperately so that you are easily able to differentiate between the two.';
-	freq = readable(Frequency.Semester);
+	freq = readable(Frequency.Course);
 	instanceName = writable('Final Exam');
-	perSem = writable(1);
+	perCourse = writable(1);
 	prepLength = writable(0);
 	examLength = writable(60);
 
@@ -24,7 +24,7 @@ export class FinalExam extends Component {
 		super(courseMeta);
 		this.form = [
 			new form.TextInput('componentName', this.instanceName, 'Exam Name'),
-			new form.RangeInput('perSem', this.perSem, 'Exams Per Course', {
+			new form.RangeInput('perCourse', this.perCourse, 'Exams Per Course', {
 				min: 0,
 				max: 10
 			}),
@@ -39,10 +39,10 @@ export class FinalExam extends Component {
 			})
 		];
 		this.results = derived(
-			[this.perSem, this.prepLength, this.examLength],
-			([$perSem, $prepLength, $examLength]) => {
+			[this.perCourse, this.prepLength, this.examLength],
+			([$perCourse, $prepLength, $examLength]) => {
 				return {
-					occurences: $perSem,
+					occurences: $perCourse,
 					prepHoursPer: $prepLength,
 					IndependentHoursPer: 0,
 					scheduledHoursPer: $examLength / 60,

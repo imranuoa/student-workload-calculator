@@ -5,15 +5,15 @@ import { Component, Frequency } from '$lib/course-components/genericComponent';
 import type { calculatedResults, derivedCalculated } from '../components';
 
 export class VideoOrPodcast extends Component {
-	static readonly writables = ['instanceName', 'perSem', 'length'];
+	static readonly writables = ['instanceName', 'perCourse', 'length'];
 	static type = 'VideoOrPodcast';
 	static label = 'Video / Podcast';
 	static icon = '📼';
 	static description =
 		'This component accommodates the time involved in watching or listening to media (e.g., recorded lectures, assigned films). The hours from this component are assigned to the independent category and reflected in workload summary accordingly.';
-	freq = readable(Frequency.Semester);
+	freq = readable(Frequency.Course);
 	instanceName = writable('Video / Podcast');
-	perSem = writable(1);
+	perCourse = writable(1);
 	length = writable(60);
 
 	readonly results: Readable<calculatedResults>;
@@ -23,7 +23,7 @@ export class VideoOrPodcast extends Component {
 		super(courseMeta);
 		this.form = [
 			new form.TextInput('componentName', this.instanceName, 'Video/Podcast Name'),
-			new form.RangeInput('perSem', this.perSem, 'Video/Podcasts Per Course', {
+			new form.RangeInput('perCourse', this.perCourse, 'Video/Podcasts Per Course', {
 				min: 0,
 				max: 10
 			}),
@@ -33,9 +33,9 @@ export class VideoOrPodcast extends Component {
 				step: 5
 			})
 		];
-		this.results = derived([this.perSem, this.length], ([$perSem, $length]) => {
+		this.results = derived([this.perCourse, this.length], ([$perCourse, $length]) => {
 			return {
-				occurences: $perSem,
+				occurences: $perCourse,
 				prepHoursPer: 0,
 				IndependentHoursPer: 0,
 				scheduledHoursPer: $length / 60,
