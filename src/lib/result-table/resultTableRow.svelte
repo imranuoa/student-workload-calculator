@@ -31,7 +31,9 @@
 	<td
 		class:warning={perWeekI > 4}
 		class:danger={perWeekI > 10}
-		style="--comparison: {(perWeekI / totals.perWeek.median) * 100}%"
+		style="--comparison: {totals.perWeek.median > 0
+			? (perWeekI / totals.perWeek.median) * 100
+			: 100}%"
 	>
 		{perWeekI}
 		<div class="comparison" />
@@ -39,7 +41,9 @@
 	<td
 		class:warning={perWeekS > 4}
 		class:danger={perWeekS > 10}
-		style="--comparison: {(perWeekS / totals.perWeek.median) * 100}%"
+		style="--comparison: {totals.perWeek.median > 0
+			? (perWeekS / totals.perWeek.median) * 100
+			: 100}%"
 	>
 		{perWeekS}
 		<div class="comparison" />
@@ -47,7 +51,7 @@
 	<td
 		class:warning={perSemI / courseWeeks > 4}
 		class:danger={perSemI / courseWeeks > 10}
-		style="--comparison: {(perSemI / totals.perSem.median) * 100}%"
+		style="--comparison: {totals.perSem.median ? (perSemI / totals.perSem.median) * 100 : 100}%"
 	>
 		{perSemI}
 		<div class="comparison" />
@@ -55,7 +59,7 @@
 	<td
 		class:warning={perSemS / courseWeeks > 4}
 		class:danger={perSemS / courseWeeks > 10}
-		style="--comparison: {(perSemS / totals.perSem.median) * 100}%"
+		style="--comparison: {totals.perSem.median ? (perSemS / totals.perSem.median) * 100 : 100}%"
 	>
 		{perSemS}
 		<div class="comparison" />

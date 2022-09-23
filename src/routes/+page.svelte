@@ -68,7 +68,7 @@
 			</div>
 			{#if activeCourseInst}
 				<div class="config">
-					<EditForm bind:components={$activeCourseComponents} {openComponent} />
+					<EditForm components={activeCourseComponents} {openComponent} />
 				</div>
 				<div class="results">
 					{#if $activeCourseComponents && $activeCourseMeta && $activeCourseComponents.length > 0}

@@ -35,7 +35,7 @@
 	<button
 		class="btn btn-block btn-danger"
 		aria-label="delete"
-		on:click={() => {
+		on:click|stopPropagation={() => {
 			dispatch('delete', component);
 		}}
 	>

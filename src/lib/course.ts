@@ -65,15 +65,29 @@ export class Course {
 		if (open) this.openComponent.set(get(this.components).length - 1);
 	}
 	removeComponent(i: number) {
-		if (get(this.components).length === 1) {
+		const numComponents = get(this.components).length;
+		if (numComponents === 1) {
 			this._components.set([]);
+			this.openComponent.set(-1);
 		} else {
 			this._components.update((c) => {
 				c.splice(i, 1);
 				return c;
 			});
+			if (get(this.openComponent) === i) {
+				if (numComponents === i + 1) {
+					this.openComponent.set(i - 1);
+				} else {
+					this.openComponent.set(i);
+				}
+			} else {
+				this.openComponent.update((o) => {
+					if (o > i) return o - 1;
+					return o;
+				});
+			}
+			console.log(get(this.openComponent));
 		}
-		this.openComponent.set(-1);
 	}
 	constructor(
 		name = '',
