@@ -145,7 +145,7 @@
 <div class="mt-4">
 	<!-- Download -->
 	<button class="btn" on:click={() => downloadJSON()}>Download (JSON)</button>
-	<button class="btn" on:click={() => downloadXLSX()}>Download (XLSX)</button>
+	<button class="btn" on:click={() => downloadXLSX()}>Download (CSV)</button>
 </div>
 
 <style lang="postcss">
