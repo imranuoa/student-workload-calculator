@@ -54,7 +54,7 @@ export class Discussion extends Component {
 		super(courseMeta);
 		this.form = [
 			new TextInput('componentName', this.instanceName, 'Discussion Name'),
-			new RangeInput('perSem', this.perSem, 'Discussions Per Semester', {
+			new RangeInput('perSem', this.perSem, 'Discussions Per Course', {
 				min: 0,
 				max: 20
 			}),
