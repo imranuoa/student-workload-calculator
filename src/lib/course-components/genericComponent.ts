@@ -15,7 +15,7 @@ export abstract class Component {
 	static readonly writables: writableProperties = ['instanceName'];
 	static serialize(instance: Component): serializedComponent {
 		return {
-			type: 'Discussion',
+			type: this.type,
 			props: this.writables.reduce((acc, cur) => {
 				acc[cur] = get((instance as any)[cur] as Readable<any>);
 				return acc;
@@ -23,14 +23,26 @@ export abstract class Component {
 		};
 	}
 	static deserialize(obj: serializedComponent, courseMeta: Writable<courseMeta>): Component {
-		const component = new (this as ComponentSubClass)(courseMeta);
-
-		for (const prop of this.writables) {
-			if (obj.props[prop] !== undefined) {
-				((component as any)[prop] as Writable<any>).set(obj.props[prop]);
+		try {
+			const component = new (this as ComponentSubClass)(courseMeta);
+			try {
+				for (const prop of this.writables) {
+					if (obj.props[prop] !== undefined) {
+						((component as any)[prop] as Writable<any>).set(obj.props[prop]);
+					}
+				}
+			} catch (error) {
+				console.error(
+					`Failed to deserialize '${this.type}' component. Failed while setting writables. Returning instance with some default values`,
+					error
+				);
 			}
+			return component;
+		} catch (error) {
+			throw new Error(
+				`Failed to deserialize component: '${this.type}'. Failed while creating instance`
+			);
 		}
-		return component;
 	}
 	// About the component
 	static type = 'Component';

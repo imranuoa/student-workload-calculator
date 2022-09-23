@@ -4,6 +4,14 @@ import type { Component } from '$lib/course-components/genericComponent';
 import { PrimaryMeeting } from '$lib/course-components/primaryMeeting';
 import { CreativePractice } from '$lib/course-components/creativePractice';
 import { Discussion } from '$lib/course-components/discussion';
+import { Exam } from './course-components/exam';
+import { FinalExam } from './course-components/finalExam';
+import { Quiz } from './course-components/quiz';
+import { ReadingAssignment } from './course-components/readingAssignment';
+import { Lab } from './course-components/lab';
+import { Tutorial } from './course-components/tutorial';
+import { VideoOrPodcast } from './course-components/videoOrPodcast';
+import { WritingAssignment } from './course-components/writingAssignment';
 
 export interface calculatedResults {
 	occurences: number;
@@ -37,6 +45,18 @@ export type ComponentSubClass = {
 	new (courseMeta: Writable<courseMeta>): Component;
 } & { [K in keyof typeof Component]: typeof Component[K] };
 
-export const components: ComponentSubClass[] = [PrimaryMeeting, CreativePractice, Discussion];
+export const components: ComponentSubClass[] = [
+	PrimaryMeeting,
+	CreativePractice,
+	Discussion,
+	Exam,
+	FinalExam,
+	Lab,
+	Quiz,
+	ReadingAssignment,
+	Tutorial,
+	VideoOrPodcast,
+	WritingAssignment
+];
 
 export default components;

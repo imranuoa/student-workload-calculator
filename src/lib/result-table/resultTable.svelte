@@ -16,8 +16,8 @@
 		{ name: 'Name', detail: 'Name' },
 		{ name: 'hrs/wk (I)', detail: 'Independant Hours per Week' },
 		{ name: 'hrs/wk (S)', detail: 'Scheduled Hours per Week' },
-		{ name: 'hrs/semester (I)', detail: 'Independant Hours per Semester' },
-		{ name: 'hrs/semester (S)', detail: 'Scheduled Hours per Semester' }
+		{ name: 'hrs/semester (I)', detail: 'Independant Hours Per Course' },
+		{ name: 'hrs/semester (S)', detail: 'Scheduled Hours Per Course' }
 	];
 
 	const median = (numbers: number[]) => {
