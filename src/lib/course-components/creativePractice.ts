@@ -53,7 +53,7 @@ export class CreativePractice extends Component {
 				return {
 					occurences: $sessionsPerSem,
 					prepHoursPer: $prepLength,
-					independantHoursPer: $postLength,
+					IndependentHoursPer: $postLength,
 					scheduledHoursPer: $sessionLength,
 					postActivityHoursPer: 0
 				};

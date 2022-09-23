@@ -44,7 +44,7 @@ export class FinalExam extends Component {
 				return {
 					occurences: $perSem,
 					prepHoursPer: $prepLength,
-					independantHoursPer: 0,
+					IndependentHoursPer: 0,
 					scheduledHoursPer: $examLength / 60,
 					postActivityHoursPer: 0
 				};

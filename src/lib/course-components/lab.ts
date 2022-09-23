@@ -85,7 +85,7 @@ export class Lab extends Component {
 				return {
 					occurences: $labsPerWeek,
 					prepHoursPer: $prepTime / 60,
-					independantHoursPer: $isScheduled ? 0 : $labLength,
+					IndependentHoursPer: $isScheduled ? 0 : $labLength,
 					scheduledHoursPer: $isScheduled ? $labLength : 0,
 					postActivityHoursPer: $postLab / 60,
 					weeksRunning: $weeksList.map((w) => $weeksRunning?.includes(w) || false)

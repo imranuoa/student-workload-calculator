@@ -37,7 +37,7 @@ export class VideoOrPodcast extends Component {
 			return {
 				occurences: $perSem,
 				prepHoursPer: 0,
-				independantHoursPer: 0,
+				IndependentHoursPer: 0,
 				scheduledHoursPer: $length / 60,
 				postActivityHoursPer: 0
 			};

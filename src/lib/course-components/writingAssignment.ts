@@ -5,7 +5,7 @@ import { Component, Frequency } from '$lib/course-components/genericComponent';
 import type { calculatedResults, derivedCalculated } from '../components';
 
 enum format {
-	Independant = 0,
+	Independent = 0,
 	Scheduled = 1
 }
 
@@ -44,7 +44,7 @@ export class WritingAssignment extends Component {
 		'This component is focused on writing assignments or activities such as essays, creating short stories, and research papers. A writing assignment may be independent or scheduled (for in-class writing assignments).';
 	freq = readable(Frequency.Semester);
 	instanceName = writable('Writing Assignment');
-	format: Writable<format> = writable(format.Independant);
+	format: Writable<format> = writable(format.Independent);
 	perCourse = writable(1);
 	pagesPerAssignment = writable(0);
 	pageDensity = writable(pageDensity.low);
@@ -66,11 +66,11 @@ export class WritingAssignment extends Component {
 				max: 14
 			}),
 			new form.SingleSelectInput('format', this.format, 'Assignment Format', {
-				options: readable(['Independant', 'Scheduled'])
+				options: readable(['Independent', 'Scheduled'])
 			}),
 			new form.ConditionalInput(
-				'isIndependant',
-				derived(this.format, ($f) => $f === format.Independant),
+				'isIndependent',
+				derived(this.format, ($f) => $f === format.Independent),
 				'',
 				{
 					elements: [
@@ -181,7 +181,7 @@ export class WritingAssignment extends Component {
 				return {
 					occurences: $perCourse,
 					prepHoursPer: $format === format.Scheduled ? $prepTime / 60 : 0,
-					independantHoursPer: $pagesPerAssignment / pageSpeedPerHr,
+					IndependentHoursPer: $pagesPerAssignment / pageSpeedPerHr,
 					scheduledHoursPer: 0,
 					postActivityHoursPer: 0
 				};

@@ -17,7 +17,7 @@ import { CustomAssignment } from '$lib/course-components/customAssignment';
 export interface calculatedResults {
 	occurences: number;
 	prepHoursPer: number;
-	independantHoursPer: number;
+	IndependentHoursPer: number;
 	scheduledHoursPer: number;
 	postActivityHoursPer: number;
 	weeksRunning?: boolean[];

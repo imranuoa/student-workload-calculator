@@ -121,7 +121,7 @@ export class ReadingAssignment extends Component {
 				return {
 					occurences: 1,
 					prepHoursPer: 0,
-					independantHoursPer: $pagesPerWeek / pageSpeed,
+					IndependentHoursPer: $pagesPerWeek / pageSpeed,
 					scheduledHoursPer: 0,
 					postActivityHoursPer: 0
 				};

@@ -151,7 +151,7 @@ export class Discussion extends Component {
 				return {
 					occurences: $perSem,
 					prepHoursPer: $prepTime / 60,
-					independantHoursPer: $isSynchronous ? 0 : totalTime,
+					IndependentHoursPer: $isSynchronous ? 0 : totalTime,
 					scheduledHoursPer: $isSynchronous ? totalTime : 0,
 					postActivityHoursPer: 0
 				};

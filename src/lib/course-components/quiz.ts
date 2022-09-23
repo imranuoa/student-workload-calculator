@@ -5,7 +5,7 @@ import { Component, Frequency } from '$lib/course-components/genericComponent';
 import type { calculatedResults, derivedCalculated } from '../components';
 
 enum format {
-	Independant = 0,
+	Independent = 0,
 	Scheduled = 1
 }
 
@@ -18,7 +18,7 @@ export class Quiz extends Component {
 		'This component is focused on quizzes, which can be either be held in an asynchronous (typically online) or synchronous (within a Primary Class Meeting) manner.';
 	freq = readable(Frequency.Semester);
 	instanceName = writable('Quiz');
-	format: Writable<format> = writable(format.Independant);
+	format: Writable<format> = writable(format.Independent);
 	perSem = writable(1);
 	prepLength = writable(0);
 	QuizLength = writable(30);
@@ -31,7 +31,7 @@ export class Quiz extends Component {
 		this.form = [
 			new form.TextInput('componentName', this.instanceName, 'Quiz Name'),
 			new form.SingleSelectInput('format', this.format, 'Quiz Format', {
-				options: readable(['Independant', 'Scheduled'])
+				options: readable(['Independent', 'Scheduled'])
 			}),
 			new form.RangeInput('perSem', this.perSem, 'Quizzes Per Course', {
 				min: 0,
@@ -42,8 +42,8 @@ export class Quiz extends Component {
 				max: 100
 			}),
 			new form.ConditionalInput(
-				'isIndependant',
-				derived(this.format, ($f) => $f === format.Independant),
+				'isIndependent',
+				derived(this.format, ($f) => $f === format.Independent),
 				'',
 				{
 					elements: [
@@ -62,7 +62,7 @@ export class Quiz extends Component {
 				return {
 					occurences: $perSem,
 					prepHoursPer: $prepLength,
-					independantHoursPer: $format === format.Independant ? $QuizLength / 60 : 0,
+					IndependentHoursPer: $format === format.Independent ? $QuizLength / 60 : 0,
 					scheduledHoursPer: 0,
 					postActivityHoursPer: 0
 				};

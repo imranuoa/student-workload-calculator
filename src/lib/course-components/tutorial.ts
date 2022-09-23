@@ -1,4 +1,4 @@
-import { get, derived, writable, type Readable, type Writable } from 'svelte/store';
+import { get, derived, writable, type Readable, type Writable, readable } from 'svelte/store';
 import type { courseMeta } from '../course';
 import { RangeInput, TextInput, CheckSelectInput, CheckboxInput } from '../form';
 import { Component, Frequency } from '$lib/course-components/genericComponent';
@@ -77,7 +77,7 @@ export class Tutorial extends Component {
 				return {
 					occurences: $tutorialsPerWeek,
 					prepHoursPer: $prepTime / 60,
-					independantHoursPer: $isScheduled ? 0 : $tutorialLength,
+					IndependentHoursPer: $isScheduled ? 0 : $tutorialLength,
 					scheduledHoursPer: $isScheduled ? $tutorialLength : 0,
 					postActivityHoursPer: 0,
 					weeksRunning: $weeksList.map((w) => $weeksRunning?.includes(w) || false)

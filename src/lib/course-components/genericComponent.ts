@@ -73,7 +73,7 @@ export abstract class Component {
 				perSem = $results.occurences;
 			}
 			let IPerOcc =
-				$results.independantHoursPer + $results.prepHoursPer + $results.postActivityHoursPer;
+				$results.IndependentHoursPer + $results.prepHoursPer + $results.postActivityHoursPer;
 			let SPerOcc = $results.scheduledHoursPer;
 			return {
 				perWeekI: Math.round(perWeek * IPerOcc * 100) / 100,

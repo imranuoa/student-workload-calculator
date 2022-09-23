@@ -10,7 +10,7 @@ export class CustomAssignment extends Component {
 		'freq',
 		'occurences',
 		'prepHoursPer',
-		'independantHoursPer',
+		'IndependentHoursPer',
 		'scheduledHoursPer',
 		'postActivityHoursPer'
 	];
@@ -23,7 +23,7 @@ export class CustomAssignment extends Component {
 	freq = writable(Frequency.Semester);
 	occurences = writable(1);
 	prepHoursPer = writable(0);
-	independantHoursPer = writable(0);
+	IndependentHoursPer = writable(0);
 	scheduledHoursPer = writable(0);
 	postActivityHoursPer = writable(0);
 
@@ -43,7 +43,7 @@ export class CustomAssignment extends Component {
 				'Number of Assignments Per week / semester'
 			),
 			new form.NumberInput('prepHoursPer', this.prepHoursPer, 'Preparation Time (Hours)'),
-			new form.NumberInput('IndependantHoursPer', this.independantHoursPer, 'Independent Hours'),
+			new form.NumberInput('IndependentHoursPer', this.IndependentHoursPer, 'Independent Hours'),
 			new form.NumberInput('scheduledHoursPer', this.scheduledHoursPer, 'Scheduled Hours'),
 			new form.NumberInput('postActivityHoursPer', this.postActivityHoursPer, 'Post-Activity Hours')
 		];
@@ -51,21 +51,21 @@ export class CustomAssignment extends Component {
 			[
 				this.occurences,
 				this.prepHoursPer,
-				this.independantHoursPer,
+				this.IndependentHoursPer,
 				this.scheduledHoursPer,
 				this.postActivityHoursPer
 			],
 			([
 				occurences,
 				prepHoursPer,
-				independantHoursPer,
+				IndependentHoursPer,
 				scheduledHoursPer,
 				postActivityHoursPer
 			]) => {
 				return {
 					occurences,
 					prepHoursPer,
-					independantHoursPer,
+					IndependentHoursPer,
 					scheduledHoursPer,
 					postActivityHoursPer
 				};
