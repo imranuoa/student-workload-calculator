@@ -1,16 +1,16 @@
 import { derived, writable, type Readable, type Writable, readable } from 'svelte/store';
 import type { courseMeta } from '../course';
 import * as form from '../form';
-import { Component, Frequency } from '$lib/course-components/genericComponent';
-import type { calculatedResults, derivedCalculated } from '../components';
+import { Activity, Frequency } from '$lib/course-activities/genericActivity';
+import type { calculatedResults, derivedCalculated } from '../activities';
 
-export class VideoOrPodcast extends Component {
+export class VideoOrPodcast extends Activity {
 	static readonly writables = ['instanceName', 'perCourse', 'length'];
 	static type = 'VideoOrPodcast';
 	static label = 'Video / Podcast';
 	static icon = '📼';
 	static description =
-		'This component accommodates the time involved in watching or listening to media (e.g., recorded lectures, assigned films). The hours from this component are assigned to the independent category and reflected in workload summary accordingly.';
+		'This activity accommodates the time involved in watching or listening to media (e.g., recorded lectures, assigned films). The hours from this activity are assigned to the independent category and reflected in workload summary accordingly.';
 	freq = readable(Frequency.Course);
 	instanceName = writable('Video / Podcast');
 	perCourse = writable(1);
@@ -22,7 +22,7 @@ export class VideoOrPodcast extends Component {
 	constructor(courseMeta: Writable<courseMeta>) {
 		super(courseMeta);
 		this.form = [
-			new form.TextInput('componentName', this.instanceName, 'Video/Podcast Name'),
+			new form.TextInput('activityName', this.instanceName, 'Video/Podcast Name'),
 			new form.RangeInput('perCourse', this.perCourse, 'Video/Podcasts Per Course', {
 				min: 0,
 				max: 10

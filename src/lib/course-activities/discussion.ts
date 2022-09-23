@@ -9,15 +9,15 @@ import {
 	SingleSelectInput,
 	CheckboxInput
 } from '../form';
-import { Component, Frequency } from '$lib/course-components/genericComponent';
-import type { calculatedResults, derivedCalculated } from '../components';
+import { Activity, Frequency } from '$lib/course-activities/genericActivity';
+import type { calculatedResults, derivedCalculated } from '../activities';
 
 enum isSync {
 	Asynchronous = 0,
 	Synchronous = 1
 }
 
-export class Discussion extends Component {
+export class Discussion extends Activity {
 	static readonly writables = [
 		'instanceName',
 		'perCourse',
@@ -53,7 +53,7 @@ export class Discussion extends Component {
 	constructor(courseMeta: Writable<courseMeta>) {
 		super(courseMeta);
 		this.form = [
-			new TextInput('componentName', this.instanceName, 'Discussion Name'),
+			new TextInput('activityName', this.instanceName, 'Discussion Name'),
 			new RangeInput('perCourse', this.perCourse, 'Discussions Per Course', {
 				min: 0,
 				max: 20

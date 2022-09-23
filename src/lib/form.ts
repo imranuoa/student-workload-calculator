@@ -10,13 +10,13 @@ import checkboxInput from './form-elems/checkboxInput.svelte';
 export type formProps = { id: string; label: string; value: Readable<any>; [key: string]: any };
 
 export abstract class FormElement {
-	abstract component: any;
+	abstract activity: any;
 	abstract props: formProps;
 	constructor(id: string, value: Readable<any>, label: string, props?: object) {}
 }
 
 export class ConditionalInput extends FormElement {
-	component = conditionalInputs;
+	activity = conditionalInputs;
 	props;
 	constructor(
 		id: string,
@@ -32,7 +32,7 @@ export class ConditionalInput extends FormElement {
 }
 
 export class TextInput extends FormElement {
-	component = textInput;
+	activity = textInput;
 	props;
 	constructor(id: string, value: Writable<string>, label: string) {
 		super(id, value, label);
@@ -41,7 +41,7 @@ export class TextInput extends FormElement {
 }
 
 export class NumberInput extends FormElement {
-	component = numberInput;
+	activity = numberInput;
 	props;
 	constructor(id: string, value: Writable<number>, label: string) {
 		super(id, value, label);
@@ -50,7 +50,7 @@ export class NumberInput extends FormElement {
 }
 
 export class CheckboxInput extends FormElement {
-	component = checkboxInput;
+	activity = checkboxInput;
 	props;
 	constructor(id: string, value: Writable<boolean>, label: string) {
 		super(id, value, label);
@@ -60,7 +60,7 @@ export class CheckboxInput extends FormElement {
 
 export class RangeInput extends FormElement {
 	props;
-	component = rangeInput;
+	activity = rangeInput;
 	constructor(
 		id: string,
 		value: Writable<number>,
@@ -78,7 +78,7 @@ export class RangeInput extends FormElement {
 
 export class CheckSelectInput extends FormElement {
 	props;
-	component = checkSelect;
+	activity = checkSelect;
 	constructor(
 		id: string,
 		value: Writable<string[]>,
@@ -92,7 +92,7 @@ export class CheckSelectInput extends FormElement {
 
 export class SingleSelectInput extends FormElement {
 	props;
-	component = SingleSelect;
+	activity = SingleSelect;
 	constructor(
 		id: string,
 		value: Writable<number>, // Index

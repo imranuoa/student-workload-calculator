@@ -2,32 +2,32 @@
 	import { clickOutside } from 'svelte-use-click-outside';
 	import ResultTable from '$lib/result-table/resultTable.svelte';
 	import { courses, activeCourse, addCourse } from '../store';
-	import Config from '$lib/edit-component/config.svelte';
-	import ComponentList from '$lib/add-component/manageComponents.svelte';
+	import Config from '$lib/edit-activity/config.svelte';
+	import ActivityList from '$lib/add-activity/manageActivities.svelte';
 	import { fade } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	// import arrowPattern from '$lib/assets/arrow-left.svg';
 
-	let addComponentOpen: boolean;
+	let addActivityOpen: boolean;
 
 	$: activeCourseInst = $activeCourse >= 0 ? $courses[$activeCourse] : undefined;
 	$: activeCourseMeta = activeCourseInst?.meta;
-	$: activeCourseComponents = activeCourseInst?.components;
-	$: openComponent = activeCourseInst?.openComponent;
-	$: openComponentInst =
-		$openComponent !== undefined && $openComponent >= 0
-			? $activeCourseComponents?.[$openComponent]
+	$: activeCourseActivities = activeCourseInst?.activities;
+	$: openActivity = activeCourseInst?.openActivity;
+	$: openActivityInst =
+		$openActivity !== undefined && $openActivity >= 0
+			? $activeCourseActivities?.[$openActivity]
 			: undefined;
 
-	// If openComponent is >0 and doesn't resolve, reset it to -1
+	// If openActivity is >0 and doesn't resolve, reset it to -1
 	$: if (
-		$openComponent &&
-		$openComponent > 0 &&
-		$activeCourseComponents &&
-		$activeCourseComponents[$openComponent] === undefined
+		$openActivity &&
+		$openActivity > 0 &&
+		$activeCourseActivities &&
+		$activeCourseActivities[$openActivity] === undefined
 	) {
-		$openComponent = -1;
+		$openActivity = -1;
 	}
 
 	onMount(async () => {
@@ -42,19 +42,19 @@
 	};
 </script>
 
-{#if activeCourseInst && $activeCourseMeta && $activeCourseComponents}
+{#if activeCourseInst && $activeCourseMeta && $activeCourseActivities}
 	{#key $activeCourse}
 		<div
 			class="calculator-layout"
-			class:expandComponents={addComponentOpen}
-			class:hideConfig={!openComponentInst}
-			class:noComponents={$activeCourseComponents.length === 0}
-			class:hasComponents={$activeCourseComponents.length > 0}
+			class:expandActivities={addActivityOpen}
+			class:hideConfig={!openActivityInst}
+			class:noActivities={$activeCourseActivities.length === 0}
+			class:hasActivities={$activeCourseActivities.length > 0}
 		>
 			<div
-				class="components"
+				class="activities"
 				use:clickOutside={() => {
-					addComponentOpen = false;
+					addActivityOpen = false;
 				}}
 			>
 				<div class="title">
@@ -64,32 +64,32 @@
 					{/if}
 				</div>
 				<hr class="my-2" />
-				<ComponentList bind:activeCourse={activeCourseInst} bind:addComponentOpen />
+				<ActivityList bind:activeCourse={activeCourseInst} bind:addActivityOpen />
 			</div>
 			{#if activeCourseInst}
 				<div class="config">
-					<Config components={activeCourseComponents} {openComponent} />
+					<Config activities={activeCourseActivities} {openActivity} />
 				</div>
 				<div class="results">
-					{#if $activeCourseComponents && $activeCourseMeta && $activeCourseComponents.length > 0}
+					{#if $activeCourseActivities && $activeCourseMeta && $activeCourseActivities.length > 0}
 						<ResultTable
-							components={$activeCourseComponents}
+							activities={$activeCourseActivities}
 							courseWeeks={$activeCourseMeta.weeks}
-							bind:openComponent={$openComponent}
-							on:selectComponent={({ detail }) => {
-								const matchedIndex = $activeCourseComponents?.findIndex((c) => c == detail);
-								if (matchedIndex === $openComponent) $openComponent = -1;
-								else if (matchedIndex !== -1) $openComponent = matchedIndex;
+							bind:openActivity={$openActivity}
+							on:selectActivity={({ detail }) => {
+								const matchedIndex = $activeCourseActivities?.findIndex((c) => c == detail);
+								if (matchedIndex === $openActivity) $openActivity = -1;
+								else if (matchedIndex !== -1) $openActivity = matchedIndex;
 							}}
 						/>
 					{:else}
-						<div class="no-components-results" in:fade>
+						<div class="no-activities-results" in:fade>
 							<div class="arrows-wrap">
 								<div class="arrows" />
 							</div>
 							<p class="hint">
 								This course doesn't have anything in it! To get started, use the menu to the left to
-								add a component.
+								add a activity.
 							</p>
 						</div>
 					{/if}
@@ -102,13 +102,13 @@
 <style lang="postcss">
 	.calculator-layout {
 		@apply flex gap-8 p-8 min-h-full pb-5 flex-wrap;
-		--components-pane-width: 20rem;
-		--components-pane-extra-width: 0rem;
+		--activities-pane-width: 20rem;
+		--activities-pane-extra-width: 0rem;
 		--config-pane-width: 25rem;
 
-		.components {
+		.activities {
 			@apply shadow-lg bg-white p-4 rounded-r-lg transition-all z-10 -ml-8;
-			width: calc(var(--components-pane-width) + var(--components-pane-extra-width));
+			width: calc(var(--activities-pane-width) + var(--activities-pane-extra-width));
 			.title {
 				@apply grid items-center gap-4;
 				grid-template-columns: auto 1fr;
@@ -135,15 +135,15 @@
 			flex-basis: var(--config-pane-width);
 		}
 		&.hideConfig {
-			.components {
+			.activities {
 				@apply shadow-xl;
-				--components-pane-extra-width: 10rem;
+				--activities-pane-extra-width: 10rem;
 				z-index: 10;
 			}
-			&.expandComponents {
-				.components {
+			&.expandActivities {
+				.activities {
 					@apply shadow-2xl;
-					--components-pane-extra-width: 20rem;
+					--activities-pane-extra-width: 20rem;
 					margin-right: -10rem;
 				}
 			}
@@ -155,9 +155,9 @@
 			}
 		}
 
-		&.expandComponents {
-			--components-pane-extra-width: 20rem;
-			.components {
+		&.expandActivities {
+			--activities-pane-extra-width: 20rem;
+			.activities {
 				@apply shadow-xl;
 				z-index: 10;
 			}
@@ -166,19 +166,19 @@
 				@apply opacity-30 pointer-events-none;
 			}
 			.config {
-				margin-left: calc(var(--components-pane-extra-width) * -1);
+				margin-left: calc(var(--activities-pane-extra-width) * -1);
 			}
 		}
 
-		&.noComponents {
-			.components {
+		&.noActivities {
+			.activities {
 				@apply shadow-2xl pulsehint;
-				:global(.add-component) {
+				:global(.add-activity) {
 					@apply pulsehint transition;
 					@apply bg-blue-600;
 				}
 			}
-			.no-components-results {
+			.no-activities-results {
 				@apply h-96 flex items-center justify-center  relative overflow-clip;
 				.arrows-wrap {
 					@apply absolute top-0 bottom-0 m-auto right-0 z-0 opacity-20 w-full;
@@ -215,8 +215,8 @@
 		}
 	}
 	@media screen and (max-width: 1024px) {
-		.calculator-layout.hasComponents {
-			.components,
+		.calculator-layout.hasActivities {
+			.activities,
 			.config {
 				@apply grow ml-0 rounded-lg basis-80;
 				width: 50%;
@@ -225,10 +225,10 @@
 				@apply basis-full overflow-x-auto;
 			}
 			&.hideConfig {
-				.components {
+				.activities {
 					@apply shadow-lg;
 				}
-				.components,
+				.activities,
 				.config,
 				.results {
 					@apply mx-0;
@@ -240,11 +240,11 @@
 		}
 	}
 	@media screen and (max-width: 53rem) {
-		.calculator-layout.noComponents {
-			.no-components-results {
+		.calculator-layout.noActivities {
+			.no-activities-results {
 				@apply hidden;
 			}
-			.components {
+			.activities {
 				@apply ml-0 rounded-lg w-full;
 			}
 		}

@@ -1,10 +1,10 @@
 import { get, derived, writable, type Readable, type Writable, readable } from 'svelte/store';
 import type { courseMeta } from '../course';
 import { RangeInput, TextInput, CheckSelectInput } from '../form';
-import { Component, Frequency } from '$lib/course-components/genericComponent';
-import type { serializedComponent, calculatedResults, derivedCalculated } from '../components';
+import { Activity, Frequency } from '$lib/course-activities/genericActivity';
+import type { serializedActivity, calculatedResults, derivedCalculated } from '../activities';
 
-export class PrimaryMeeting extends Component {
+export class PrimaryMeeting extends Activity {
 	static readonly writables = ['instanceName', 'meetingsPerWeek', 'meetingLength', 'weeksRunning'];
 	static type = 'PrimaryMeeting';
 	static label = 'Primary Meeting';
@@ -28,7 +28,7 @@ export class PrimaryMeeting extends Component {
 		);
 		this.weeksRunning = writable(get(this.weeksList));
 		this.form = [
-			new TextInput('componentName', this.instanceName, 'Component Name'),
+			new TextInput('activityName', this.instanceName, 'Activity Name'),
 			new RangeInput('meetingsPerWeek', this.meetingsPerWeek, 'Meetings per week', {
 				min: 0,
 				max: 14

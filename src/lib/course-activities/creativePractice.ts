@@ -1,10 +1,10 @@
 import { get, derived, writable, type Readable, type Writable, readable } from 'svelte/store';
 import type { courseMeta } from '../course';
 import { RangeInput, TextInput, CheckSelectInput, NumberInput } from '../form';
-import { Component, Frequency } from '$lib/course-components/genericComponent';
-import type { serializedComponent, calculatedResults, derivedCalculated } from '../components';
+import { Activity, Frequency } from '$lib/course-activities/genericActivity';
+import type { serializedActivity, calculatedResults, derivedCalculated } from '../activities';
 
-export class CreativePractice extends Component {
+export class CreativePractice extends Activity {
 	static readonly writables = [
 		'instanceName',
 		'sessionsPerSem',
@@ -32,7 +32,7 @@ export class CreativePractice extends Component {
 	constructor(courseMeta: Writable<courseMeta>) {
 		super(courseMeta);
 		this.form = [
-			new TextInput('componentName', this.instanceName, 'Component Name'),
+			new TextInput('activityName', this.instanceName, 'Activity Name'),
 			new NumberInput('sessionsPerSem', this.sessionsPerSem, 'Sessions Per Course'),
 			new RangeInput('prepLength', this.prepLength, 'Session Prep Time (Hours)', {
 				min: 0,

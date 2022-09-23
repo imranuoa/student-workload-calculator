@@ -1,8 +1,8 @@
 import { derived, writable, type Readable, type Writable, readable } from 'svelte/store';
 import type { courseMeta } from '../course';
 import * as form from '../form';
-import { Component, Frequency } from '$lib/course-components/genericComponent';
-import type { calculatedResults, derivedCalculated } from '../components';
+import { Activity, Frequency } from '$lib/course-activities/genericActivity';
+import type { calculatedResults, derivedCalculated } from '../activities';
 
 enum pageDensity {
 	low = 0,
@@ -22,7 +22,7 @@ enum purpose {
 	engage = 2
 }
 
-export class ReadingAssignment extends Component {
+export class ReadingAssignment extends Activity {
 	static readonly writables = [
 		'instanceName',
 		'perWeek',
@@ -37,7 +37,7 @@ export class ReadingAssignment extends Component {
 	static label = 'Reading Assignment';
 	static icon = '📚';
 	static description =
-		'This component is focused on independent readings such as assigned textbook readings, readings of short stories, novel excerpts, etc. The hours from this component will be assigned to the independent category and reflected in workload summary accordingly.';
+		'This activity is focused on independent readings such as assigned textbook readings, readings of short stories, novel excerpts, etc. The hours from this activity will be assigned to the independent category and reflected in workload summary accordingly.';
 	freq = readable(Frequency.Weekly);
 	instanceName = writable('Reading Assignment');
 	pagesPerWeek = writable(0);
@@ -53,7 +53,7 @@ export class ReadingAssignment extends Component {
 	constructor(courseMeta: Writable<courseMeta>) {
 		super(courseMeta);
 		this.form = [
-			new form.TextInput('componentName', this.instanceName, 'Assignment Name'),
+			new form.TextInput('activityName', this.instanceName, 'Assignment Name'),
 			new form.RangeInput('pagesPerWeek', this.pagesPerWeek, 'Pages Per Week', {
 				min: 0,
 				max: 100

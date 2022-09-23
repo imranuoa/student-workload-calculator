@@ -1,10 +1,10 @@
 import { get, derived, writable, type Readable, type Writable, readable } from 'svelte/store';
 import type { courseMeta } from '../course';
 import { RangeInput, TextInput, CheckSelectInput, CheckboxInput } from '../form';
-import { Component, Frequency } from '$lib/course-components/genericComponent';
-import type { serializedComponent, calculatedResults, derivedCalculated } from '../components';
+import { Activity, Frequency } from '$lib/course-activities/genericActivity';
+import type { serializedActivity, calculatedResults, derivedCalculated } from '../activities';
 
-export class Tutorial extends Component {
+export class Tutorial extends Activity {
 	static readonly writables = [
 		'instanceName',
 		'tutorialsPerWeek',
@@ -17,7 +17,7 @@ export class Tutorial extends Component {
 	static label = 'Tutorial';
 	static icon = '🙋';
 	static description =
-		'This component is focused on the tutorial portion of courses; these sessions are commonly focused on providing students with an opportunity to practice and/or reinforce learning. The Tutorial component has both scheduled and independent components. When the scheduled box is checked (the default state), the hours per tutorial portion is added to scheduled hours; and the preparation time is added to independent hours. If the check is removed, all hours are assigned to the independent category and reflected in workload summary accordingly.';
+		'This activity is focused on the tutorial portion of courses; these sessions are commonly focused on providing students with an opportunity to practice and/or reinforce learning. The Tutorial activity has both scheduled and independent components. When the scheduled box is checked (the default state), the hours per tutorial portion is added to scheduled hours; and the preparation time is added to independent hours. If the check is removed, all hours are assigned to the independent category and reflected in workload summary accordingly.';
 	freq = readable(Frequency.Weekly);
 	instanceName = writable('Tutorial');
 	tutorialsPerWeek = writable(1);
@@ -38,7 +38,7 @@ export class Tutorial extends Component {
 		);
 		this.weeksRunning = writable(get(this.weeksList));
 		this.form = [
-			new TextInput('componentName', this.instanceName, 'Component Name'),
+			new TextInput('activityName', this.instanceName, 'Activity Name'),
 			new RangeInput('tutorialsPerWeek', this.tutorialsPerWeek, 'Tutorials per week', {
 				min: 0,
 				max: 14

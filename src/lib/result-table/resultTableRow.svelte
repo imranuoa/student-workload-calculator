@@ -1,14 +1,14 @@
 <script lang="ts">
 	import type { Readable } from 'svelte/store';
 	import { createEventDispatcher } from 'svelte';
-	import { Frequency, type Component } from '$lib/course-components/genericComponent';
-	import { getComponentClass } from '$lib/components';
+	import { Frequency, type Activity } from '$lib/course-activities/genericActivity';
+	import { getActivityClass } from '$lib/activities';
 
 	const dispatch = createEventDispatcher();
 
-	export let component: Component;
+	export let activity: Activity;
 
-	$: freq = component.freq;
+	$: freq = activity.freq;
 
 	export let totals: {
 		perWeekI: { median: number; total: number };
@@ -21,8 +21,8 @@
 	export let courseWeeks: number;
 	export let active: boolean | null = null;
 
-	$: derivedCalculated = component.derivedCalculated;
-	$: instanceName = component.instanceName;
+	$: derivedCalculated = activity.derivedCalculated;
+	$: instanceName = activity.instanceName;
 
 	$: perWeekI = $derivedCalculated.perWeekI;
 	$: perWeekS = $derivedCalculated.perWeekS;
@@ -31,7 +31,7 @@
 </script>
 
 <tr class:active class:clickable={active !== null}>
-	<td class="name" on:click={() => dispatch('click', component)}>
+	<td class="name" on:click={() => dispatch('click', activity)}>
 		{#if $freq == Frequency.Weekly}
 			<span class="pill weekly" title="Occurs Weekly"> W </span>
 		{:else}
@@ -39,7 +39,7 @@
 		{/if}
 		{$instanceName}
 		<span class="icon">
-			{getComponentClass(component).icon}
+			{getActivityClass(activity).icon}
 		</span>
 	</td>
 	<td
@@ -47,7 +47,9 @@
 		class:danger={perWeekI > 10}
 		style="--comparison: {totals.perWeek.median > 0
 			? (perWeekI / totals.perWeek.median) * 100
-			: 100}%"
+			: perWeekI > 0
+			? 100
+			: 0}%"
 	>
 		{perWeekI}
 		<div class="comparison" />
@@ -57,7 +59,9 @@
 		class:danger={perWeekS > 10}
 		style="--comparison: {totals.perWeek.median > 0
 			? (perWeekS / totals.perWeek.median) * 100
-			: 100}%"
+			: perWeekS > 0
+			? 100
+			: 0}%"
 	>
 		{perWeekS}
 		<div class="comparison" />
@@ -65,9 +69,11 @@
 	<td
 		class:warning={perCourseI / courseWeeks > 4}
 		class:danger={perCourseI / courseWeeks > 10}
-		style="--comparison: {totals.perCourse.median
+		style="--comparison: {totals.perCourse.median > 0
 			? (perCourseI / totals.perCourse.median) * 100
-			: 100}%"
+			: perCourseI > 0
+			? 100
+			: 0}%"
 	>
 		{perCourseI}
 		<div class="comparison" />
@@ -75,9 +81,11 @@
 	<td
 		class:warning={perCourseS / courseWeeks > 4}
 		class:danger={perCourseS / courseWeeks > 10}
-		style="--comparison: {totals.perCourse.median
+		style="--comparison: {totals.perCourse.median > 0
 			? (perCourseS / totals.perCourse.median) * 100
-			: 100}%"
+			: perCourseS > 0
+			? 100
+			: 0}%"
 	>
 		{perCourseS}
 		<div class="comparison" />

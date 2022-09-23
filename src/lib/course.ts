@@ -1,5 +1,5 @@
-import components, { getComponentClass, type serializedComponent } from '$lib/components';
-import type { Component } from '$lib/course-components/genericComponent';
+import activities, { getActivityClass, type serializedActivity } from '$lib/activities';
+import type { Activity } from '$lib/course-activities/genericActivity';
 import { derived, get, writable, type Writable } from 'svelte/store';
 
 export interface courseMeta {
@@ -9,40 +9,48 @@ export interface courseMeta {
 
 export interface serializedCourse {
 	meta: courseMeta;
-	openComponent: number;
-	components: serializedComponent[];
+	openActivity: number;
+	activities: serializedActivity[];
 }
 
 export class Course {
 	static serialize(c: Course): serializedCourse {
-		const components = get(c.components).map((component) => {
-			const compClass = getComponentClass(component);
-			return compClass.serialize(component);
+		const activities = get(c.activities).map((activity) => {
+			const compClass = getActivityClass(activity);
+			return compClass.serialize(activity);
 		});
 
 		return {
 			meta: get(c.meta),
-			openComponent: get(c.openComponent),
-			components
+			openActivity: get(c.openActivity),
+			activities
 		};
 	}
 	static deserialize(c: serializedCourse) {
-		const course = new Course(c.meta.name, c.meta.weeks, [], c.openComponent);
-		c.components.forEach((component) => {
-			const componentClass = components.find((cClass) => cClass.type === component.type);
-			if (!componentClass) throw new Error(`Component type ${component.type} not found`);
-			course.addComponent(componentClass.deserialize(component, course.meta));
-		});
-		return course;
+		try {
+			const course = new Course(c.meta.name, c.meta.weeks, [], c.openActivity);
+			try {
+				c.activities.forEach((activity) => {
+					const activityClass = activities.find((cClass) => cClass.type === activity.type);
+					if (!activityClass) throw new Error(`Activity type ${activity.type} not found`);
+					course.addActivity(activityClass.deserialize(activity, course.meta));
+				});
+			} catch (error) {
+				console.error('Error deserializing activities', error);
+			}
+			return course;
+		} catch (error) {
+			console.error('Error deserializing course', error);
+		}
 	}
-	openComponent: Writable<number>;
+	openActivity: Writable<number>;
 	meta: Writable<courseMeta>;
-	private _components: Writable<Component[]> = writable([]);
-	public get components(): Writable<Component[]> {
-		return this._components;
+	private _activities: Writable<Activity[]> = writable([]);
+	public get activities(): Writable<Activity[]> {
+		return this._activities;
 	}
 	watchDerived() {
-		const d = derived([this.openComponent, this.meta, this._components], (e) => e);
+		const d = derived([this.openActivity, this.meta, this._activities], (e) => e);
 		d.subscribe(this.notify);
 	}
 	subscribe(f: Function) {
@@ -55,50 +63,50 @@ export class Course {
 		};
 	}
 	notify = () => this.subscribers.forEach((f) => f());
-	addComponent(component: Component, open = true) {
-		component.subscribe(() => {
+	addActivity(activity: Activity, open = true) {
+		activity.subscribe(() => {
 			this.notify();
 		});
-		this._components.update((c) => {
-			return [...c, component];
+		this._activities.update((c) => {
+			return [...c, activity];
 		});
-		if (open) this.openComponent.set(get(this.components).length - 1);
+		if (open) this.openActivity.set(get(this.activities).length - 1);
 	}
-	removeComponent(i: number) {
-		const numComponents = get(this.components).length;
-		if (numComponents === 1) {
-			this._components.set([]);
-			this.openComponent.set(-1);
+	removeActivity(i: number) {
+		const numActivities = get(this.activities).length;
+		if (numActivities === 1) {
+			this._activities.set([]);
+			this.openActivity.set(-1);
 		} else {
-			this._components.update((c) => {
+			this._activities.update((c) => {
 				c.splice(i, 1);
 				return c;
 			});
-			if (get(this.openComponent) === i) {
-				if (numComponents === i + 1) {
-					this.openComponent.set(i - 1);
+			if (get(this.openActivity) === i) {
+				if (numActivities === i + 1) {
+					this.openActivity.set(i - 1);
 				} else {
-					this.openComponent.set(i);
+					this.openActivity.set(i);
 				}
 			} else {
-				this.openComponent.update((o) => {
+				this.openActivity.update((o) => {
 					if (o > i) return o - 1;
 					return o;
 				});
 			}
-			console.log(get(this.openComponent));
+			console.log(get(this.openActivity));
 		}
 	}
 	constructor(
 		name = '',
 		weeks = 0,
-		components: Component[] = [],
-		openComponent = 0,
+		activities: Activity[] = [],
+		openActivity = 0,
 		private subscribers: Function[] = []
 	) {
-		this.openComponent = writable(openComponent);
+		this.openActivity = writable(openActivity);
 		this.meta = writable({ name, weeks });
-		components.forEach((c) => this.addComponent(c));
+		activities.forEach((c) => this.addActivity(c));
 		this.watchDerived();
 	}
 }

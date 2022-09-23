@@ -1,15 +1,15 @@
 <script lang="ts">
 	import type { Readable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
-	import { Frequency, type Component } from '$lib/course-components/genericComponent';
+	import { Frequency, type Activity } from '$lib/course-activities/genericActivity';
 
-	export let components: Readable<Component[]> | undefined;
-	export let openComponent: Readable<number> | undefined;
+	export let activities: Readable<Activity[]> | undefined;
+	export let openActivity: Readable<number> | undefined;
 
-	$: componentInst =
-		$components && $openComponent !== undefined ? $components[$openComponent] : undefined;
-	$: results = componentInst ? componentInst.results : undefined;
-	$: freq = componentInst ? componentInst.freq : undefined;
+	$: activityInst =
+		$activities && $openActivity !== undefined ? $activities[$openActivity] : undefined;
+	$: results = activityInst ? activityInst.results : undefined;
+	$: freq = activityInst ? activityInst.freq : undefined;
 
 	$: perOccurance = (value: number): string => {
 		let result;
@@ -45,13 +45,13 @@
 	$: filteredList = resultsList.filter((item) => item.value > 0);
 </script>
 
-{#if componentInst}
+{#if activityInst}
 	<div transition:fade={{ duration: 150 }}>
 		<h2>Configuration</h2>
-		{#key $openComponent}
+		{#key $openActivity}
 			<div>
-				{#each componentInst.form as formElem}
-					<svelte:component this={formElem && formElem.component} props={formElem.props} />
+				{#each activityInst.form as formElem}
+					<svelte:component this={formElem && formElem.activity} props={formElem.props} />
 				{/each}
 			</div>
 			{#if $results && filteredList.length > 0}

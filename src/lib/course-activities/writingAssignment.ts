@@ -1,8 +1,8 @@
 import { derived, writable, type Readable, type Writable, readable } from 'svelte/store';
 import type { courseMeta } from '../course';
 import * as form from '../form';
-import { Component, Frequency } from '$lib/course-components/genericComponent';
-import type { calculatedResults, derivedCalculated } from '../components';
+import { Activity, Frequency } from '$lib/course-activities/genericActivity';
+import type { calculatedResults, derivedCalculated } from '../activities';
 
 enum format {
 	Independent = 0,
@@ -26,7 +26,7 @@ enum drafting {
 	extensive = 2
 }
 
-export class WritingAssignment extends Component {
+export class WritingAssignment extends Activity {
 	static readonly writables = [
 		'instanceName',
 		'perCourse',
@@ -41,7 +41,7 @@ export class WritingAssignment extends Component {
 	static label = 'Writing Assignment';
 	static icon = '📝';
 	static description =
-		'This component is focused on writing assignments or activities such as essays, creating short stories, and research papers. A writing assignment may be independent or scheduled (for in-class writing assignments).';
+		'This activity is focused on writing assignments or activities such as essays, creating short stories, and research papers. A writing assignment may be independent or scheduled (for in-class writing assignments).';
 	freq = readable(Frequency.Course);
 	instanceName = writable('Writing Assignment');
 	format: Writable<format> = writable(format.Independent);
@@ -60,7 +60,7 @@ export class WritingAssignment extends Component {
 	constructor(courseMeta: Writable<courseMeta>) {
 		super(courseMeta);
 		this.form = [
-			new form.TextInput('componentName', this.instanceName, 'Assignment Name'),
+			new form.TextInput('activityName', this.instanceName, 'Assignment Name'),
 			new form.RangeInput('perCourse', this.perCourse, 'Assignments Per Course', {
 				min: 0,
 				max: 14

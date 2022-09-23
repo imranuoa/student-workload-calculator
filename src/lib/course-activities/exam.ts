@@ -1,15 +1,15 @@
 import { derived, writable, type Readable, type Writable, readable } from 'svelte/store';
 import type { courseMeta } from '../course';
 import * as form from '../form';
-import { Component, Frequency } from '$lib/course-components/genericComponent';
-import type { calculatedResults, derivedCalculated } from '../components';
+import { Activity, Frequency } from '$lib/course-activities/genericActivity';
+import type { calculatedResults, derivedCalculated } from '../activities';
 
 enum format {
 	Independent = 0,
 	Scheduled = 1
 }
 
-export class Exam extends Component {
+export class Exam extends Activity {
 	static readonly writables = ['instanceName', 'format', 'perCourse', 'prepLength', 'examLength'];
 	static type = 'Exam';
 	static label = 'Exam';
@@ -29,7 +29,7 @@ export class Exam extends Component {
 	constructor(courseMeta: Writable<courseMeta>) {
 		super(courseMeta);
 		this.form = [
-			new form.TextInput('componentName', this.instanceName, 'Exam Name'),
+			new form.TextInput('activityName', this.instanceName, 'Exam Name'),
 			new form.SingleSelectInput('format', this.format, 'Exam Format', {
 				options: readable(['Independent', 'Scheduled'])
 			}),

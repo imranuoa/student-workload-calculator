@@ -1,28 +1,28 @@
 <script lang="ts">
-	import { getComponentClass } from '$lib/components';
-	import { Frequency, type Component } from '$lib/course-components/genericComponent';
+	import { getActivityClass } from '$lib/activities';
+	import { Frequency, type Activity } from '$lib/course-activities/genericActivity';
 	import { createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher();
 
 	export let active: boolean;
-	export let component: Component;
+	export let activity: Activity;
 
-	$: instanceName = component.instanceName;
-	$: freq = component.freq;
-	$: derivedCalculated = component.derivedCalculated;
+	$: instanceName = activity.instanceName;
+	$: freq = activity.freq;
+	$: derivedCalculated = activity.derivedCalculated;
 </script>
 
 <div
-	class="component-row"
+	class="activity-row"
 	class:active
 	role="button"
 	on:click={() => {
-		dispatch('select', component);
+		dispatch('select', activity);
 	}}
 >
 	<span class="icon">
-		{getComponentClass(component).icon}
+		{getActivityClass(activity).icon}
 	</span>
 	<span class="name">{$instanceName}</span>
 	<span class="hours">
@@ -36,7 +36,7 @@
 		class="btn btn-block btn-danger"
 		aria-label="delete"
 		on:click|stopPropagation={() => {
-			dispatch('delete', component);
+			dispatch('delete', activity);
 		}}
 	>
 		<span class="icon">-</span>
@@ -44,7 +44,7 @@
 </div>
 
 <style lang="postcss">
-	.component-row {
+	.activity-row {
 		@apply grid p-1 items-center rounded transition;
 		grid-template-columns: 4ch 1fr auto auto;
 		&:hover {

@@ -12,7 +12,7 @@
 	{/if}
 	{#if $value}
 		{#each elements as element}
-			<svelte:component this={element.component} props={element.props} />
+			<svelte:component this={element.activity} props={element.props} />
 		{/each}
 	{/if}
 </div>

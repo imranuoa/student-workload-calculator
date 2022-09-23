@@ -2,11 +2,11 @@ import { derived, get, type Readable, type Writable } from 'svelte/store';
 import type { courseMeta } from '../course';
 import type { FormElement } from '../form';
 import type {
-	serializedComponent,
+	serializedActivity,
 	calculatedResults,
 	derivedCalculated,
-	ComponentSubClass
-} from '../components';
+	ActivitySubClass
+} from '../activities';
 
 export enum Frequency {
 	Weekly = 0,
@@ -15,9 +15,9 @@ export enum Frequency {
 
 export type writableProperties = string[];
 
-export abstract class Component {
+export abstract class Activity {
 	static readonly writables: writableProperties = ['instanceName'];
-	static serialize(instance: Component): serializedComponent {
+	static serialize(instance: Activity): serializedActivity {
 		return {
 			type: this.type,
 			props: this.writables.reduce((acc, cur) => {
@@ -26,30 +26,30 @@ export abstract class Component {
 			}, {} as Record<string, any>)
 		};
 	}
-	static deserialize(obj: serializedComponent, courseMeta: Writable<courseMeta>): Component {
+	static deserialize(obj: serializedActivity, courseMeta: Writable<courseMeta>): Activity {
 		try {
-			const component = new (this as ComponentSubClass)(courseMeta);
+			const activity = new (this as ActivitySubClass)(courseMeta);
 			try {
 				for (const prop of this.writables) {
 					if (obj.props[prop] !== undefined) {
-						((component as any)[prop] as Writable<any>).set(obj.props[prop]);
+						((activity as any)[prop] as Writable<any>).set(obj.props[prop]);
 					}
 				}
 			} catch (error) {
 				console.error(
-					`Failed to deserialize '${this.type}' component. Failed while setting writables. Returning instance with some default values`,
+					`Failed to deserialize '${this.type}' activity. Failed while setting writables. Returning instance with some default values`,
 					error
 				);
 			}
-			return component;
+			return activity;
 		} catch (error) {
 			throw new Error(
-				`Failed to deserialize component: '${this.type}'. Failed while creating instance`
+				`Failed to deserialize activity: '${this.type}'. Failed while creating instance`
 			);
 		}
 	}
-	// About the component
-	static type = 'Component';
+	// About the activity
+	static type = 'Activity';
 	static label: string;
 	static icon: string;
 	static description: string;
@@ -58,7 +58,7 @@ export abstract class Component {
 	abstract freq: Readable<Frequency>;
 	abstract readonly results: Readable<calculatedResults>;
 	abstract derivedCalculated: Readable<derivedCalculated>;
-	// Data for the instance of the component type
+	// Data for the instance of the activity type
 	setDerived(courseMeta: Readable<courseMeta>) {
 		return derived([this.results, courseMeta, this.freq], ([$results, $courseMeta, $freq]) => {
 			if (!$results) return { perWeekI: 0, perWeekS: 0, perCourseI: 0, perCourseS: 0 };

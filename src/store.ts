@@ -1,10 +1,10 @@
 import { writable as localStorageStore } from 'svelte-local-storage-store';
 import { Course } from '$lib/course';
 import { get, writable, type Writable } from 'svelte/store';
-import { PrimaryMeeting } from '$lib/course-components/primaryMeeting';
+import { PrimaryMeeting } from '$lib/course-activities/primaryMeeting';
 import { goto } from '$app/navigation';
 
-const storeVersion = '1.0.0';
+const storeVersion = 'v2';
 
 const serializer = {
 	stringify(value: Course[]) {
@@ -17,8 +17,10 @@ const serializer = {
 		const courseList: Course[] = [];
 		parsed.forEach((c: any) => {
 			const course = Course.deserialize(c);
-			course.subscribe(notifyStore);
-			courseList.push(course);
+			if (course) {
+				course.subscribe(notifyStore);
+				courseList.push(course);
+			}
 		});
 		console.log(parsed);
 		return courseList;
@@ -64,7 +66,7 @@ export const exportCourseData = () => {
 	const url = URL.createObjectURL(blob);
 	const link = document.createElement('a');
 	link.href = url;
-	link.download = 'components.json';
+	link.download = 'activities.json';
 	link.click();
 };
 
@@ -73,8 +75,10 @@ export const importCourseData = (data: string) => {
 		const courseData = JSON.parse(data);
 		courseData.forEach((c: any) => {
 			const course = Course.deserialize(c);
-			course.subscribe(notifyStore);
-			courses.update((c) => [...c, course]);
+			if (course) {
+				course.subscribe(notifyStore);
+				courses.update((c) => [...c, course]);
+			}
 		});
 	} catch (error) {
 		console.error(error);

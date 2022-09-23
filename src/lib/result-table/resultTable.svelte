@@ -3,14 +3,14 @@
 	import { derived, get } from 'svelte/store';
 	import { onMount } from 'svelte';
 	import csvDownload from 'json-to-csv-export';
-	import type { Component } from '$lib/course-components/genericComponent';
+	import type { Activity } from '$lib/course-activities/genericActivity';
 	import ResultTableRow from './resultTableRow.svelte';
 
 	const dispatch = createEventDispatcher();
 
-	export let components: Component[];
+	export let activities: Activity[];
 	export let courseWeeks: number;
-	export let openComponent: number | null = null;
+	export let openActivity: number | null = null;
 
 	const columns = [
 		{ name: 'Name', detail: 'Name' },
@@ -32,7 +32,7 @@
 	};
 
 	$: totals = derived(
-		components.map((c) => c.derivedCalculated),
+		activities.map((c) => c.derivedCalculated),
 		(values) => ({
 			perWeekI: {
 				median: median(values.map((v) => v.perWeekI)),
@@ -62,7 +62,7 @@
 	);
 
 	const buildData = () =>
-		components.map((c) => ({
+		activities.map((c) => ({
 			name: get(c.instanceName),
 			results: get(c.results),
 			derived: get(c.derivedCalculated)
@@ -79,7 +79,7 @@
 			const url = URL.createObjectURL(blob);
 			const link = document.createElement('a');
 			link.href = url;
-			link.download = 'components.json';
+			link.download = 'activities.json';
 			link.click();
 		};
 		downloadXLSX = () => {
@@ -90,7 +90,7 @@
 					...c.derived,
 					...c.results
 				})),
-				filename: 'components.csv'
+				filename: 'activities.csv'
 			});
 		};
 	});
@@ -105,13 +105,13 @@
 		</tr>
 	</thead>
 	<tbody>
-		{#each components as component}
+		{#each activities as activity}
 			<ResultTableRow
-				{component}
+				{activity}
 				totals={$totals}
 				{courseWeeks}
-				active={openComponent === null ? null : components[openComponent] === component}
-				on:click={() => dispatch('selectComponent', component)}
+				active={openActivity === null ? null : activities[openActivity] === activity}
+				on:click={() => dispatch('selectActivity', activity)}
 			/>
 		{/each}
 	</tbody>

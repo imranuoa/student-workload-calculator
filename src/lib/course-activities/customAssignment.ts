@@ -1,10 +1,10 @@
 import { derived, writable, type Readable, type Writable, readable } from 'svelte/store';
 import type { courseMeta } from '../course';
 import * as form from '../form';
-import { Component, Frequency } from '$lib/course-components/genericComponent';
-import type { calculatedResults, derivedCalculated } from '../components';
+import { Activity, Frequency } from '$lib/course-activities/genericActivity';
+import type { calculatedResults, derivedCalculated } from '../activities';
 
-export class CustomAssignment extends Component {
+export class CustomAssignment extends Activity {
 	static readonly writables = [
 		'instanceName',
 		'freq',
@@ -33,7 +33,7 @@ export class CustomAssignment extends Component {
 	constructor(courseMeta: Writable<courseMeta>) {
 		super(courseMeta);
 		this.form = [
-			new form.TextInput('componentName', this.instanceName, 'Assignment Name'),
+			new form.TextInput('activityName', this.instanceName, 'Assignment Name'),
 			new form.SingleSelectInput('freq', this.freq, 'Frequency', {
 				options: readable(['Weekly', 'Course'])
 			}),

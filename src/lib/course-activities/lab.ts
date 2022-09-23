@@ -1,10 +1,10 @@
 import { get, derived, writable, type Readable, type Writable, readable } from 'svelte/store';
 import type { courseMeta } from '../course';
 import { RangeInput, TextInput, CheckSelectInput, CheckboxInput } from '../form';
-import { Component, Frequency } from '$lib/course-components/genericComponent';
-import type { serializedComponent, calculatedResults, derivedCalculated } from '../components';
+import { Activity, Frequency } from '$lib/course-activities/genericActivity';
+import type { serializedActivity, calculatedResults, derivedCalculated } from '../activities';
 
-export class Lab extends Component {
+export class Lab extends Activity {
 	static readonly writables = [
 		'instanceName',
 		'labsPerWeek',
@@ -18,7 +18,7 @@ export class Lab extends Component {
 	static label = 'Lab';
 	static icon = '🥼';
 	static description =
-		'This component is focused on the Laboratory portion of courses. Labs can have scheduled and independent activities. When the scheduled box is checked (the default state), the hours per lab portion is added to scheduled hours; preparation and post-lab inputs are added to independent hours. If the check is removed, all hours are assigned to the independent category and reflected in workload summary accordingly.';
+		'This activity is focused on the Laboratory portion of courses. Labs can have scheduled and independent activities. When the scheduled box is checked (the default state), the hours per lab portion is added to scheduled hours; preparation and post-lab inputs are added to independent hours. If the check is removed, all hours are assigned to the independent category and reflected in workload summary accordingly.';
 	freq = readable(Frequency.Weekly);
 	instanceName = writable('Lab');
 	labsPerWeek = writable(1);
@@ -39,7 +39,7 @@ export class Lab extends Component {
 		);
 		this.weeksRunning = writable(get(this.weeksList));
 		this.form = [
-			new TextInput('componentName', this.instanceName, 'Component Name'),
+			new TextInput('activityName', this.instanceName, 'Activity Name'),
 			new RangeInput('labsPerWeek', this.labsPerWeek, 'Labs per week', {
 				min: 0,
 				max: 14
