@@ -55,7 +55,7 @@
 				{/each}
 			</div>
 			{#if $results && filteredList.length > 0}
-				<div class="results">
+				<div class="results mt-4">
 					<h2>Results</h2>
 					<p>
 						{#if $freq == Frequency.Weekly}
