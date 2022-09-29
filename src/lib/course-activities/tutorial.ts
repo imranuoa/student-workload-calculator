@@ -23,7 +23,7 @@ export class Tutorial extends Activity {
 	tutorialsPerWeek = writable(1);
 	tutorialLength = writable(1);
 	prepTime = writable(30);
-	isScheduled = writable(false);
+	isScheduled = writable(true);
 	postTutorial = writable(30);
 	weeksRunning: Writable<string[]>;
 	readonly weeksList: Readable<string[]>;

@@ -3,6 +3,7 @@
 	import { derived, get } from 'svelte/store';
 	import { onMount } from 'svelte';
 	import csvDownload from 'json-to-csv-export';
+
 	import type { Activity } from '$lib/course-activities/genericActivity';
 	import ResultTableRow from './resultTableRow.svelte';
 
@@ -94,6 +95,15 @@
 			});
 		};
 	});
+
+	let data = {
+		labels: ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'],
+		datasets: [
+			{
+				values: [10, 12, 3, 9, 8, 15, 9]
+			}
+		]
+	};
 </script>
 
 <table>

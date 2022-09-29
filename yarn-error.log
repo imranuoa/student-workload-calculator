@@ -1,5 +1,5 @@
 Arguments: 
-  /opt/homebrew/Cellar/node/18.7.0/bin/node /opt/homebrew/bin/yarn add typescript-json-serializer
+  /opt/homebrew/Cellar/node/18.7.0/bin/node /opt/homebrew/bin/yarn add --dev @types/svelte-frappe-charts
 
 PATH: 
   /Users/zmil425/.rbenv/shims:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/zmil425/.yarn/bin:/Users/zmil425/Documents/Git/team10-backend/backend/node_modules/.bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/zmil425/.rbenv/shims:/opt/homebrew/bin:/opt/homebrew/sbin
@@ -14,11 +14,17 @@ Platform:
   darwin arm64
 
 Trace: 
-  Error: unable to get local issuer certificate
-      at TLSSocket.onConnectSecure (node:_tls_wrap:1534:34)
-      at TLSSocket.emit (node:events:513:28)
-      at TLSSocket._finishInit (node:_tls_wrap:948:8)
-      at ssl.onhandshakedone (node:_tls_wrap:729:12)
+  Error: https://registry.yarnpkg.com/@types%2fsvelte-frappe-charts: Not found
+      at params.callback [as _callback] (/opt/homebrew/lib/node_modules/yarn/lib/cli.js:66145:18)
+      at self.callback (/opt/homebrew/lib/node_modules/yarn/lib/cli.js:140890:22)
+      at Request.emit (node:events:513:28)
+      at Request.<anonymous> (/opt/homebrew/lib/node_modules/yarn/lib/cli.js:141862:10)
+      at Request.emit (node:events:513:28)
+      at IncomingMessage.<anonymous> (/opt/homebrew/lib/node_modules/yarn/lib/cli.js:141784:12)
+      at Object.onceWrapper (node:events:627:28)
+      at IncomingMessage.emit (node:events:525:35)
+      at endReadableNT (node:internal/streams/readable:1359:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:82:21)
 
 npm manifest: 
   {
@@ -36,17 +42,24 @@ npm manifest:
   	},
   	"devDependencies": {
   		"@sveltejs/adapter-auto": "next",
+  		"@sveltejs/adapter-static": "^1.0.0-next.43",
   		"@sveltejs/kit": "next",
   		"@tailwindcss/forms": "^0.5.2",
   		"@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
+  		"@types/humanize-duration": "^3.27.1",
   		"autoprefixer": "^10.4.7",
+  		"humanize-duration": "^3.27.3",
+  		"json-to-csv-export": "^2.0.2",
+  		"luxon": "^3.0.4",
   		"postcss": "^8.4.14",
   		"postcss-import": "^15.0.0",
   		"postcss-load-config": "^4.0.1",
   		"prettier": "^2.6.2",
   		"prettier-plugin-svelte": "^2.7.0",
-  		"svelte": "^3.44.0",
+  		"svelte": "^3.50.1",
   		"svelte-check": "^2.7.1",
+  		"svelte-frappe-charts": "^1.9.2",
+  		"svelte-loading-spinners": "^0.1.7",
   		"svelte-local-storage-store": "^0.3.1",
   		"svelte-preprocess": "^4.10.7",
   		"tailwindcss": "^3.1.5",
@@ -180,6 +193,11 @@ Lockfile:
       set-cookie-parser "^2.4.8"
       tiny-glob "^0.2.9"
   
+  "@sveltejs/adapter-static@^1.0.0-next.43":
+    version "1.0.0-next.43"
+    resolved "https://registry.yarnpkg.com/@sveltejs/adapter-static/-/adapter-static-1.0.0-next.43.tgz#1505075d9d6ee2e0bac3dde250a7264235e73015"
+    integrity sha512-PAgSp1GA8HkYE4p30/sBvJme2nefhcTBJafqQdMNoUksWZF2WzuL8OEO8wa9ndE6cghcGk3j6Ve0Oskg/wtTOw==
+  
   "@sveltejs/adapter-vercel@1.0.0-next.72":
     version "1.0.0-next.72"
     resolved "https://registry.yarnpkg.com/@sveltejs/adapter-vercel/-/adapter-vercel-1.0.0-next.72.tgz#97f11fdc642c861ea3fc76a1127e5fe6fe90a1dd"
@@ -231,6 +249,11 @@ Lockfile:
     integrity sha512-WhHoFBx19TnH/c+xLwT/sxei6+4RpdfiyG3MYXfmLaMsADmVqBkF7B6lDalgZD9YdM459MF7DtxVbWkOrV7IaQ==
     dependencies:
       postcss-nested "^5.0.5"
+  
+  "@types/humanize-duration@^3.27.1":
+    version "3.27.1"
+    resolved "https://registry.yarnpkg.com/@types/humanize-duration/-/humanize-duration-3.27.1.tgz#f14740d1f585a0a8e3f46359b62fda8b0eaa31e7"
+    integrity sha512-K3e+NZlpCKd6Bd/EIdqjFJRFHbrq5TzPPLwREk5Iv/YoIjQrs6ljdAUCo+Lb2xFlGNOjGSE0dqsVD19cZL137w==
   
   "@types/node@*":
     version "18.7.14"
@@ -735,6 +758,11 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/fraction.js/-/fraction.js-4.2.0.tgz#448e5109a313a3527f5a3ab2119ec4cf0e0e2950"
     integrity sha512-MhLuK+2gUcnZe8ZHlaaINnQLl0xRIGRfcGk2yl8xoQAfHrSsL3rYu6FCmBdkdbhc9EPlwyGHewaRsvwRMJtAlA==
   
+  frappe-charts@^1.6.2:
+    version "1.6.2"
+    resolved "https://registry.yarnpkg.com/frappe-charts/-/frappe-charts-1.6.2.tgz#4671a943a8606e5020180fa65c8ea1835c510baf"
+    integrity sha512-9TC3/+YVUi84yYoEbxFiSqu+1FQ5If/ydUNj6i8FRpwynd08t6a7RkS+IRJozAk6NfdL8/LVTTE1DUOjjKZZxg==
+  
   fs-minipass@^2.0.0:
     version "2.1.0"
     resolved "https://registry.yarnpkg.com/fs-minipass/-/fs-minipass-2.1.0.tgz#7f5036fdbf12c63c169190cbe4199c852271f9fb"
@@ -833,6 +861,11 @@ Lockfile:
       agent-base "6"
       debug "4"
   
+  humanize-duration@^3.27.3:
+    version "3.27.3"
+    resolved "https://registry.yarnpkg.com/humanize-duration/-/humanize-duration-3.27.3.tgz#db654e72ebf5ccfe232c7f56bc58aa3a6fe4df88"
+    integrity sha512-iimHkHPfIAQ8zCDQLgn08pRqSVioyWvnGfaQ8gond2wf7Jq2jJ+24ykmnRyiz3fIldcn4oUuQXpjqKLhSVR7lw==
+  
   import-fresh@^3.2.1:
     version "3.3.0"
     resolved "https://registry.yarnpkg.com/import-fresh/-/import-fresh-3.3.0.tgz#37162c25fcb9ebaa2e6e53d5b4d88ce17d9e0c2b"
@@ -890,6 +923,11 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/is-number/-/is-number-7.0.0.tgz#7535345b896734d5f80c4d06c50955527a14f12b"
     integrity sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==
   
+  json-to-csv-export@^2.0.2:
+    version "2.0.2"
+    resolved "https://registry.yarnpkg.com/json-to-csv-export/-/json-to-csv-export-2.0.2.tgz#3acc1dc89e1a5452ab696d94092550dd142b42d5"
+    integrity sha512-LYuRCAQzNCocKIgwIcL9c6mBTAQuGXcehXejRCTXCf39zTNgS9TuqObX8DsKFnBHGaOZkQDXOVUzAvH3KqSymw==
+  
   kleur@^4.1.4, kleur@^4.1.5:
     version "4.1.5"
     resolved "https://registry.yarnpkg.com/kleur/-/kleur-4.1.5.tgz#95106101795f7050c6c650f350c683febddb1780"
@@ -906,6 +944,11 @@ Lockfile:
     integrity sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==
     dependencies:
       yallist "^4.0.0"
+  
+  luxon@^3.0.4:
+    version "3.0.4"
+    resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.0.4.tgz#d179e4e9f05e092241e7044f64aaa54796b03929"
+    integrity sha512-aV48rGUwP/Vydn8HT+5cdr26YYQiUZ42NM6ToMoaGKwYfWbfLeRkEu1wXWMHBZT6+KyLfcbbtVcoQFCbbPjKlw==
   
   magic-string@^0.25.7:
     version "0.25.9"
@@ -1426,10 +1469,23 @@ Lockfile:
       svelte-preprocess "^4.0.0"
       typescript "*"
   
+  svelte-frappe-charts@^1.9.2:
+    version "1.9.2"
+    resolved "https://registry.yarnpkg.com/svelte-frappe-charts/-/svelte-frappe-charts-1.9.2.tgz#c28dcb39a5094892bed62a8b29bfe42e498e0ef8"
+    integrity sha512-FYwbI5lY6fiN8b+5IFu6RvcgpWpCKTTpL0sGCqbwgbth4cIZoOjIAdU7JbzjuaF5mUCHRt4TSnGEsK+345C2hw==
+    dependencies:
+      frappe-charts "^1.6.2"
+      svelte "^3.48.0"
+  
   svelte-hmr@^0.14.12:
     version "0.14.12"
     resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.14.12.tgz#a127aec02f1896500b10148b2d4d21ddde39973f"
     integrity sha512-4QSW/VvXuqVcFZ+RhxiR8/newmwOCTlbYIezvkeN6302YFRE8cXy0naamHcjz8Y9Ce3ITTZtrHrIL0AGfyo61w==
+  
+  svelte-loading-spinners@^0.1.7:
+    version "0.1.7"
+    resolved "https://registry.yarnpkg.com/svelte-loading-spinners/-/svelte-loading-spinners-0.1.7.tgz#3fa6fa0ef67ab635773bf20b07d0b071debbadaa"
+    integrity sha512-EKCId1DjVL2RSUVJJsvtNcqQHox03XIgh4xh/4p7r6ST7d8mut6INY9/LqK4A17PFU64+3quZmqiSfOlf480CA==
   
   svelte-local-storage-store@^0.3.1:
     version "0.3.1"
@@ -1458,10 +1514,10 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/svelte-use-click-outside/-/svelte-use-click-outside-1.0.0.tgz#9db6208c314b5cb9cc80a38284a89da176c8075d"
     integrity sha512-tOWeMPxeIoW9RshS0WbogRhdYdbxcJV0ebkzSh1lwR7Ihl0hSZMmB4YyCHHoXJK4xcbxCCFh0AnQ1vkzGZfLVQ==
   
-  svelte@^3.44.0:
-    version "3.49.0"
-    resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.49.0.tgz#5baee3c672306de1070c3b7888fc2204e36a4029"
-    integrity sha512-+lmjic1pApJWDfPCpUUTc1m8azDqYCG1JN9YEngrx/hUyIcFJo6VZhj0A1Ai0wqoHcEIuQy+e9tk+4uDgdtsFA==
+  svelte@^3.48.0, svelte@^3.50.1:
+    version "3.50.1"
+    resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.50.1.tgz#b35fbc5e79ddd71e8bb27c3149ee6ff903841239"
+    integrity sha512-bS4odcsdj5D5jEg6riZuMg5NKelzPtmsCbD9RG+8umU03TeNkdWnP6pqbCm0s8UQNBkqk29w/Bdubn3C+HWSwA==
   
   tailwindcss@^3.1.5:
     version "3.1.8"

@@ -59,10 +59,11 @@ export abstract class Activity {
 	abstract readonly results: Readable<calculatedResults>;
 	abstract derivedCalculated: Readable<derivedCalculated>;
 	// Data for the instance of the activity type
-	setDerived(courseMeta: Readable<courseMeta>) {
+	setDerived(courseMeta: Readable<courseMeta>): Readable<derivedCalculated> {
 		return derived([this.results, courseMeta, this.freq], ([$results, $courseMeta, $freq]) => {
-			if (!$results) return { perWeekI: 0, perWeekS: 0, perCourseI: 0, perCourseS: 0 };
-			let perWeek, perCourse;
+			if (!$results)
+				return { perWeekI: 0, perWeekS: 0, perCourseI: 0, perCourseS: 0, weeklyI: [], weeklyS: [] };
+			let perWeek: number, perCourse: number;
 			if ($freq === Frequency.Weekly) {
 				perWeek = $results.occurences;
 				const weeksRunning = $results.weeksRunning?.filter((x) => x).length;
@@ -75,11 +76,19 @@ export abstract class Activity {
 			let IPerOcc =
 				$results.IndependentHoursPer + $results.prepHoursPer + $results.postActivityHoursPer;
 			let SPerOcc = $results.scheduledHoursPer;
+			let weeklyI = new Array($courseMeta.weeks).fill(IPerOcc * perWeek);
+			let weeklyS = new Array($courseMeta.weeks).fill(SPerOcc * perWeek);
+			if ($results.weeksRunning) {
+				weeklyI = $results.weeksRunning.map((w) => (w ? IPerOcc * perWeek : 0));
+				weeklyS = $results.weeksRunning.map((w) => (w ? SPerOcc * perWeek : 0));
+			}
 			return {
 				perWeekI: Math.round(perWeek * IPerOcc * 100) / 100,
 				perWeekS: Math.round(perWeek * SPerOcc * 100) / 100,
 				perCourseI: Math.round(perCourse * IPerOcc * 100) / 100,
-				perCourseS: Math.round(perCourse * SPerOcc * 100) / 100
+				perCourseS: Math.round(perCourse * SPerOcc * 100) / 100,
+				weeklyI,
+				weeklyS
 			};
 		});
 	}

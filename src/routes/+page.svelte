@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { clickOutside } from 'svelte-use-click-outside';
-	import ResultTable from '$lib/result-table/resultTable.svelte';
+	import ResultTable from '$lib/results/resultTable.svelte';
 	import { courses, activeCourse, addCourse } from '../store';
 	import Config from '$lib/edit-activity/config.svelte';
 	import ActivityList from '$lib/add-activity/manageActivities.svelte';
 	import { fade } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import ResultChart from '$lib/results/resultChart.svelte';
 	// import arrowPattern from '$lib/assets/arrow-left.svg';
 
 	let addActivityOpen: boolean;
@@ -40,6 +41,9 @@
 	const openCourseConfig = () => {
 		goto('/configure');
 	};
+
+	let resultsWidth: number;
+	let resultsHeight: number;
 </script>
 
 {#if activeCourseInst && $activeCourseMeta && $activeCourseActivities}
@@ -70,8 +74,8 @@
 				<div class="config">
 					<Config activities={activeCourseActivities} {openActivity} />
 				</div>
-				<div class="results">
-					{#if $activeCourseActivities && $activeCourseMeta && $activeCourseActivities.length > 0}
+				<div class="results" bind:clientWidth={resultsWidth} bind:clientHeight={resultsHeight}>
+					{#if activeCourseActivities && activeCourseMeta && $activeCourseActivities && $activeCourseMeta && $activeCourseActivities.length > 0}
 						<ResultTable
 							activities={$activeCourseActivities}
 							courseWeeks={$activeCourseMeta.weeks}
@@ -82,6 +86,7 @@
 								else if (matchedIndex !== -1) $openActivity = matchedIndex;
 							}}
 						/>
+						<ResultChart activities={activeCourseActivities} meta={activeCourseMeta} />
 					{:else}
 						<div class="no-activities-results" in:fade>
 							<div class="arrows-wrap">
@@ -101,7 +106,7 @@
 
 <style lang="postcss">
 	.calculator-layout {
-		@apply flex gap-8 p-8 min-h-full pb-5 flex-wrap;
+		@apply flex gap-8 p-8 min-h-full pb-5;
 		--activities-pane-width: 20rem;
 		--activities-pane-extra-width: 0rem;
 		--config-pane-width: 25rem;
@@ -212,6 +217,15 @@
 		}
 		to {
 			box-shadow: 0 0 10px -6px #4daafb;
+		}
+	}
+
+	@media screen and (max-width: 1400px) {
+		.calculator-layout {
+			@apply flex-wrap;
+			.results {
+				@apply w-full basis-full;
+			}
 		}
 	}
 	@media screen and (max-width: 1024px) {
