@@ -1,30 +1,8 @@
 <script lang="ts">
 	import { derived, get, readable, type Readable } from 'svelte/store';
 
-	import {
-		Chart as ChartJS,
-		Title,
-		Tooltip,
-		Legend,
-		LineElement,
-		LinearScale,
-		PointElement,
-		CategoryScale,
-		Filler,
-		LineController
-	} from 'chart.js';
-
-	ChartJS.register(
-		Title,
-		Tooltip,
-		Legend,
-		LineElement,
-		LinearScale,
-		PointElement,
-		CategoryScale,
-		Filler
-	);
-	ChartJS.register(LineController);
+	import { Chart, registerables } from 'chart.js/dist/chart.mjs';
+	Chart.register(...registerables);
 
 	import type { Activity } from '$lib/course-activities/genericActivity';
 	import { onMount } from 'svelte';
@@ -95,7 +73,7 @@
 		]
 	};
 
-	let chart: ChartJS;
+	let chart: Chart;
 
 	$: if (chart && $activities) {
 		chart.data.datasets[0].data = $independantSum;
@@ -104,7 +82,7 @@
 	}
 
 	onMount(() => {
-		chart = new ChartJS(canvas, {
+		chart = new Chart(canvas, {
 			type: 'line',
 			data,
 			options: {
