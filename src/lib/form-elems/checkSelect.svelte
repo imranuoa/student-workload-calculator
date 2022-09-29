@@ -51,7 +51,7 @@
 
 <label class="block" for="rangeInput" style="--numOptions: {$options.length}">
 	<span class="text-gray-700">
-		{label} <i class="text-sm align-baseline">(click or drag to select)</i>
+		{label} <i class="text-sm align-baseline">(click or drag to delete)</i>
 	</span>
 	<div class="daySelectGroup" bind:this={selectGroup}>
 		{#each $options as option}
