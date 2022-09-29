@@ -2,6 +2,7 @@
 	import { getActivityClass } from '$lib/activities';
 	import { Frequency, type Activity } from '$lib/course-activities/genericActivity';
 	import { createEventDispatcher } from 'svelte';
+	import Duration from 'humanize-duration';
 
 	const dispatch = createEventDispatcher();
 
@@ -11,6 +12,32 @@
 	$: instanceName = activity.instanceName;
 	$: freq = activity.freq;
 	$: derivedCalculated = activity.derivedCalculated;
+
+	const shortEnglishHumanizer = Duration.humanizer({
+		language: 'shortEn',
+		languages: {
+			shortEn: {
+				y: (v) => (v === 1 ? 'y' : 'yrs'),
+				mo: (v) => (v === 1 ? 'mo' : 'months'),
+				w: (v) => (v === 1 ? 'w' : 'wks'),
+				d: (v) => (v === 1 ? 'd' : 'days'),
+				h: (v) => (v === 1 ? 'h' : 'hrs'),
+				m: (v) => (v === 1 ? 'min' : 'mins'),
+				s: (v) => (v === 1 ? 's' : 'secs'),
+				ms: (v) => (v === 1 ? 'ms' : 'ms')
+			}
+		}
+	});
+
+	$: perOccurance = (value: number): string => {
+		return shortEnglishHumanizer(value * 60 * 60 * 1000, {
+			units: ['h'],
+			round: true,
+			spacer: '',
+			serialComma: false,
+			language: 'shortEn'
+		});
+	};
 </script>
 
 <div
@@ -27,9 +54,9 @@
 	<span class="name">{$instanceName}</span>
 	<span class="hours">
 		{#if $freq == Frequency.Weekly}
-			{$derivedCalculated.perWeekI + $derivedCalculated.perWeekS} Hrs per Week
+			{perOccurance($derivedCalculated.perWeekI + $derivedCalculated.perWeekS)} per Week
 		{:else}
-			{$derivedCalculated.perCourseI + $derivedCalculated.perCourseS} Hrs per Course
+			{perOccurance($derivedCalculated.perCourseI + $derivedCalculated.perCourseS)} per Course
 		{/if}
 	</span>
 	<button

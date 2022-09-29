@@ -2,6 +2,7 @@
 	import type { Readable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 	import { Frequency, type Activity } from '$lib/course-activities/genericActivity';
+	import Duration from 'humanize-duration';
 
 	export let activities: Readable<Activity[]> | undefined;
 	export let openActivity: Readable<number> | undefined;
@@ -12,10 +13,13 @@
 	$: freq = activityInst ? activityInst.freq : undefined;
 
 	$: perOccurance = (value: number): string => {
-		let result;
-		if (!$results) result = 0;
-		else result = Math.round(value * $results.occurences * 100) / 100;
-		return `${result} ${result === 1 ? 'hour' : 'hours'}`;
+		if (!$results) return '0 hours';
+		return Duration(value * $results.occurences * 60 * 60 * 1000, {
+			units: ['h', 'm'],
+			round: true,
+			conjunction: ' and ',
+			serialComma: false
+		});
 	};
 
 	$: resultsList = $results
