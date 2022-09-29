@@ -63,11 +63,19 @@
 	);
 
 	const buildData = () =>
-		activities.map((c) => ({
-			name: get(c.instanceName),
-			results: get(c.results),
-			derived: get(c.derivedCalculated)
-		}));
+		activities.map((a) => {
+			const derived = get(a.derivedCalculated);
+			return {
+				name: get(a.instanceName),
+				results: get(a.results),
+				derived: {
+					perWeekI: derived.perWeekI,
+					perWeekS: derived.perWeekS,
+					perCourseI: derived.perCourseI,
+					perCourseS: derived.perCourseS
+				}
+			};
+		});
 
 	let downloadJSON: Function;
 	let downloadXLSX: Function;
