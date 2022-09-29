@@ -152,10 +152,10 @@
 	</tfoot>
 </table>
 
-<div class="mt-4">
+<div class="mt-4 flex gap-4 flex-wrap">
 	<!-- Download -->
-	<button class="btn" on:click={() => downloadJSON()}>Download (JSON)</button>
-	<button class="btn" on:click={() => downloadXLSX()}>Download (CSV)</button>
+	<button class="btn" on:click={() => downloadJSON()}>Download (JSON for data analysis)</button>
+	<button class="btn" on:click={() => downloadXLSX()}>Download (Spreadsheet for viewing)</button>
 </div>
 
 <style lang="postcss">
