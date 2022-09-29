@@ -3,6 +3,7 @@
 	import { fade } from 'svelte/transition';
 	import { Frequency, type Activity } from '$lib/course-activities/genericActivity';
 	import Duration from 'humanize-duration';
+	import RangeInput from '$lib/form-elems/rangeInput.svelte';
 
 	export let activities: Readable<Activity[]> | undefined;
 	export let openActivity: Readable<number> | undefined;
@@ -57,6 +58,18 @@
 				{#each activityInst.form as formElem}
 					<svelte:component this={formElem && formElem.activity} props={formElem.props} />
 				{/each}
+			</div>
+			<div class="mt-2">
+				<RangeInput
+					props={{
+						id: 'grade Worth',
+						value: activityInst.gradeWorth,
+						label: 'Grade Worth (%)',
+						min: 0,
+						max: 100,
+						step: 1
+					}}
+				/>
 			</div>
 			{#if $results && filteredList.length > 0}
 				<div class="results mt-4">

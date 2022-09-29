@@ -5,7 +5,13 @@ import { Activity, Frequency } from '$lib/course-activities/genericActivity';
 import type { serializedActivity, calculatedResults, derivedCalculated } from '../activities';
 
 export class PrimaryMeeting extends Activity {
-	static readonly writables = ['instanceName', 'meetingsPerWeek', 'meetingLength', 'weeksRunning'];
+	static readonly writables = [
+		'instanceName',
+		'gradeWorth',
+		'meetingsPerWeek',
+		'meetingLength',
+		'weeksRunning'
+	];
 	static type = 'PrimaryMeeting';
 	static label = 'Primary Meeting';
 	static icon = '🧑‍🏫';

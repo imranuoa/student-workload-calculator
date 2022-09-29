@@ -5,7 +5,7 @@ import { Activity, Frequency } from '$lib/course-activities/genericActivity';
 import type { calculatedResults, derivedCalculated } from '../activities';
 
 export class VideoOrPodcast extends Activity {
-	static readonly writables = ['instanceName', 'perCourse', 'length'];
+	static readonly writables = ['instanceName', 'gradeWorth', 'perCourse', 'length'];
 	static type = 'VideoOrPodcast';
 	static label = 'Video / Podcast';
 	static icon = '📼';

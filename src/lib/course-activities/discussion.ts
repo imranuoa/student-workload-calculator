@@ -20,6 +20,7 @@ enum isSync {
 export class Discussion extends Activity {
 	static readonly writables = [
 		'instanceName',
+		'gradeWorth',
 		'perCourse',
 		'originalPosts',
 		'postLength',

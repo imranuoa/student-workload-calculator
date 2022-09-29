@@ -7,6 +7,7 @@ import type { serializedActivity, calculatedResults, derivedCalculated } from '.
 export class Lab extends Activity {
 	static readonly writables = [
 		'instanceName',
+		'gradeWorth',
 		'labsPerWeek',
 		'labLength',
 		'prepTime',

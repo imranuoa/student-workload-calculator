@@ -5,7 +5,13 @@ import { Activity, Frequency } from '$lib/course-activities/genericActivity';
 import type { calculatedResults, derivedCalculated } from '../activities';
 
 export class FinalExam extends Activity {
-	static readonly writables = ['instanceName', 'perCourse', 'prepLength', 'examLength'];
+	static readonly writables = [
+		'instanceName',
+		'gradeWorth',
+		'perCourse',
+		'prepLength',
+		'examLength'
+	];
 	static type = 'FinalExam';
 	static label = 'Final Exam';
 	static icon = '🕰';

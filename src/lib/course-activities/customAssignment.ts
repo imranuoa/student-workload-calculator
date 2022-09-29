@@ -7,6 +7,7 @@ import type { calculatedResults, derivedCalculated } from '../activities';
 export class CustomAssignment extends Activity {
 	static readonly writables = [
 		'instanceName',
+		'gradeWorth',
 		'freq',
 		'occurences',
 		'prepHoursPer',

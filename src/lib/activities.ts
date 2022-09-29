@@ -31,6 +31,7 @@ export interface derivedCalculated {
 	perCourseS: number;
 	weeklyI: number[];
 	weeklyS: number[];
+	weeklyGrade: number[];
 }
 
 export const getActivityClass = (activity: Activity) => {

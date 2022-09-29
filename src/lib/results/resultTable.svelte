@@ -18,7 +18,8 @@
 		{ name: 'hrs/wk (I)', detail: 'Independent Hours per Week' },
 		{ name: 'hrs/wk (S)', detail: 'Scheduled Hours per Week' },
 		{ name: 'hrs/course (I)', detail: 'Independent Hours Per Course' },
-		{ name: 'hrs/course (S)', detail: 'Scheduled Hours Per Course' }
+		{ name: 'hrs/course (S)', detail: 'Scheduled Hours Per Course' },
+		{ name: 'Grade %', detail: 'The amount the activity is worth as a percent of the grade' }
 	];
 
 	const median = (numbers: number[]) => {
@@ -31,6 +32,14 @@
 
 		return sorted[middle];
 	};
+
+	$: gradeTotals = derived(
+		activities.map((c) => c.gradeWorth),
+		(grades) => ({
+			median: median(grades),
+			total: grades.reduce((a, v) => a + v, 0)
+		})
+	);
 
 	$: totals = derived(
 		activities.map((c) => c.derivedCalculated),
@@ -127,6 +136,7 @@
 			<ResultTableRow
 				{activity}
 				totals={$totals}
+				gradeTotals={$gradeTotals}
 				{courseWeeks}
 				active={openActivity === null ? null : activities[openActivity] === activity}
 				on:click={() => dispatch('selectActivity', activity)}
@@ -155,6 +165,10 @@
 				>{Math.round($totals.perCourseS.median * 100) / 100} / {Math.round(
 					$totals.perCourseS.total * 100
 				) / 100}</td
+			>
+			<td
+				>{Math.round($gradeTotals.median * 100) / 100} / {Math.round($gradeTotals.total * 100) /
+					100}</td
 			>
 		</tr>
 	</tfoot>

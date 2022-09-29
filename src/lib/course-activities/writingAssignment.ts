@@ -29,6 +29,7 @@ enum drafting {
 export class WritingAssignment extends Activity {
 	static readonly writables = [
 		'instanceName',
+		'gradeWorth',
 		'perCourse',
 		'pagesPerAssignment',
 		'pageDensity',

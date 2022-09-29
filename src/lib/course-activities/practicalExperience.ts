@@ -7,6 +7,7 @@ import type { serializedActivity, calculatedResults, derivedCalculated } from '.
 export class PracticalExperience extends Activity {
 	static readonly writables = [
 		'instanceName',
+		'gradeWorth',
 		'prepLength',
 		'sessionLength',
 		'postLength',

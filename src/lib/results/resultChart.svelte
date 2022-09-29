@@ -44,6 +44,21 @@
 		derivedScheduled.map((week) => week.reduce((a, b) => a + b, 0))
 	);
 
+	// Calculation of Grade worth %
+	$: grades = derived(
+		$activities.map((a) => a.derivedCalculated),
+		(derived) => {
+			const gradesItemised = derived.map((d) => d.weeklyGrade);
+			// Flip the array so that the indicies are the weeks and each week has a list of the activities
+			// Transposition of the matrix
+			if (gradesItemised.length) return transpose(gradesItemised);
+			return [];
+		}
+	);
+	$: gradesSum = derived(grades, (derivedgrades) =>
+		derivedgrades.map((week) => week.reduce((a, b) => a + b, 0))
+	);
+
 	const datasetPrefs = {
 		tension: 0.1,
 		stepped: true,
@@ -61,14 +76,26 @@
 				label: 'Independent',
 				data: $independantSum,
 				borderColor: 'rgb(75, 192, 192)',
-				backgroundColor: 'rgba(75, 192, 192,1)'
+				backgroundColor: 'rgba(75, 192, 192,1)',
+				order: 3
 			},
 			{
 				...datasetPrefs,
 				label: 'Scheduled',
 				data: $scheduledSum,
 				borderColor: 'rgb(255, 99, 132)',
-				backgroundColor: 'rgba(255, 99, 132,1)'
+				backgroundColor: 'rgba(255, 99, 132,1)',
+				order: 2
+			},
+			{
+				...datasetPrefs,
+				fill: false,
+				label: 'Grade',
+				data: $gradesSum,
+				borderColor: '#FFD700',
+				yAxisID: 'grade',
+				order: 1,
+				hidden: true
 			}
 		]
 	};
@@ -78,6 +105,7 @@
 	$: if (chart && $activities) {
 		chart.data.datasets[0].data = $independantSum;
 		chart.data.datasets[1].data = $scheduledSum;
+		chart.data.datasets[2].data = $gradesSum;
 		chart.update();
 	}
 
@@ -113,6 +141,17 @@
 						ticks: {
 							precision: 1
 						}
+					},
+					grade: {
+						min: 0,
+						title: {
+							display: true,
+							text: 'Grade %'
+						},
+						ticks: {
+							precision: 1
+						},
+						position: 'right'
 					}
 				}
 			}

@@ -25,6 +25,7 @@ enum purpose {
 export class ReadingAssignment extends Activity {
 	static readonly writables = [
 		'instanceName',
+		'gradeWorth',
 		'perWeek',
 		'pagesPerWeek',
 		'pageDensity',

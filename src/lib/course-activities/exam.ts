@@ -10,7 +10,14 @@ enum format {
 }
 
 export class Exam extends Activity {
-	static readonly writables = ['instanceName', 'format', 'perCourse', 'prepLength', 'examLength'];
+	static readonly writables = [
+		'instanceName',
+		'gradeWorth',
+		'format',
+		'perCourse',
+		'prepLength',
+		'examLength'
+	];
 	static type = 'Exam';
 	static label = 'Exam';
 	static icon = '⏰';

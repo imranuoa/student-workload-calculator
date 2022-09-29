@@ -18,6 +18,7 @@
 		perCourse: { median: number; total: number };
 		perWeek: { median: number; total: number };
 	};
+	export let gradeTotals: { median: number; total: number };
 	export let courseWeeks: number;
 	export let active: boolean | null = null;
 
@@ -28,6 +29,7 @@
 	$: perWeekS = $derivedCalculated.perWeekS;
 	$: perCourseI = $derivedCalculated.perCourseI;
 	$: perCourseS = $derivedCalculated.perCourseS;
+	$: gradeWorth = activity.gradeWorth;
 </script>
 
 <tr class:active class:clickable={active !== null}>
@@ -45,8 +47,8 @@
 	<td
 		class:warning={perWeekI > 4}
 		class:danger={perWeekI > 10}
-		style="--comparison: {totals.perWeek.median > 0
-			? (perWeekI / totals.perWeek.median) * 100
+		style="--comparison: {totals.perWeek.total > 0
+			? (perWeekI / totals.perWeek.total) * 100
 			: perWeekI > 0
 			? 100
 			: 0}%"
@@ -57,8 +59,8 @@
 	<td
 		class:warning={perWeekS > 4}
 		class:danger={perWeekS > 10}
-		style="--comparison: {totals.perWeek.median > 0
-			? (perWeekS / totals.perWeek.median) * 100
+		style="--comparison: {totals.perWeek.total > 0
+			? (perWeekS / totals.perWeek.total) * 100
 			: perWeekS > 0
 			? 100
 			: 0}%"
@@ -69,8 +71,8 @@
 	<td
 		class:warning={perCourseI / courseWeeks > 4}
 		class:danger={perCourseI / courseWeeks > 10}
-		style="--comparison: {totals.perCourse.median > 0
-			? (perCourseI / totals.perCourse.median) * 100
+		style="--comparison: {totals.perCourse.total > 0
+			? (perCourseI / totals.perCourse.total) * 100
 			: perCourseI > 0
 			? 100
 			: 0}%"
@@ -81,13 +83,23 @@
 	<td
 		class:warning={perCourseS / courseWeeks > 4}
 		class:danger={perCourseS / courseWeeks > 10}
-		style="--comparison: {totals.perCourse.median > 0
-			? (perCourseS / totals.perCourse.median) * 100
+		style="--comparison: {totals.perCourse.total > 0
+			? (perCourseS / totals.perCourse.total) * 100
 			: perCourseS > 0
 			? 100
 			: 0}%"
 	>
 		{perCourseS}
+		<div class="comparison" />
+	</td>
+	<td
+		style="--comparison: {gradeTotals.total > 0
+			? ($gradeWorth / gradeTotals.total) * 100
+			: $gradeWorth > 0
+			? 100
+			: 0}%"
+	>
+		{$gradeWorth}%
 		<div class="comparison" />
 	</td>
 </tr>

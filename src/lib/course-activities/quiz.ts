@@ -10,7 +10,14 @@ enum format {
 }
 
 export class Quiz extends Activity {
-	static readonly writables = ['instanceName', 'format', 'perCourse', 'prepLength', 'QuizLength'];
+	static readonly writables = [
+		'instanceName',
+		'gradeWorth',
+		'format',
+		'perCourse',
+		'prepLength',
+		'QuizLength'
+	];
 	static type = 'Quiz';
 	static label = 'Quiz';
 	static icon = '⁉️';

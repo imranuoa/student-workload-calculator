@@ -1,4 +1,4 @@
-import { derived, get, type Readable, type Writable } from 'svelte/store';
+import { derived, get, writable, type Readable, type Writable } from 'svelte/store';
 import type { courseMeta } from '../course';
 import type { FormElement } from '../form';
 import type {
@@ -53,6 +53,7 @@ export abstract class Activity {
 	static label: string;
 	static icon: string;
 	static description: string;
+	gradeWorth = writable(0); // Percent 1-100
 	abstract form: FormElement[];
 	abstract instanceName: Writable<string>;
 	abstract freq: Readable<Frequency>;
@@ -60,39 +61,59 @@ export abstract class Activity {
 	abstract derivedCalculated: Readable<derivedCalculated>;
 	// Data for the instance of the activity type
 	setDerived(courseMeta: Readable<courseMeta>): Readable<derivedCalculated> {
-		return derived([this.results, courseMeta, this.freq], ([$results, $courseMeta, $freq]) => {
-			if (!$results)
-				return { perWeekI: 0, perWeekS: 0, perCourseI: 0, perCourseS: 0, weeklyI: [], weeklyS: [] };
-			let perWeek: number, perCourse: number;
-			if ($freq === Frequency.Weekly) {
-				perWeek = $results.occurences;
-				const weeksRunning = $results.weeksRunning?.filter((x) => x).length;
-				perCourse =
-					$results.occurences * (weeksRunning === undefined ? $courseMeta.weeks : weeksRunning);
-			} else {
-				perWeek = $results.occurences / $courseMeta.weeks;
-				perCourse = $results.occurences;
+		return derived(
+			[this.results, courseMeta, this.freq, this.gradeWorth],
+			([$results, $courseMeta, $freq, $gradeWorth]) => {
+				if (!$results)
+					return {
+						perWeekI: 0,
+						perWeekS: 0,
+						perCourseI: 0,
+						perCourseS: 0,
+						weeklyI: [],
+						weeklyS: [],
+						weeklyGrade: []
+					};
+				let perWeek: number, perCourse: number;
+				if ($freq === Frequency.Weekly) {
+					perWeek = $results.occurences;
+					const weeksRunning = $results.weeksRunning?.filter((x) => x).length;
+					perCourse =
+						$results.occurences * (weeksRunning === undefined ? $courseMeta.weeks : weeksRunning);
+				} else {
+					perWeek = $results.occurences / $courseMeta.weeks;
+					perCourse = $results.occurences;
+				}
+				let IPerOcc =
+					$results.IndependentHoursPer + $results.prepHoursPer + $results.postActivityHoursPer;
+				let SPerOcc = $results.scheduledHoursPer;
+				let weeklyI = new Array($courseMeta.weeks).fill(IPerOcc * perWeek);
+				let weeklyS = new Array($courseMeta.weeks).fill(SPerOcc * perWeek);
+				let weeklyGrade = new Array($courseMeta.weeks).fill($gradeWorth * perWeek);
+				if ($results.weeksRunning) {
+					weeklyI = $results.weeksRunning.map((w) => (w ? IPerOcc * perWeek : 0));
+					weeklyS = $results.weeksRunning.map((w) => (w ? SPerOcc * perWeek : 0));
+					weeklyGrade = $results.weeksRunning.map((w) => (w ? $gradeWorth * perWeek : 0));
+				}
+				return {
+					perWeekI: Math.round(perWeek * IPerOcc * 100) / 100,
+					perWeekS: Math.round(perWeek * SPerOcc * 100) / 100,
+					perCourseI: Math.round(perCourse * IPerOcc * 100) / 100,
+					perCourseS: Math.round(perCourse * SPerOcc * 100) / 100,
+					weeklyI,
+					weeklyS,
+					weeklyGrade
+				};
 			}
-			let IPerOcc =
-				$results.IndependentHoursPer + $results.prepHoursPer + $results.postActivityHoursPer;
-			let SPerOcc = $results.scheduledHoursPer;
-			let weeklyI = new Array($courseMeta.weeks).fill(IPerOcc * perWeek);
-			let weeklyS = new Array($courseMeta.weeks).fill(SPerOcc * perWeek);
-			if ($results.weeksRunning) {
-				weeklyI = $results.weeksRunning.map((w) => (w ? IPerOcc * perWeek : 0));
-				weeklyS = $results.weeksRunning.map((w) => (w ? SPerOcc * perWeek : 0));
-			}
-			return {
-				perWeekI: Math.round(perWeek * IPerOcc * 100) / 100,
-				perWeekS: Math.round(perWeek * SPerOcc * 100) / 100,
-				perCourseI: Math.round(perCourse * IPerOcc * 100) / 100,
-				perCourseS: Math.round(perCourse * SPerOcc * 100) / 100,
-				weeklyI,
-				weeklyS
-			};
-		});
+		);
 	}
-	constructor(courseMeta: Writable<courseMeta>, private subscribers: Function[] = []) {}
+	constructor(
+		courseMeta: Writable<courseMeta>,
+		private subscribers: Function[] = [],
+		gradeWorth?: number
+	) {
+		this.gradeWorth.set(gradeWorth || 0);
+	}
 	subscribe(f: Function) {
 		this.subscribers.push(f);
 		return () => {
