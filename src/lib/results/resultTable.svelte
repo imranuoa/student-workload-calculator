@@ -77,6 +77,7 @@
 			return {
 				name: get(a.instanceName),
 				results: get(a.results),
+				gradeWorth: get(a.gradeWorth),
 				derived: {
 					perWeekI: derived.perWeekI,
 					perWeekS: derived.perWeekS,
@@ -105,6 +106,7 @@
 			csvDownload({
 				data: data.map((c) => ({
 					name: c.name,
+					worth: `${c.gradeWorth}%`,
 					...c.derived,
 					...c.results
 				})),
