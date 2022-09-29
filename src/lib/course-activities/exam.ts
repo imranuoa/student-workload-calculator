@@ -15,7 +15,7 @@ export class Exam extends Activity {
 	static label = 'Exam';
 	static icon = '⏰';
 	static description =
-		'This component is focused on major assessments, which can be either be held in an asynchronous (typically online) or synchronous (within a Primary Class Meeting) manner.';
+		'This activity is focused on major assessments, which can be either be held in an asynchronous (typically online) or synchronous (within a Primary Class Meeting) manner.';
 	freq = readable(Frequency.Course);
 	instanceName = writable('Exam');
 	format: Writable<format> = writable(format.Independent);

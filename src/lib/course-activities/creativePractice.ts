@@ -17,7 +17,7 @@ export class CreativePractice extends Activity {
 	static label = 'Creative Practice';
 	static icon = '🎨';
 	static description =
-		'This component is focused on Creative Practice Sessions, which include activities that fall within the creative arts. This component can have scheduled and independent activities. When the scheduled box is checked (the default state), the Preparation per Session portion is added to scheduled hours; preparation and post-session inputs are added to independent hours. If the check is removed, all hours are assigned to the independent category and reflected in workload summary accordingly.';
+		'This activity is focused on Creative Practice Sessions, which include activities that fall within the creative arts. This component can have scheduled and independent activities. When the scheduled box is checked (the default state), the Preparation per Session portion is added to scheduled hours; preparation and post-session inputs are added to independent hours. If the check is removed, all hours are assigned to the independent category and reflected in workload summary accordingly.';
 	freq = readable(Frequency.Course);
 	instanceName = writable('Creative Practice Sessions');
 	sessionsPerSem = writable(1);
@@ -36,15 +36,18 @@ export class CreativePractice extends Activity {
 			new NumberInput('sessionsPerSem', this.sessionsPerSem, 'Sessions Per Course'),
 			new RangeInput('prepLength', this.prepLength, 'Session Prep Time (Hours)', {
 				min: 0,
-				max: 14
+				max: 14,
+				step: 0.5
 			}),
 			new RangeInput('sessionLength', this.sessionLength, 'Session Duration (hours)', {
 				min: 0,
-				max: 12
+				max: 12,
+				step: 0.5
 			}),
 			new RangeInput('postLength', this.postLength, 'Post-Session time (hours)', {
 				min: 0,
-				max: 12
+				max: 12,
+				step: 0.5
 			})
 		];
 		this.results = derived(

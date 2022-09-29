@@ -34,7 +34,7 @@ export class Discussion extends Activity {
 	static label = 'Discussion';
 	static icon = '💬';
 	static description =
-		'This component is focused on discussions, which can be either be held in an asynchronous (typically online) or synchronous (within a live session) manner.';
+		'This activity is focused on discussions, which can be either be held in an asynchronous (typically online) or synchronous (within a live session) manner.';
 	freq = readable(Frequency.Course);
 	instanceName = writable('Discussion');
 	perCourse = writable(1);
