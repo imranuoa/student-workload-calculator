@@ -43,6 +43,7 @@
 		"chart.js": "^3.9.1",
 		"deep-clone": "^3.0.3",
 		"svelte-table": "^0.5.0",
-		"svelte-use-click-outside": "^1.0.0"
+		"svelte-use-click-outside": "^1.0.0",
+		"svelte-writable-derived": "^2.1.5"
 	}
 }

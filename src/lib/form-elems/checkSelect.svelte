@@ -75,6 +75,7 @@
 <style lang="postcss">
 	.daySelectGroup {
 		@apply grid rounded shadow select-none overflow-clip overflow-x-auto;
+		@apply bg-gray-200;
 		grid-template-columns: repeat(var(--numOptions), minmax(2.3ch, 1fr));
 		.daySelectLabel {
 			@apply grow flex;

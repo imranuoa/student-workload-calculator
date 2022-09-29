@@ -5,6 +5,7 @@ import { derived, get, writable, type Writable } from 'svelte/store';
 export interface courseMeta {
 	name: string;
 	weeks: number;
+	weekTemplate: string[];
 }
 
 export interface serializedCourse {
@@ -29,6 +30,8 @@ export class Course {
 	static deserialize(c: serializedCourse) {
 		try {
 			const course = new Course(c.meta.name, c.meta.weeks, [], c.openActivity);
+			if (c.meta.weekTemplate)
+				course.meta.update((m) => ({ ...m, weekTemplate: c.meta.weekTemplate }));
 			try {
 				c.activities.forEach((activity) => {
 					const activityClass = activities.find((cClass) => cClass.type === activity.type);
@@ -105,7 +108,11 @@ export class Course {
 		private subscribers: Function[] = []
 	) {
 		this.openActivity = writable(openActivity);
-		this.meta = writable({ name, weeks });
+		this.meta = writable({
+			name,
+			weeks,
+			weekTemplate: [...Array(weeks).keys()].map((e) => (e + 1).toString())
+		});
 		activities.forEach((c) => this.addActivity(c));
 		this.watchDerived();
 	}

@@ -26,7 +26,7 @@ export class PrimaryMeeting extends Activity {
 		this.weeksList = derived(courseMeta, ($courseMeta) =>
 			[...Array($courseMeta.weeks).keys()].map((e) => (e + 1).toString())
 		);
-		this.weeksRunning = writable(get(this.weeksList));
+		this.weeksRunning = writable(get(courseMeta).weekTemplate);
 		this.form = [
 			new TextInput('activityName', this.instanceName, 'Activity Name'),
 			new RangeInput('meetingsPerWeek', this.meetingsPerWeek, 'Meetings per week', {
