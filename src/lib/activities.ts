@@ -13,6 +13,7 @@ import { Tutorial } from '$lib/course-activities/tutorial';
 import { VideoOrPodcast } from '$lib/course-activities/videoOrPodcast';
 import { WritingAssignment } from '$lib/course-activities/writingAssignment';
 import { CustomAssignment } from '$lib/course-activities/customAssignment';
+import { PracticalExperience } from '$lib/course-activities/practicalExperience';
 
 export interface calculatedResults {
 	occurences: number;
@@ -49,6 +50,7 @@ export type ActivitySubClass = {
 export const activities: ActivitySubClass[] = [
 	PrimaryMeeting,
 	CreativePractice,
+	PracticalExperience,
 	Discussion,
 	Exam,
 	FinalExam,
