@@ -151,7 +151,8 @@
 						ticks: {
 							precision: 1
 						},
-						position: 'right'
+						position: 'right',
+						display: 'auto'
 					}
 				}
 			}
