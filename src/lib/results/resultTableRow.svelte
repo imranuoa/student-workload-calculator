@@ -35,12 +35,16 @@
 <tr class:active class:clickable={active !== null}>
 	<td class="name" on:click={() => dispatch('click', activity)}>
 		{#if $freq == Frequency.Weekly}
-			<span class="pill weekly" title="Occurs Weekly"> W </span>
+			<span class="pill weekly" title="Occurs Weekly">
+				<span aria-hidden="true"> W </span>
+			</span>
 		{:else}
-			<span class="pill coursely" title="Occurs once"> C </span>
+			<span class="pill coursely" title="Occurs once">
+				<span aria-hidden="true"> C </span>
+			</span>
 		{/if}
 		{$instanceName}
-		<span class="icon">
+		<span class="icon" aria-hidden="true">
 			{getActivityClass(activity).icon}
 		</span>
 	</td>

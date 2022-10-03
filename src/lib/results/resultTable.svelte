@@ -129,7 +129,9 @@
 	<thead>
 		<tr class="head">
 			{#each columns as column}
-				<th title={column.detail}>{column.name}</th>
+				<th title={column.detail} aria-label={column.detail}>
+					<span aria-hidden="false">{column.name}</span>
+				</th>
 			{/each}
 		</tr>
 	</thead>

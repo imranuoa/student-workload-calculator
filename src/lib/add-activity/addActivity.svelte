@@ -13,12 +13,14 @@
 
 	let hoveredActivity = -1;
 	let hoveredTimeout: number;
+
+	let isFocused = false;
 </script>
 
 <div
 	on:mouseleave={() => {
 		hoveredTimeout = window.setTimeout(() => {
-			hoveredActivity = -1;
+			if (!isFocused) hoveredActivity = -1;
 		}, 300);
 	}}
 	class="activityWrapper"
@@ -32,6 +34,18 @@
 					clearTimeout(hoveredTimeout);
 					hoveredActivity = i;
 				}}
+				on:focus={() => {
+					isFocused = true;
+					clearTimeout(hoveredTimeout);
+					hoveredActivity = i;
+				}}
+				on:blur={() => {
+					isFocused = false;
+					hoveredTimeout = window.setTimeout(() => {
+						if (!isFocused) hoveredActivity = -1;
+					}, 300);
+				}}
+				aria-details="activity-info"
 			>
 				<span class="icon">{activity.icon}</span>
 				<span class="label">{activity.label}</span>
@@ -42,7 +56,7 @@
 		{#if hoveredActivity >= 0}
 			{#key hoveredActivity}
 				<div
-					class="activity-info"
+					id="activity-info"
 					transition:fly={{ y: 10 }}
 					on:mouseenter={() => {
 						clearTimeout(hoveredTimeout);
@@ -68,7 +82,8 @@
 				/* Default */
 				@apply flex flex-col items-center justify-center w-full relative rounded-lg  outline-blue-400 outline-0 outline overflow-hidden bg-gray-50 text-black;
 				/* On Hover */
-				@apply transition hover:shadow-md hover:outline-2;
+				@apply transition hover:shadow-md hover:outline-2 focus:shadow-md
+focus:outline-2;
 				.icon {
 					@apply text-2xl;
 				}
@@ -85,9 +100,9 @@
 		}
 
 		.activity-info-wrapper {
-			@apply grid absolute;
+			@apply grid absolute z-20;
 			grid-template-areas: 'content';
-			.activity-info {
+			#activity-info {
 				@apply m-3 p-4 rounded-lg shadow-md  bg-white;
 				grid-area: content;
 				h3 {

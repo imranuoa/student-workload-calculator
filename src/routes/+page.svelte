@@ -46,6 +46,14 @@
 	let resultsHeight: number;
 </script>
 
+<svelte:head>
+	{#if $activeCourseMeta}
+		<title>Student Workload Calculator: {$activeCourseMeta.name}</title>
+	{:else}
+		<title>Student Workload Calculator</title>
+	{/if}
+</svelte:head>
+
 {#if activeCourseInst && $activeCourseMeta && $activeCourseActivities}
 	{#key $activeCourse}
 		<div
@@ -62,7 +70,9 @@
 				}}
 			>
 				<div class="title">
-					<a href="/configure" class="btn configure" title="return to course list">&leftarrow;</a>
+					<a href="/configure" class="btn configure" title="return to course list">
+						<span aria-hidden="true"> &leftarrow; </span>
+					</a>
 					{#if activeCourseMeta}
 						<h2>{$activeCourseMeta.name}</h2>
 					{/if}

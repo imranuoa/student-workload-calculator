@@ -40,18 +40,21 @@
 	};
 </script>
 
-<div
-	class="activity-row"
-	class:active
-	role="button"
-	on:click={() => {
-		dispatch('select', activity);
-	}}
->
+<label class="activity-row" class:active for="select-activity-{$instanceName}">
+	<input
+		type="checkbox"
+		id="select-activity-{$instanceName}"
+		on:change={() => {
+			dispatch('select', activity);
+		}}
+		checked={active}
+	/>
 	<span class="icon">
 		{getActivityClass(activity).icon}
 	</span>
-	<span class="name">{$instanceName}</span>
+	<span class="name">
+		{$instanceName}
+	</span>
 	<span class="hours">
 		{#if $freq == Frequency.Weekly}
 			{perOccurance($derivedCalculated.perWeekI + $derivedCalculated.perWeekS)} per Week
@@ -68,12 +71,20 @@
 	>
 		<span class="icon">-</span>
 	</button>
-</div>
+</label>
 
 <style lang="postcss">
 	.activity-row {
-		@apply grid p-1 items-center rounded transition;
+		@apply grid p-1 items-center rounded transition relative;
 		grid-template-columns: 4ch 1fr auto auto;
+		grid-template-areas: 'icon name hours delete';
+		input {
+			@apply m-auto z-10 outline outline-2 outline-blue-500 opacity-0 pointer-events-none;
+			grid-area: icon;
+			&:focus {
+				@apply opacity-100;
+			}
+		}
 		&:hover {
 			@apply bg-gray-100;
 		}
@@ -82,12 +93,18 @@
 		}
 		.icon {
 			@apply text-center;
+			grid-area: icon;
 		}
 		.name {
 			@apply text-gray-700 font-bold;
+			grid-area: name;
 		}
 		.hours {
 			@apply text-gray-500 text-sm italic mx-2;
+			grid-area: hours;
+		}
+		.btn {
+			grid-area: delete;
 		}
 	}
 </style>

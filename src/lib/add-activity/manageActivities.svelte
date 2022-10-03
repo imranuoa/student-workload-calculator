@@ -23,7 +23,7 @@
 				addActivityOpen = !addActivityOpen;
 			}}
 		>
-			<span class="icon">+</span>
+			<span class="icon" aria-hidden="false">+</span>
 		</button>
 	</h2>
 	{#if addActivityOpen}

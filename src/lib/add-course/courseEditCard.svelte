@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { writable, derived } from 'svelte/store';
+	import { writable, derived, type Writable } from 'svelte/store';
 	import { propertyStore } from 'svelte-writable-derived';
 
 	import type { Course } from '$lib/course';
@@ -9,7 +9,7 @@
 	export let course: Course;
 	export let courseIndex: number;
 	$: meta = course.meta;
-	let writableWeekTemplate;
+	let writableWeekTemplate: Writable<string[]>;
 	$: if ($meta) {
 		writableWeekTemplate = propertyStore(meta, ['weekTemplate']);
 	}
@@ -17,25 +17,32 @@
 
 <div class="card">
 	{#if $meta}
-		<label class="coursename" for="courseName">
+		<label class="coursename" for="courseEdit-{course.id}-courseName">
 			<span class="prefix">Course:</span>
-			<input type="text" bind:value={$meta.name} id="courseName" />
+			<input type="text" bind:value={$meta.name} id="courseEdit-{course.id}-courseName" />
 			<!-- <span class="suffix">✐</span> -->
 		</label>
 
-		<label class="block pt-4 mb-4" for="numberWeeks">
-			<span class="text-gray-700"> Number of Weeks </span>
+		<div class="block pt-4 mb-4">
+			<label class="text-gray-700" for="courseEdit-{course.id}-numWeeks"> Number of Weeks </label>
 			<div class="rangeInputFlex mt-1 flex gap-4">
-				<input type="number" id="numberWeeks" class="form-input w-16" bind:value={$meta.weeks} />
+				<input
+					type="number"
+					id="courseEdit-{course.id}-numWeeks"
+					class="form-input w-16"
+					bind:value={$meta.weeks}
+				/>
 				<input
 					type="range"
 					bind:value={$meta.weeks}
 					class="block w-full flex-grow"
 					min="1"
 					max="52"
+					aria-hidden="true"
+					tabindex="-1"
 				/>
 			</div>
-		</label>
+		</div>
 		{#if $writableWeekTemplate}
 			<CheckSelect
 				props={{
@@ -43,7 +50,8 @@
 						[...Array(Dmeta.weeks).keys()].map((e) => (e + 1).toString())
 					),
 					value: writableWeekTemplate,
-					label: 'Default teaching weeks'
+					label: 'Default teaching weeks',
+					id: `courseEdit-${course.id}-defaultWeeks`
 				}}
 			/>
 		{/if}
@@ -70,11 +78,6 @@
 			}
 			input {
 				@apply flex-grow border-0 p-2 text-2xl;
-			}
-			.suffix {
-				@apply block;
-				@apply rounded-full outline outline-1 outline-slate-800 text-slate-800 cursor-pointer;
-				@apply w-7 h-7 leading-7 text-center text-lg;
 			}
 		}
 	}

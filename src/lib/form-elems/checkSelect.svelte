@@ -49,10 +49,10 @@
 	});
 </script>
 
-<label class="block" for="rangeInput" style="--numOptions: {$options.length}">
-	<span class="text-gray-700">
-		{label} <i class="text-sm align-baseline">(click or drag to delete)</i>
-	</span>
+<fieldset class="block" for="rangeInput" style="--numOptions: {$options.length}">
+	<legend class="text-gray-700">
+		{label} <i class="text-sm align-baseline" aria-hidden="true">(click or drag to delete)</i>
+	</legend>
 	<div class="daySelectGroup" bind:this={selectGroup}>
 		{#each $options as option}
 			<div
@@ -70,7 +70,7 @@
 			</div>
 		{/each}
 	</div>
-</label>
+</fieldset>
 
 <style lang="postcss">
 	.daySelectGroup {

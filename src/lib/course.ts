@@ -1,6 +1,7 @@
+import { nanoid } from 'nanoid';
+import { derived, get, writable, type Writable } from 'svelte/store';
 import activities, { getActivityClass, type serializedActivity } from '$lib/activities';
 import type { Activity } from '$lib/course-activities/genericActivity';
-import { derived, get, writable, type Writable } from 'svelte/store';
 
 export interface courseMeta {
 	name: string;
@@ -12,9 +13,13 @@ export interface serializedCourse {
 	meta: courseMeta;
 	openActivity: number;
 	activities: serializedActivity[];
+	id: string;
 }
 
 export class Course {
+	public get id() {
+		return this._id;
+	}
 	static serialize(c: Course): serializedCourse {
 		const activities = get(c.activities).map((activity) => {
 			const compClass = getActivityClass(activity);
@@ -24,12 +29,13 @@ export class Course {
 		return {
 			meta: get(c.meta),
 			openActivity: get(c.openActivity),
-			activities
+			activities,
+			id: c.id
 		};
 	}
 	static deserialize(c: serializedCourse) {
 		try {
-			const course = new Course(c.meta.name, c.meta.weeks, [], c.openActivity);
+			const course = new Course(c.meta.name, c.meta.weeks, [], c.openActivity, [], c.id);
 			if (c.meta.weekTemplate)
 				course.meta.update((m) => ({ ...m, weekTemplate: c.meta.weekTemplate }));
 			try {
@@ -105,7 +111,8 @@ export class Course {
 		weeks = 0,
 		activities: Activity[] = [],
 		openActivity = 0,
-		private subscribers: Function[] = []
+		private subscribers: Function[] = [],
+		private _id = nanoid()
 	) {
 		this.openActivity = writable(openActivity);
 		this.meta = writable({

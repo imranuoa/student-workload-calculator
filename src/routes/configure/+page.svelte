@@ -25,6 +25,10 @@
 	};
 </script>
 
+<svelte:head>
+	<title>Student Workload Calculator: Configure Courses</title>
+</svelte:head>
+
 <div class="layout">
 	<div class="createPane">
 		<div class="card">
@@ -34,12 +38,12 @@
 				<span class="text-gray-700">Course Name</span>
 				<input type="text" class="form-input mt-1 block w-full" bind:value={newCourseData.name} />
 			</label>
-			<label class="block pt-4" for="numberWeeks">
-				<span class="text-gray-700"> Number of Weeks </span>
+			<div class="block pt-4">
+				<label class="text-gray-700" for="createCourseNumberWeeks"> Number of Weeks </label>
 				<div class="rangeInputFlex mt-1 flex gap-4">
 					<input
 						type="number"
-						id="numberWeeks"
+						id="createCourseNumberWeeks"
 						class="form-input w-16"
 						bind:value={newCourseData.weeks}
 					/>
@@ -49,9 +53,11 @@
 						class="block w-full flex-grow"
 						min="1"
 						max="52"
+						aria-hidden="true"
+						tabindex="-1"
 					/>
 				</div>
-			</label>
+			</div>
 			<br />
 			<button
 				class="btn btn-lg btn-primary"
