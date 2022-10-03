@@ -67,7 +67,7 @@
 					deleteCourse(courseIndex);
 					courseIndex = 0;
 				}
-			}}>Delete Course {courseIndex}</button
+			}}>Delete Course</button
 		>
 	{/if}
 </div>
