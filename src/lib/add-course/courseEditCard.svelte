@@ -5,6 +5,7 @@
 	import type { Course } from '$lib/course';
 	import { deleteCourse, openCourse } from '../../store';
 	import CheckSelect from '$lib/form-elems/checkSelect.svelte';
+	import { scale } from 'svelte/transition';
 
 	export let course: Course;
 	export let courseIndex: number;
@@ -15,7 +16,7 @@
 	}
 </script>
 
-<div class="card">
+<div class="card" transition:scale>
 	{#if $meta}
 		<label class="coursename" for="courseEdit-{course.id}-courseName">
 			<span class="prefix">Course:</span>
@@ -62,9 +63,11 @@
 		<button
 			class="btn btn-lg btn-danger"
 			on:click={() => {
-				deleteCourse(courseIndex);
-				courseIndex = 0;
-			}}>Delete Course</button
+				if (confirm('Are you sure you want to delete this course?')) {
+					deleteCourse(courseIndex);
+					courseIndex = 0;
+				}
+			}}>Delete Course {courseIndex}</button
 		>
 	{/if}
 </div>

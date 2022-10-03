@@ -85,7 +85,7 @@
 		<div class="editPane">
 			<h2 class="text-2xl mb-4">Your Courses:</h2>
 			<div class="editPane-items">
-				{#each $courses as course, courseIndex}
+				{#each $courses as course, courseIndex (course.id)}
 					<CourseEditCard {course} {courseIndex} />
 				{/each}
 			</div>
