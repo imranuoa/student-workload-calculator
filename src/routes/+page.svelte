@@ -220,11 +220,27 @@
 		}
 	}
 
+	@media screen and (max-width: 1600px) {
+		.calculator-layout {
+			.results {
+				@apply max-w-2xl;
+			}
+		}
+	}
+
 	@media screen and (max-width: 1400px) {
 		.calculator-layout {
 			@apply flex-wrap;
 			.results {
-				@apply w-full basis-full;
+				@apply w-full max-w-full basis-full;
+			}
+			&.noActivities {
+				.no-activities-results {
+					@apply hidden;
+				}
+				.activities {
+					@apply ml-0 rounded-lg w-full;
+				}
 			}
 		}
 	}
@@ -250,16 +266,6 @@
 				.config {
 					@apply hidden;
 				}
-			}
-		}
-	}
-	@media screen and (max-width: 53rem) {
-		.calculator-layout.noActivities {
-			.no-activities-results {
-				@apply hidden;
-			}
-			.activities {
-				@apply ml-0 rounded-lg w-full;
 			}
 		}
 	}
