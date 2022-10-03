@@ -43,7 +43,7 @@ export const addCourse = (course = new Course('Your Course', 12)) => {
 	course.subscribe(notifyStore);
 	courses.update((c) => [...c, course]);
 	activeCourse.set(get(courses).length - 1);
-	goto('/');
+	// goto('/');
 };
 
 export const deleteCourse = (i: number) => {
