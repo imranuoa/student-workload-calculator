@@ -20,6 +20,10 @@
 	$: activeCourseMeta = activeCourseInst?.meta;
 </script>
 
+<svelte:head>
+	<link rel="icon" href="/favicon.svg" />
+</svelte:head>
+
 <div class="wrapper">
 	<div class="layout">
 		<header>
