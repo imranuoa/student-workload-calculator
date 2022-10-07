@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 .btn {
-	@apply rounded shadow bg-slate-700 text-white px-3 py-1 inline-block transition;
+	@apply rounded shadow bg-slate-700 text-white px-3 py-1 inline-block transition select-none;
 	&.btn-block {
 		@apply block w-full;
 	}
@@ -15,7 +15,10 @@
 		@apply px-5 py-2;
 	}
 	&.btn-primary {
-		@apply bg-blue-600;
+		@apply bg-uni-color-green;
+		&.active {
+			@apply bg-lime-800;
+		}
 	}
 	&.btn-danger {
 		@apply bg-red-600;
@@ -33,5 +36,12 @@ h2 {
 }
 
 .card {
-	@apply max-w-prose w-full bg-white shadow rounded-lg px-10 py-7;
+	@apply w-full bg-white shadow rounded-lg px-10 py-7;
+}
+
+/* Compact interface for embedded layout */
+.embed {
+	.card {
+		@apply rounded-none shadow-none;
+	}
 }

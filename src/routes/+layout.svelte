@@ -2,8 +2,10 @@
 	import { BarLoader } from 'svelte-loading-spinners';
 
 	import '../app.postcss';
-	import { fade } from 'svelte/transition';
+	import { fade, fly, slide } from 'svelte/transition';
 	import { courses, activeCourse } from '../store';
+	import Logo from '$lib/assets/logo.svg';
+	import { page } from '$app/stores';
 
 	const resetPrompt = () => {
 		if (
@@ -27,18 +29,11 @@
 <div class="wrapper">
 	<div class="layout">
 		<header>
-			<div class="title flex">
-				<a href="/"><h1>Student Workload Calculator</h1></a>
-			</div>
-			<p>
-				This planning tool is for instructors who wish to estimate the expected student time
-				commitment in a course based on the assigned learning activities. The tool is designed to be
-				used for courses that represent the blended learning spectrum from face-to-face to fully
-				online. Based on the input provided, the tool calculates the total time commitment expected,
-				and allocates activities into scheduled (set by the institution, typically live meetings)
-				and independent (at the discretion of the student within the parameters set by course
-				deadlines) activities.
-			</p>
+			<img src={Logo} aria-hidden="true" alt="" />
+			<h1>
+				Student Workload
+				<br />Calculator
+			</h1>
 		</header>
 		<div class="page">
 			<!-- {#if !$hasLoaded}
@@ -65,29 +60,43 @@
 			'header'
 			'page'
 			'footer';
-		background: linear-gradient(180deg, #f5f5f5 0%, #e5e5e5 100%);
 	}
 	header {
-		@apply flex gap-5 pt-5 pl-5 pr-5;
+		@apply flex gap-5 m-5 mb-0;
 		grid-area: header;
-		justify-content: space-evenly;
+		justify-content: center;
 		flex-wrap: wrap;
+		img {
+			@apply w-32 h-32;
+		}
 		h1 {
-			@apply text-5xl font-light;
-			min-width: 7ch;
-			max-width: 10ch;
+			@apply text-5xl font-light leading-none;
 			align-self: center;
 		}
-		p {
-			max-width: 85ch;
-			/* min-width: 40ch; */
-			@apply font-light italic text-justify;
+		@media screen and (max-width: 640px) {
+			& {
+				@apply h-auto;
+			}
+			img {
+				@apply w-24 h-24;
+			}
+			h1 {
+				@apply text-3xl;
+			}
+		}
+		@media screen and (max-width: 280px) {
+			img {
+				@apply hidden;
+			}
+			h1 {
+				@apply text-xl text-center;
+			}
 		}
 	}
 	.page {
 		grid-area: page;
-		overflow-x: auto;
 		height: 100%;
+		@apply max-w-screen-lg w-full m-auto;
 	}
 
 	.footer-push,

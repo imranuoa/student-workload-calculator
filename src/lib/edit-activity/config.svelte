@@ -2,47 +2,38 @@
 	import type { Readable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 	import { Frequency, type Activity } from '$lib/course-activities/genericActivity';
-	import Duration from 'humanize-duration';
 	import RangeInput from '$lib/form-elems/rangeInput.svelte';
+	import type { Course } from '$lib/course';
+	import { durationToString } from '$lib/serialize';
 
-	export let activities: Readable<Activity[]> | undefined;
-	export let openActivity: Readable<number> | undefined;
+	export let course: Course;
+	$: openActivity = course.openActivity;
+	$: activities = course.activities;
+	$: activity = $activities && $openActivity !== undefined ? $activities[$openActivity] : undefined;
 
-	$: activityInst =
-		$activities && $openActivity !== undefined ? $activities[$openActivity] : undefined;
-	$: results = activityInst ? activityInst.results : undefined;
-	$: freq = activityInst ? activityInst.freq : undefined;
-
-	$: perOccurance = (value: number): string => {
-		if (!$results) return '0 hours';
-		return Duration(value * $results.occurences * 60 * 60 * 1000, {
-			units: ['h', 'm'],
-			round: true,
-			conjunction: ' and ',
-			serialComma: false
-		});
-	};
+	$: results = activity ? activity.results : undefined;
+	$: freq = activity ? activity.freq : undefined;
 
 	$: resultsList = $results
 		? [
 				{
 					value: $results.prepHoursPer,
-					formatted: perOccurance($results.prepHoursPer),
+					formatted: durationToString($results.prepHoursPer, $results.occurences),
 					label: ' to prepare'
 				},
 				{
 					value: $results.IndependentHoursPer,
-					formatted: perOccurance($results.IndependentHoursPer),
+					formatted: durationToString($results.IndependentHoursPer, $results.occurences),
 					label: 'of independent study'
 				},
 				{
 					value: $results.scheduledHoursPer,
-					formatted: perOccurance($results.scheduledHoursPer),
+					formatted: durationToString($results.scheduledHoursPer, $results.occurences),
 					label: 'of additional scheduled class time'
 				},
 				{
 					value: $results.postActivityHoursPer,
-					formatted: perOccurance($results.postActivityHoursPer),
+					formatted: durationToString($results.postActivityHoursPer, $results.occurences),
 					label: 'of time post activity'
 				}
 		  ]
@@ -50,12 +41,12 @@
 	$: filteredList = resultsList.filter((item) => item.value > 0);
 </script>
 
-{#if activityInst}
-	<div transition:fade={{ duration: 150 }}>
+{#if activity}
+	<div>
 		<h2>Configuration</h2>
 		{#key $openActivity}
 			<div>
-				{#each activityInst.form as formElem}
+				{#each activity.form as formElem}
 					<svelte:component this={formElem && formElem.activity} props={formElem.props} />
 				{/each}
 			</div>
@@ -63,7 +54,7 @@
 				<RangeInput
 					props={{
 						id: 'grade Worth',
-						value: activityInst.gradeWorth,
+						value: activity.gradeWorth,
 						label: 'Grade Worth (%)',
 						min: 0,
 						max: 100,

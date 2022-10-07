@@ -6,11 +6,11 @@
 	import ActivityListItem from './activityListItem.svelte';
 
 	export let addActivityOpen = false;
-	export let activeCourse: Course;
+	export let course: Course;
 
-	$: courseMeta = activeCourse.meta;
-	$: courseActivities = activeCourse.activities;
-	$: courseOpenActivity = activeCourse.openActivity;
+	$: courseMeta = course.meta;
+	$: courseActivities = course.activities;
+	$: courseOpenActivity = course.openActivity;
 </script>
 
 <div class="activityList">
@@ -30,7 +30,7 @@
 		<AddActivityMenu
 			{activities}
 			on:add={({ detail }) => {
-				activeCourse?.addActivity(new detail(activeCourse.meta));
+				course?.addActivity(new detail(course.meta));
 				addActivityOpen = false;
 			}}
 		/>
@@ -50,10 +50,10 @@
 				<ActivityListItem
 					{activity}
 					active={$courseOpenActivity === i}
-					on:delete={() => activeCourse?.removeActivity(i)}
+					on:delete={() => course?.removeActivity(i)}
 					on:select={() => {
-						if ($courseOpenActivity === i) activeCourse.openActivity.set(-1);
-						else activeCourse.openActivity.set(i);
+						if ($courseOpenActivity === i) course.openActivity.set(-1);
+						else course.openActivity.set(i);
 					}}
 				/>
 			{/each}

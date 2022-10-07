@@ -1,17 +1,27 @@
 <script lang="ts">
-	import { writable, derived, type Writable } from 'svelte/store';
+	import { writable, derived, type Writable, readable } from 'svelte/store';
 	import { propertyStore } from 'svelte-writable-derived';
 
 	import type { Course } from '$lib/course';
 	import { deleteCourse, openCourse } from '../../store';
 	import CheckSelect from '$lib/form-elems/checkSelect.svelte';
 	import { scale } from 'svelte/transition';
+	import NumberInput from '$lib/form-elems/numberInput.svelte';
+	import RangeInput from '$lib/form-elems/rangeInput.svelte';
+	import type { Frequency } from '$lib/course-activities/genericActivity';
+	import SingleSelect from '$lib/form-elems/singleSelect.svelte';
 
 	export let course: Course;
 	export let courseIndex: number;
 	$: meta = course.meta;
 	let writableWeekTemplate: Writable<string[]>;
+	let writableWeeks: Writable<number>;
+	let writableTarget: Writable<Frequency>;
+	let writableTargetFreq: Writable<number>;
 	$: if ($meta) {
+		writableWeeks = propertyStore(meta, ['weeks']);
+		writableTarget = propertyStore(meta, ['target']);
+		writableTargetFreq = propertyStore(meta, ['targetFreq']);
 		writableWeekTemplate = propertyStore(meta, ['weekTemplate']);
 	}
 </script>
@@ -23,27 +33,34 @@
 			<input type="text" bind:value={$meta.name} id="courseEdit-{course.id}-courseName" />
 			<!-- <span class="suffix">✐</span> -->
 		</label>
-
-		<div class="block pt-4 mb-4">
-			<label class="text-gray-700" for="courseEdit-{course.id}-numWeeks"> Number of Weeks </label>
-			<div class="rangeInputFlex mt-1 flex gap-4">
-				<input
-					type="number"
-					id="courseEdit-{course.id}-numWeeks"
-					class="form-input w-16"
-					bind:value={$meta.weeks}
-				/>
-				<input
-					type="range"
-					bind:value={$meta.weeks}
-					class="block w-full flex-grow"
-					min="1"
-					max="52"
-					aria-hidden="true"
-					tabindex="-1"
-				/>
-			</div>
-		</div>
+		<RangeInput
+			props={{
+				id: 'courseEdit-{course.id}-weeks',
+				value: writableWeeks,
+				label: 'Number of Weeks',
+				min: 1,
+				max: 20,
+				step: 1
+			}}
+		/>
+		<RangeInput
+			props={{
+				id: 'courseEdit-{course.id}-target',
+				value: writableTarget,
+				label: 'Target Hours',
+				min: 1,
+				max: 20,
+				step: 1
+			}}
+		/>
+		<SingleSelect
+			props={{
+				id: 'courseEdit-{course.id}-targetFreq',
+				value: writableTargetFreq,
+				label: 'Is this a weekly or total target?',
+				options: readable(['Weekly', 'Total'])
+			}}
+		/>
 		{#if $writableWeekTemplate}
 			<CheckSelect
 				props={{
@@ -74,6 +91,7 @@
 
 <style lang="postcss">
 	.card {
+		@apply ring-2 ring-orange-300;
 		.coursename {
 			@apply text-2xl flex items-center gap-4 border-b-2 border-dashed;
 			.prefix {

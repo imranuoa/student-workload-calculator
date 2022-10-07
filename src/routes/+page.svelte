@@ -1,25 +1,28 @@
 <script lang="ts">
 	import { clickOutside } from 'svelte-use-click-outside';
 	import ResultTable from '$lib/results/resultTable.svelte';
-	import { courses, activeCourse, addCourse } from '../store';
+	import { courses, activeCourse, addCourse } from '$lib/../store';
 	import Config from '$lib/edit-activity/config.svelte';
 	import ActivityList from '$lib/add-activity/manageActivities.svelte';
-	import { fade } from 'svelte/transition';
+	import { fade, fly, slide } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { durationToString } from '$lib/serialize';
+	import { Frequency } from '$lib/course-activities/genericActivity';
 	import ResultChart from '$lib/results/resultChart.svelte';
+	import { Course } from '$lib/course';
 	// import arrowPattern from '$lib/assets/arrow-left.svg';
 
 	let addActivityOpen: boolean;
+	let showReport: boolean = false;
 
 	$: activeCourseInst = $activeCourse >= 0 ? $courses[$activeCourse] : undefined;
 	$: activeCourseMeta = activeCourseInst?.meta;
 	$: activeCourseActivities = activeCourseInst?.activities;
+	$: totals = $activeCourseActivities && Course.getTotal($activeCourseActivities);
+	$: gradeTotals = $activeCourseActivities && Course.getGradeTotals($activeCourseActivities);
 	$: openActivity = activeCourseInst?.openActivity;
-	$: openActivityInst =
-		$openActivity !== undefined && $openActivity >= 0
-			? $activeCourseActivities?.[$openActivity]
-			: undefined;
+	$: openActivityInst = $activeCourseActivities?.[$openActivity !== undefined ? $openActivity : -1];
 
 	// If openActivity is >0 and doesn't resolve, reset it to -1
 	$: if (
@@ -39,11 +42,8 @@
 	});
 
 	const openCourseConfig = () => {
-		goto('/configure');
+		goto('/courses');
 	};
-
-	let resultsWidth: number;
-	let resultsHeight: number;
 </script>
 
 <svelte:head>
@@ -54,145 +54,140 @@
 	{/if}
 </svelte:head>
 
-{#if activeCourseInst && $activeCourseMeta && $activeCourseActivities}
-	{#key $activeCourse}
-		<div
-			class="calculator-layout"
-			class:expandActivities={addActivityOpen}
-			class:hideConfig={!openActivityInst}
-			class:noActivities={$activeCourseActivities.length === 0}
-			class:hasActivities={$activeCourseActivities.length > 0}
-		>
-			<div
-				class="activities"
-				use:clickOutside={() => {
-					addActivityOpen = false;
-				}}
-			>
-				<div class="title">
-					<a href="/configure" class="btn configure" title="return to course list">
-						<span aria-hidden="true"> &leftarrow; </span>
-					</a>
-					{#if activeCourseMeta}
-						<h2>{$activeCourseMeta.name}</h2>
-					{/if}
+{#if activeCourseInst && $activeCourseMeta && $activeCourseActivities && $totals}
+	<div class="layout">
+		<div class="main card">
+			<div class="header">
+				<div class="coursename">
+					<label for="courseName">Course:</label>
+					<input
+						id="courseName"
+						type="text"
+						bind:value={$activeCourseMeta.name}
+						placeholder="Course Name"
+					/>
 				</div>
-				<hr class="my-2" />
-				<ActivityList bind:activeCourse={activeCourseInst} bind:addActivityOpen />
+				<div class="actions">
+					<button class="btn btn-primary" on:click={openCourseConfig}>Manage Courses</button>
+				</div>
 			</div>
-			{#if activeCourseInst}
-				<div class="config">
-					<Config activities={activeCourseActivities} {openActivity} />
-				</div>
-				<div class="results" bind:clientWidth={resultsWidth} bind:clientHeight={resultsHeight}>
-					{#if activeCourseActivities && activeCourseMeta && $activeCourseActivities && $activeCourseMeta && $activeCourseActivities.length > 0}
-						<ResultTable
-							activities={$activeCourseActivities}
-							courseWeeks={$activeCourseMeta.weeks}
-							bind:openActivity={$openActivity}
-							on:selectActivity={({ detail }) => {
-								const matchedIndex = $activeCourseActivities?.findIndex((c) => c == detail);
-								if (matchedIndex === $openActivity) $openActivity = -1;
-								else if (matchedIndex !== -1) $openActivity = matchedIndex;
-							}}
-						/>
-						<ResultChart activities={activeCourseActivities} meta={activeCourseMeta} />
-					{:else}
-						<div class="no-activities-results" in:fade>
-							<div class="arrows-wrap">
-								<div class="arrows" />
-							</div>
-							<p class="hint">
-								This course doesn't have anything in it! To get started, use the menu to the left to
-								add a activity.
-							</p>
-						</div>
-					{/if}
-				</div>
-			{/if}
+			<div class="activity-list">
+				<ActivityList bind:course={activeCourseInst} bind:addActivityOpen />
+			</div>
+			<div class="activity-config">
+				{#if openActivityInst}
+					<Config course={activeCourseInst} />
+				{:else}
+					<div class="placeholder">
+						<h2>Activity Configuration</h2>
+						<p>Select an activity to configure it.</p>
+					</div>
+				{/if}
+			</div>
 		</div>
-	{/key}
+		{@debug $totals}
+		<div class="results card" class:danger={$totals.perCourse.total > 40}>
+			<div class="stats">
+				<strong>{durationToString($totals.perCourse.total)}</strong> in course /
+				<strong>
+					{durationToString($totals.perWeek.total)}
+				</strong>
+				per week
+			</div>
+			<div class="more">
+				<i
+					>({$activeCourseMeta.target} hr{#if $activeCourseMeta.targetFreq == Frequency.Weekly}/week{/if}
+					target)
+				</i>
+				<button
+					class="btn btn-primary"
+					class:active={showReport}
+					on:click={() => {
+						showReport = !showReport;
+					}}
+				>
+					Details...</button
+				>
+			</div>
+			<div class="indicator">
+				<div
+					class="scheduled"
+					style:width={`${
+						($totals.perCourseS.total / Math.max(40, $totals.perCourse.total)) * 100
+					}%`}
+				/>
+				<div
+					class="independant"
+					style:width={`${
+						($totals.perCourseI.total / Math.max(40, $totals.perCourse.total)) * 100
+					}%`}
+				/>
+			</div>
+		</div>
+		{#if showReport}
+			<div class="results-details card" transition:slide>
+				<ResultTable
+					activities={activeCourseInst.activities}
+					meta={activeCourseInst.meta}
+					openActivity={activeCourseInst.openActivity}
+				/>
+				<ResultChart activities={activeCourseInst.activities} meta={activeCourseInst.meta} />
+			</div>
+		{/if}
+	</div>
 {/if}
 
 <style lang="postcss">
-	.calculator-layout {
-		@apply flex gap-8 p-8 min-h-full pb-5;
-		--activities-pane-width: 20rem;
-		--activities-pane-extra-width: 0rem;
-		--config-pane-width: 25rem;
+	.layout {
+		@apply grid grid-flow-row auto-rows-auto gap-10 w-full;
+		grid-template-areas:
+			'main'
+			'summary'
+			'details';
+	}
+	.card {
+		@apply p-5 rounded-lg shadow bg-uni-gray-100;
+	}
+	.main {
+		@apply grid auto-rows-auto gap-5;
+		grid-area: main;
+		grid-template-columns: 2fr 3fr;
+		grid-template-areas:
+			'header header'
+			'activity-list activity-config';
 
-		.activities {
-			@apply shadow-lg bg-white p-4 rounded-r-lg transition-all z-10 -ml-8;
-			width: calc(var(--activities-pane-width) + var(--activities-pane-extra-width));
-			.title {
-				@apply grid items-center gap-4;
-				grid-template-columns: auto 1fr;
-				grid-template-areas: 'button title';
-				.btn {
-					grid-area: button;
+		.header {
+			grid-area: header;
+			@apply grid gap-5;
+			grid-template-columns: 1fr auto;
+			.coursename {
+				@apply text-2xl flex items-center gap-4;
+				label {
+					@apply block opacity-50 select-none;
+				}
+				input {
+					@apply flex-grow border-0 p-2 text-2xl bg-transparent;
+				}
+			}
+			.actions {
+				@apply flex gap-4 select-none items-center;
+				button {
+					@apply text-lg;
 				}
 			}
 		}
-
-		.config,
-		.results {
-			@apply duration-150 ease-in-out z-0;
-			@apply pt-4;
-			transition-property: margin-left, opacity;
-			margin-left: 0;
+		.activity-config,
+		.activity-list {
+			@apply p-4 rounded-lg shadow bg-white;
 		}
-		.results {
-			@apply basis-0;
-			flex-grow: 999;
+		.activity-list {
+			grid-area: activity-list;
 		}
-		.config {
-			@apply flex-grow;
-			flex-basis: var(--config-pane-width);
-		}
-		&.hideConfig {
-			.activities {
-				@apply shadow-xl;
-				--activities-pane-extra-width: 10rem;
-				z-index: 10;
-			}
-			&.expandActivities {
-				.activities {
-					@apply shadow-2xl;
-					--activities-pane-extra-width: 20rem;
-					margin-right: -10rem;
-				}
-			}
-			.config {
-				margin-left: calc(var(--config-pane-width) * -1);
-			}
-			.results {
-				margin-left: -2.5rem;
-			}
-		}
-
-		&.expandActivities {
-			--activities-pane-extra-width: 20rem;
-			.activities {
-				@apply shadow-xl;
-				z-index: 10;
-			}
-			.config,
-			.results {
-				@apply opacity-30 pointer-events-none;
-			}
-			.config {
-				margin-left: calc(var(--activities-pane-extra-width) * -1);
-			}
+		.activity-config {
+			grid-area: activity-config;
 		}
 
 		&.noActivities {
-			.activities {
-				@apply shadow-2xl pulsehint;
-				:global(.add-activity) {
-					@apply pulsehint transition;
-					@apply bg-blue-600;
-				}
-			}
 			.no-activities-results {
 				@apply h-96 flex items-center justify-center  relative overflow-clip;
 				.arrows-wrap {
@@ -217,6 +212,45 @@
 		}
 	}
 
+	.results {
+		@apply grid items-center relative overflow-auto;
+		@apply outline outline-0 ring-red-500 ring-0 transition-all;
+		grid-area: summary;
+		grid-template-columns: 1fr auto;
+
+		.more {
+			@apply flex gap-4 items-center;
+		}
+
+		.scheduled,
+		.independant {
+			@apply bg-uni-color-green;
+		}
+
+		&.danger {
+			@apply ring-2;
+			.scheduled,
+			.independant {
+				@apply bg-red-500;
+			}
+		}
+		.indicator {
+			@apply rounded-full overflow-hidden h-1 absolute w-full bottom-0 left-0 flex;
+			.scheduled,
+			.independant {
+				@apply h-full transition-all;
+			}
+			.independant {
+				@apply opacity-40;
+			}
+		}
+	}
+
+	.results-details {
+		@apply bg-white ring-black ring-2 relative z-20;
+		grid-area: details;
+	}
+
 	:global(.pulsehint) {
 		animation: pulseHint 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 		animation-direction: alternate;
@@ -230,55 +264,6 @@
 		}
 	}
 
-	@media screen and (max-width: 1600px) {
-		.calculator-layout {
-			.results {
-				@apply max-w-2xl;
-			}
-		}
-	}
-
-	@media screen and (max-width: 1400px) {
-		.calculator-layout {
-			@apply flex-wrap;
-			.results {
-				@apply w-full max-w-full basis-full;
-			}
-			&.noActivities {
-				.no-activities-results {
-					@apply hidden;
-				}
-				.activities {
-					@apply ml-0 rounded-lg w-full;
-				}
-			}
-		}
-	}
-	@media screen and (max-width: 1024px) {
-		.calculator-layout.hasActivities {
-			.activities,
-			.config {
-				@apply grow ml-0 rounded-lg basis-80;
-				width: 50%;
-			}
-			.results {
-				@apply basis-full overflow-x-auto;
-			}
-			&.hideConfig {
-				.activities {
-					@apply shadow-lg;
-				}
-				.activities,
-				.config,
-				.results {
-					@apply mx-0;
-				}
-				.config {
-					@apply hidden;
-				}
-			}
-		}
-	}
 	@keyframes shiftBackground {
 		from {
 			transform: translateX(3rem);

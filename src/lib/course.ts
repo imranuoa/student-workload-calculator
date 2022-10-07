@@ -1,12 +1,29 @@
 import { nanoid } from 'nanoid';
 import { derived, get, writable, type Writable } from 'svelte/store';
-import activities, { getActivityClass, type serializedActivity } from '$lib/activities';
-import type { Activity } from '$lib/course-activities/genericActivity';
+import activities, {
+	getActivityClass,
+	type derivedCalculated,
+	type serializedActivity
+} from '$lib/activities';
+import { Frequency, type Activity } from '$lib/course-activities/genericActivity';
+
+const median = (numbers: number[]) => {
+	const sorted = Array.from(numbers).sort((a, b) => a - b);
+	const middle = Math.floor(sorted.length / 2);
+
+	if (sorted.length % 2 === 0) {
+		return (sorted[middle - 1] + sorted[middle]) / 2;
+	}
+
+	return sorted[middle];
+};
 
 export interface courseMeta {
 	name: string;
 	weeks: number;
 	weekTemplate: string[];
+	target: number;
+	targetFreq: Frequency;
 }
 
 export interface serializedCourse {
@@ -35,7 +52,16 @@ export class Course {
 	}
 	static deserialize(c: serializedCourse) {
 		try {
-			const course = new Course(c.meta.name, c.meta.weeks, [], c.openActivity, [], c.id);
+			const course = new Course(
+				c.meta.name,
+				c.meta.weeks,
+				c.meta.target,
+				c.meta.targetFreq,
+				[],
+				c.openActivity,
+				[],
+				c.id
+			);
 			if (c.meta.weekTemplate)
 				course.meta.update((m) => ({ ...m, weekTemplate: c.meta.weekTemplate }));
 			try {
@@ -51,6 +77,50 @@ export class Course {
 		} catch (error) {
 			console.error('Error deserializing course', error);
 		}
+	}
+	static getTotal(activities: Activity[]) {
+		return derived(
+			activities.map((a) => a.derivedCalculated),
+			(values) => {
+				return {
+					perWeekI: {
+						median: median(values.map((v) => v.perWeekI)),
+						total: values.reduce((a, v) => a + v.perWeekI, 0)
+					},
+					perWeekS: {
+						median: median(values.map((v) => v.perWeekS)),
+						total: values.reduce((a, v) => a + v.perWeekS, 0)
+					},
+					perCourseI: {
+						median: median(values.map((v) => v.perCourseI)),
+						total: values.reduce((a, v) => a + v.perCourseI, 0)
+					},
+					perCourseS: {
+						median: median(values.map((v) => v.perCourseS)),
+						total: values.reduce((a, v) => a + v.perCourseS, 0)
+					},
+					perCourse: {
+						median: median(values.map((v) => v.perCourseI + v.perCourseS)),
+						total: values.reduce((a, v) => a + v.perCourseI + v.perCourseS, 0)
+					},
+					perWeek: {
+						median: median(values.map((v) => v.perWeekI + v.perWeekS)),
+						total: values.reduce((a, v) => a + v.perWeekI + v.perWeekS, 0)
+					}
+				};
+			}
+		);
+	}
+	static getGradeTotals(activities: Activity[]) {
+		return derived(
+			activities.map((a) => a.gradeWorth),
+			(grades) => {
+				return {
+					median: median(grades),
+					total: grades.reduce((a, v) => a + v, 0)
+				};
+			}
+		);
 	}
 	openActivity: Writable<number>;
 	meta: Writable<courseMeta>;
@@ -109,6 +179,8 @@ export class Course {
 	constructor(
 		name = '',
 		weeks = 0,
+		target = 10,
+		targetFreq = Frequency.Weekly,
 		activities: Activity[] = [],
 		openActivity = 0,
 		private subscribers: Function[] = [],
@@ -118,7 +190,9 @@ export class Course {
 		this.meta = writable({
 			name,
 			weeks,
-			weekTemplate: [...Array(weeks).keys()].map((e) => (e + 1).toString())
+			weekTemplate: [...Array(weeks).keys()].map((e) => (e + 1).toString()),
+			target,
+			targetFreq
 		});
 		activities.forEach((c) => this.addActivity(c));
 		this.watchDerived();

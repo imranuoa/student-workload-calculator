@@ -96,7 +96,7 @@
 
 <style lang="postcss">
 	.layout {
-		@apply grid xl:grid-cols-3 grid-cols-1 min-h-full justify-center justify-items-center p-8 gap-8;
+		@apply grid xl:grid-cols-2 grid-cols-1 min-h-full justify-center justify-items-center p-8 gap-8;
 		.createPane {
 			@apply flex flex-col gap-8 order-3 xl:order-none;
 			@apply bg-white rounded-lg shadow-lg p-6;
@@ -109,12 +109,12 @@
 			@apply h-1 w-full rounded-full bg-black bg-opacity-20;
 		}
 		.editPane {
-			@apply grow order-1 xl:order-none lg:col-span-2 w-full;
+			@apply grow order-1 xl:order-none w-full;
 			h2 {
 				@apply text-3xl;
 			}
 			.editPane-items {
-				@apply gap-8 grid grid-cols-1 md:grid-cols-2 items-center md:items-start;
+				@apply gap-8 grid grid-cols-1  items-center md:items-start;
 			}
 		}
 	}

@@ -9,7 +9,6 @@ const storeVersion = 'v2';
 const serializer = {
 	stringify(value: Course[]) {
 		const serialized = value.map((c) => Course.serialize(c));
-		console.log(serialized);
 		return JSON.stringify(serialized);
 	},
 	parse(value: string) {

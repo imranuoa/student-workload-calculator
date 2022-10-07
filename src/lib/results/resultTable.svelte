@@ -1,17 +1,21 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import { derived, get } from 'svelte/store';
+	import { derived, get, type Writable } from 'svelte/store';
 	import { onMount } from 'svelte';
 	import csvDownload from 'json-to-csv-export';
 
 	import type { Activity } from '$lib/course-activities/genericActivity';
-	import ResultTableRow from './resultTableRow.svelte';
+	import ResultTableRow from '$lib/results/resultTableRow.svelte';
+	import { Course, type courseMeta } from '$lib/course';
 
 	const dispatch = createEventDispatcher();
 
-	export let activities: Activity[];
-	export let courseWeeks: number;
-	export let openActivity: number | null = null;
+	export let meta: Writable<courseMeta>;
+	export let activities: Writable<Activity[]>;
+	export let openActivity: Writable<number>;
+	$: openActivityInst = $activities?.[$openActivity !== undefined ? $openActivity : -1];
+	$: totals = Course.getTotal($activities);
+	$: gradeTotals = Course.getGradeTotals($activities);
 
 	const columns = [
 		{ name: 'Name', detail: 'Name' },
@@ -22,57 +26,9 @@
 		{ name: 'Grade %', detail: 'The amount the activity is worth as a percent of the grade' }
 	];
 
-	const median = (numbers: number[]) => {
-		const sorted = Array.from(numbers).sort((a, b) => a - b);
-		const middle = Math.floor(sorted.length / 2);
-
-		if (sorted.length % 2 === 0) {
-			return (sorted[middle - 1] + sorted[middle]) / 2;
-		}
-
-		return sorted[middle];
-	};
-
-	$: gradeTotals = derived(
-		activities.map((c) => c.gradeWorth),
-		(grades) => ({
-			median: median(grades),
-			total: grades.reduce((a, v) => a + v, 0)
-		})
-	);
-
-	$: totals = derived(
-		activities.map((c) => c.derivedCalculated),
-		(values) => ({
-			perWeekI: {
-				median: median(values.map((v) => v.perWeekI)),
-				total: values.reduce((a, v) => a + v.perWeekI, 0)
-			},
-			perWeekS: {
-				median: median(values.map((v) => v.perWeekS)),
-				total: values.reduce((a, v) => a + v.perWeekS, 0)
-			},
-			perCourseI: {
-				median: median(values.map((v) => v.perCourseI)),
-				total: values.reduce((a, v) => a + v.perCourseI, 0)
-			},
-			perCourseS: {
-				median: median(values.map((v) => v.perCourseS)),
-				total: values.reduce((a, v) => a + v.perCourseS, 0)
-			},
-			perCourse: {
-				median: median(values.map((v) => v.perCourseI + v.perCourseS)),
-				total: values.reduce((a, v) => a + v.perCourseI + v.perCourseS, 0)
-			},
-			perWeek: {
-				median: median(values.map((v) => v.perWeekI + v.perWeekS)),
-				total: values.reduce((a, v) => a + v.perCourseI + v.perCourseS, 0)
-			}
-		})
-	);
-
-	const buildData = () =>
-		activities.map((a) => {
+	const buildData = () => {
+		if (!$activities) return [];
+		return $activities.map((a) => {
 			const derived = get(a.derivedCalculated);
 			return {
 				name: get(a.instanceName),
@@ -86,6 +42,7 @@
 				}
 			};
 		});
+	};
 
 	let downloadJSON: Function;
 	let downloadXLSX: Function;
@@ -136,13 +93,13 @@
 		</tr>
 	</thead>
 	<tbody>
-		{#each activities as activity}
+		{#each $activities as activity}
 			<ResultTableRow
 				{activity}
 				totals={$totals}
 				gradeTotals={$gradeTotals}
-				{courseWeeks}
-				active={openActivity === null ? null : activities[openActivity] === activity}
+				courseWeeks={$meta.weeks}
+				active={openActivityInst === activity}
 				on:click={() => dispatch('selectActivity', activity)}
 			/>
 		{/each}

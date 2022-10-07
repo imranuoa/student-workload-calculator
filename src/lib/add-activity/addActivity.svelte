@@ -77,7 +77,7 @@
 	.activityWrapper {
 		@apply relative;
 		.activity-grid {
-			@apply grid grid-cols-5 gap-2;
+			@apply grid grid-cols-4 gap-2;
 			.btn {
 				/* Default */
 				@apply flex flex-col items-center justify-center w-full relative rounded-lg  outline-blue-400 outline-0 outline overflow-hidden bg-gray-50 text-black;
