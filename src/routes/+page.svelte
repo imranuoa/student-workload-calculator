@@ -86,7 +86,12 @@
 			</div>
 		</div>
 		{@debug $totals}
-		<div class="results card" class:danger={$totals.perCourse.total > 40}>
+		<div
+			class="results card"
+			class:danger={$totals.perCourse.total >
+				$activeCourseMeta.target *
+					($activeCourseMeta.targetFreq === Frequency.Weekly ? $activeCourseMeta.weeks : 1)}
+		>
 			<div class="stats">
 				<strong>{durationToString($totals.perCourse.total)}</strong> in course /
 				<strong>
@@ -113,13 +118,25 @@
 				<div
 					class="scheduled"
 					style:width={`${
-						($totals.perCourseS.total / Math.max(40, $totals.perCourse.total)) * 100
+						($totals.perCourseS.total /
+							Math.max(
+								$activeCourseMeta.target *
+									($activeCourseMeta.targetFreq === Frequency.Weekly ? $activeCourseMeta.weeks : 1),
+								$totals.perCourse.total
+							)) *
+						100
 					}%`}
 				/>
 				<div
 					class="independant"
 					style:width={`${
-						($totals.perCourseI.total / Math.max(40, $totals.perCourse.total)) * 100
+						($totals.perCourseI.total /
+							Math.max(
+								$activeCourseMeta.target *
+									($activeCourseMeta.targetFreq === Frequency.Weekly ? $activeCourseMeta.weeks : 1),
+								$totals.perCourse.total
+							)) *
+						100
 					}%`}
 				/>
 			</div>
