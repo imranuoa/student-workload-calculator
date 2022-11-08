@@ -4,8 +4,10 @@
 	import '../app.postcss';
 	import { fade, fly, slide } from 'svelte/transition';
 	import { courses, activeCourse } from '../store';
-	import Logo from '$lib/assets/logo.svg';
+	import Logo from '$lib/assets/logo.svelte';
 	import { page } from '$app/stores';
+	import { Course } from '$lib/course';
+	import { Frequency } from '$lib/course-activities/genericActivity';
 
 	const resetPrompt = () => {
 		if (
@@ -20,6 +22,19 @@
 
 	$: activeCourseInst = $activeCourse >= 0 ? $courses[$activeCourse] : undefined;
 	$: activeCourseMeta = activeCourseInst?.meta;
+	$: activeCourseActivities = activeCourseInst?.activities;
+	$: totals = $activeCourseActivities && Course.getTotal($activeCourseActivities);
+
+	$: isDanger = (() => {
+		if ($totals && $activeCourseMeta) {
+			return (
+				$totals.perCourse.total >
+				$activeCourseMeta.target *
+					($activeCourseMeta.targetFreq === Frequency.Weekly ? $activeCourseMeta.weeks : 1)
+			);
+		}
+		return false;
+	})();
 </script>
 
 <svelte:head>
@@ -29,7 +44,7 @@
 <div class="wrapper">
 	<div class="layout">
 		<header>
-			<img src={Logo} aria-hidden="true" alt="" />
+			<Logo score={$totals?.perWeek.total} {isDanger} />
 			<h1>
 				Student Workload
 				<br />Calculator
@@ -66,7 +81,7 @@
 		grid-area: header;
 		justify-content: center;
 		flex-wrap: wrap;
-		img {
+		:global(svg) {
 			@apply w-32 h-32;
 		}
 		h1 {
@@ -77,7 +92,7 @@
 			& {
 				@apply h-auto;
 			}
-			img {
+			:global(svg) {
 				@apply w-24 h-24;
 			}
 			h1 {
@@ -85,7 +100,7 @@
 			}
 		}
 		@media screen and (max-width: 280px) {
-			img {
+			:global(svg) {
 				@apply hidden;
 			}
 			h1 {

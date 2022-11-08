@@ -85,7 +85,6 @@
 				{/if}
 			</div>
 		</div>
-		{@debug $totals}
 		<div
 			class="results card"
 			class:danger={$totals.perCourse.total >
