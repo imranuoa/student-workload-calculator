@@ -164,6 +164,7 @@
 	.card {
 		@apply p-5 rounded-lg shadow bg-uni-gray-100;
 	}
+
 	.main {
 		@apply grid auto-rows-auto gap-5;
 		grid-area: main;
@@ -171,6 +172,14 @@
 		grid-template-areas:
 			'header header'
 			'activity-list activity-config';
+
+		@media screen and (max-width: 768px) {
+			grid-template-columns: 1fr;
+			grid-template-areas:
+				'header'
+				'activity-config'
+				'activity-list';
+		}
 
 		.header {
 			grid-area: header;
