@@ -11,7 +11,7 @@
 
 	export let activities: ActivitySubClass[];
 
-	let hoveredActivity = -1;
+	export let hoveredActivity = -1;
 	let hoveredTimeout: number;
 
 	let isFocused = false;

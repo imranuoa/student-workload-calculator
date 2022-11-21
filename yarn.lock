@@ -198,6 +198,13 @@
   dependencies:
     "@types/node" "*"
 
+"@types/svelte-range-slider-pips@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/svelte-range-slider-pips/-/svelte-range-slider-pips-2.0.0.tgz#bcb97cd7daeac86a2dd3892845b2344547f84258"
+  integrity sha512-+Yq3xwyI0ViGZKdrsNpM8Wqa0wCnSBKc8NcRfYGiu22kVJ3Xr0gfiZATWMzZ2mryt/tQR8QgH2B782ogrZS1aw==
+  dependencies:
+    svelte "^3.0.0"
+
 "@vercel/nft@^0.22.0":
   version "0.22.0"
   resolved "https://registry.yarnpkg.com/@vercel/nft/-/nft-0.22.0.tgz#586ed4edfd0dabc9bf07525044782198a0b31199"
@@ -1432,6 +1439,11 @@ svelte-preprocess@^4.0.0, svelte-preprocess@^4.10.7:
     sorcery "^0.10.0"
     strip-indent "^3.0.0"
 
+svelte-range-slider-pips@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/svelte-range-slider-pips/-/svelte-range-slider-pips-2.1.0.tgz#6bcd410b7edb781e6f62c993470aeb46b3b7a7f4"
+  integrity sha512-WpJQSXo1RG++mIKOkkfmcFho9ngzIBl7fPl0bDzpa6yFTFbxeFUVF5KkUSaiZwzs2SNT3xy6nAUeVLbVQ74JLA==
+
 svelte-table@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/svelte-table/-/svelte-table-0.5.0.tgz#e6728021b5b1cfd2edaa5870e8b9e8d31bd0e7b6"
@@ -1446,6 +1458,11 @@ svelte-writable-derived@^2.1.5:
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/svelte-writable-derived/-/svelte-writable-derived-2.1.5.tgz#c2fc5cbaf13ad6c8a41facd390ec80cd24397920"
   integrity sha512-g26/W1iWj7FlLwaggNwXxHwMSf70/bHAYcpBT/EijijjakCSU9/PXmn31fL/kw2P1SzVEU6ayyCFuNYqTY3RUw==
+
+svelte@^3.0.0:
+  version "3.53.1"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.53.1.tgz#db9d7df7a8f570e8e22547444c149208b1914442"
+  integrity sha512-Q4/hHkktZogGhN5iqxqSi9sjEVoe/NbIxX4hXEHoasTxj+TxEQVAq66LnDMdAZxjmsodkoI5F3slqsS68U7FNw==
 
 svelte@^3.44.0:
   version "3.50.1"

@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 .btn {
-	@apply rounded shadow bg-slate-700 text-white px-3 py-1 inline-block transition select-none;
+	@apply rounded bg-slate-700 text-white px-3 py-1 inline-block transition select-none;
 	&.btn-block {
 		@apply block w-full;
 	}
@@ -44,4 +44,9 @@ h2 {
 	.card {
 		@apply rounded-none shadow-none;
 	}
+}
+
+.form-input,
+.form-select {
+	@apply rounded text-sm border-slate-300;
 }
