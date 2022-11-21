@@ -39,7 +39,7 @@
 				value: writableWeeks,
 				label: 'Number of Weeks',
 				min: 1,
-				max: 20,
+				max: 52,
 				step: 1
 			}}
 		/>

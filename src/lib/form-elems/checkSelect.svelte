@@ -73,11 +73,15 @@
 </fieldset>
 
 <style lang="postcss">
+	fieldset {
+		@apply min-w-0;
+	}
 	.daySelectGroup {
-		@apply grid rounded shadow select-none overflow-clip overflow-x-auto;
+		@apply flex rounded shadow select-none overflow-clip overflow-x-auto;
 		@apply bg-gray-200;
-		grid-template-columns: repeat(var(--numOptions), minmax(2.3ch, 1fr));
+		/* grid-template-columns: repeat(var(--numOptions), minmax(2.3ch, 1fr)); */
 		.daySelectLabel {
+			min-width: 2.5ch;
 			@apply grow flex;
 			input {
 				@apply absolute opacity-0 pointer-events-none;
