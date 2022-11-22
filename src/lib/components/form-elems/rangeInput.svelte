@@ -1,7 +1,7 @@
 <script lang="ts">
 	import './formStyles.postcss';
 	import RangeSlider from 'svelte-range-slider-pips';
-	import type { RangeInput } from '../form';
+	import type { RangeInput } from '$lib/form';
 	import writableDerived from 'svelte-writable-derived';
 
 	export let props: RangeInput['props'];

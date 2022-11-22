@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { clickOutside } from 'svelte-use-click-outside';
-	import ResultTable from '$lib/results/resultTable.svelte';
+	import ResultTable from '$lib/components/results/resultTable.svelte';
 	import { courses, activeCourse, addCourse } from '$lib/../store';
-	import Config from '$lib/edit-activity/config.svelte';
+	import Config from '$lib/components/edit-activity/config.svelte';
 	import ActivityList from '$lib/add-activity/manageActivities.svelte';
 	import { fade, fly, slide } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { durationToString } from '$lib/serialize';
 	import { Frequency } from '$lib/course-activities/genericActivity';
-	import ResultChart from '$lib/results/resultChart.svelte';
+	import ResultChart from '$lib/components/results/resultChart.svelte';
 	import { Course } from '$lib/course';
 	// import arrowPattern from '$lib/assets/arrow-left.svg';
 

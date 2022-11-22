@@ -2,7 +2,7 @@
 	import type { Readable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 	import { Frequency, type Activity } from '$lib/course-activities/genericActivity';
-	import RangeInput from '$lib/form-elems/rangeInput.svelte';
+	import RangeInput from '$lib/components/form-elems/rangeInput.svelte';
 	import type { Course } from '$lib/course';
 	import { durationToString } from '$lib/serialize';
 

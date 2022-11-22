@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import './formStyles.postcss';
-	import type { CheckSelectInput } from '../form';
+	import type { CheckSelectInput } from '$lib/form';
 
 	export let props: CheckSelectInput['props'];
 	let { options, value, label } = props;

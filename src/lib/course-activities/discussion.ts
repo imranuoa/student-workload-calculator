@@ -8,7 +8,7 @@ import {
 	NumberInput,
 	SingleSelectInput,
 	CheckboxInput
-} from '../form';
+} from '$lib/form';
 import { Activity, Frequency } from '$lib/course-activities/genericActivity';
 import type { calculatedResults, derivedCalculated } from '../activities';
 

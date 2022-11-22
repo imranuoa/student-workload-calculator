@@ -1,6 +1,6 @@
 <script lang="ts">
 	import './formStyles.postcss';
-	import type { TextInput } from '../form';
+	import type { TextInput } from '$lib/form';
 
 	export let props: TextInput['props'];
 	let { value, label } = props;

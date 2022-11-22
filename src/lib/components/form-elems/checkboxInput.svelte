@@ -1,6 +1,6 @@
 <script lang="ts">
 	import './formStyles.postcss';
-	import type { CheckboxInput } from '../form';
+	import type { CheckboxInput } from '$lib/form';
 
 	export let props: CheckboxInput['props'];
 	let { value, label } = props;

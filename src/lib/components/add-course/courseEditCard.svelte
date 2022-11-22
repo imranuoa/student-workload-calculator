@@ -3,13 +3,13 @@
 	import { propertyStore } from 'svelte-writable-derived';
 
 	import type { Course } from '$lib/course';
-	import { deleteCourse, openCourse } from '../../store';
-	import CheckSelect from '$lib/form-elems/checkSelect.svelte';
+	import { deleteCourse, openCourse } from '../../../store';
+	import CheckSelect from '$lib/components/form-elems/checkSelect.svelte';
 	import { scale } from 'svelte/transition';
-	import NumberInput from '$lib/form-elems/numberInput.svelte';
-	import RangeInput from '$lib/form-elems/rangeInput.svelte';
+	import NumberInput from '$lib/components/form-elems/numberInput.svelte';
+	import RangeInput from '$lib/components/form-elems/rangeInput.svelte';
 	import type { Frequency } from '$lib/course-activities/genericActivity';
-	import SingleSelect from '$lib/form-elems/singleSelect.svelte';
+	import SingleSelect from '$lib/components/form-elems/singleSelect.svelte';
 
 	export let course: Course;
 	export let courseIndex: number;

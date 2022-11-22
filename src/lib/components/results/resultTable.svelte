@@ -5,7 +5,7 @@
 	import csvDownload from 'json-to-csv-export';
 
 	import type { Activity } from '$lib/course-activities/genericActivity';
-	import ResultTableRow from '$lib/results/resultTableRow.svelte';
+	import ResultTableRow from '$lib/components/results/resultTableRow.svelte';
 	import { Course, type courseMeta } from '$lib/course';
 
 	const dispatch = createEventDispatcher();

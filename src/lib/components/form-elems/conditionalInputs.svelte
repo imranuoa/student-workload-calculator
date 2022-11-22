@@ -1,6 +1,6 @@
 <script lang="ts">
 	import './formStyles.postcss';
-	import type { ConditionalInput } from '../form';
+	import type { ConditionalInput } from '$lib/form';
 
 	export let props: ConditionalInput['props'];
 	let { value, label, elements } = props;

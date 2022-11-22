@@ -2,7 +2,7 @@ import { get, readable, writable, type Readable, type Writable } from 'svelte/st
 import { formTypes, type FormElement, type formProps, type TextInput } from './form';
 import Duration from 'humanize-duration';
 
-const formElems = import.meta.glob('$lib/form-elems/*.svelte', { eager: true });
+const formElems = import.meta.glob('$lib/components/form-elems/*.svelte', { eager: true });
 
 type serializedFormElem = {
 	type: string;

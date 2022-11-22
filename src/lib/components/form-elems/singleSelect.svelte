@@ -1,6 +1,6 @@
 <script lang="ts">
 	import './formStyles.postcss';
-	import type { SingleSelectInput } from '../form';
+	import type { SingleSelectInput } from '$lib/form';
 
 	export let props: SingleSelectInput['props'];
 	let { value, label, options, key } = props;

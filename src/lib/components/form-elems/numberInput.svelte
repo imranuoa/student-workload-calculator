@@ -1,6 +1,6 @@
 <script lang="ts">
 	import './formStyles.postcss';
-	import type { NumberInput } from '../form';
+	import type { NumberInput } from '$lib/form';
 
 	export let props: NumberInput['props'];
 	let { value, label } = props;
