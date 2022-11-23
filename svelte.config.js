@@ -12,7 +12,6 @@ const config = {
 	],
 
 	kit: {
-		trailingSlash: 'always',
 		adapter: adapter({})
 	}
 };
