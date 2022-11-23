@@ -1,5 +1,5 @@
 <script lang="ts">
-	import AddActivityMenu from '$lib/add-activity/addActivity.svelte';
+	import AddActivityMenu from '$lib/components/add-activity/addActivity.svelte';
 	import type { Course } from '$lib/course';
 	import { activities } from '$lib/activities';
 	import { fade } from 'svelte/transition';

@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { derived, get, writable, type Writable } from 'svelte/store';
+import { derived, get, writable, type Readable, type Writable } from 'svelte/store';
 import activities, {
 	getActivityClass,
 	type derivedCalculated,
@@ -31,6 +31,20 @@ export interface serializedCourse {
 	openActivity: number;
 	activities: serializedActivity[];
 	id: string;
+}
+
+interface totalValues {
+	median: number;
+	total: number;
+}
+
+export interface Totals {
+	perWeekI: totalValues;
+	perWeekS: totalValues;
+	perCourseI: totalValues;
+	perCourseS: totalValues;
+	perCourse: totalValues;
+	perWeek: totalValues;
 }
 
 export class Course {
@@ -79,7 +93,7 @@ export class Course {
 		}
 	}
 	static getTotal(activities: Activity[]) {
-		return derived(
+		return derived<Readable<derivedCalculated>[], Totals>(
 			activities.map((a) => a.derivedCalculated),
 			(values) => {
 				return {
@@ -198,3 +212,31 @@ export class Course {
 		this.watchDerived();
 	}
 }
+
+// Utility functions to handle type narrowing in Svelte components
+export interface courseDataValid {
+	course: Course;
+	meta: courseMeta;
+	activities: Activity[];
+	totals: Totals;
+}
+export interface courseDataMissing {
+	course: undefined;
+	meta: undefined;
+	activities: undefined;
+	totals: undefined;
+}
+
+export type courseData = courseDataValid | courseDataMissing;
+export const getCourseData = (
+	course: Course | undefined,
+	meta: courseMeta | undefined,
+	activities: Activity[] | undefined,
+	totals: Totals | undefined
+) =>
+	({
+		course,
+		meta: meta!,
+		activities: activities!,
+		totals: totals!
+	} as courseData);

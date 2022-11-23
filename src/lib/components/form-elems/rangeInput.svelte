@@ -7,6 +7,9 @@
 	export let props: RangeInput['props'];
 	let { value, label, min, max, step, id } = props;
 
+	export let colour = '#009AC7';
+	export let colourActive = '#00467F';
+
 	const values = writableDerived(
 		value,
 		(v) => [v],
@@ -18,7 +21,7 @@
 	<label for={id} class="text-gray-700"> {label} </label>
 	<div class="rangeInputFlex mt-1">
 		<input type="number" {id} class="form-input" bind:value={$value} {step} />
-		<div class="range">
+		<div class="range" --range-handle-inactive={color} --range-handle-focus={colorActive}>
 			<RangeSlider range="min" bind:values={$values} {min} {max} {step} />
 		</div>
 	</div>
@@ -32,8 +35,8 @@
 		}
 		.range {
 			@apply flex-grow;
-			--range-handle-inactive: theme(colors.uni-blue.light);
-			--range-handle-focus: theme(colors.uni-blue.DEFAULT);
+			/* --range-handle-inactive: theme(colors.uni-blue.light);
+			--range-handle-focus: theme(colors.uni-blue.DEFAULT); */
 			/*--range-handle-inactive: theme(colors.white);
 			--range-handle: theme(colors.uni-blue.light);
 			--range-handle-focus: theme(colors.uni-blue.DEFAULT); */

@@ -3,6 +3,10 @@ const config = {
 
 	theme: {
 		extend: {
+			fontFamily: {
+				sans: ['Assistant', 'Helvetica', 'Arial', 'Lucida', 'sans-serif'],
+				display: ['National', '"Open Sans"', 'Helvetica', 'Arial', 'Lucida', 'sans-serif']
+			},
 			colors: {
 				'uni-blue': {
 					silver: '#8D9091',
@@ -42,6 +46,16 @@ const config = {
 					blue: '#0039A6',
 					rose: '#BA4482',
 					'teal-alt': '#006990'
+				},
+				'uni-color-light': {
+					green: '#F3F9EC',
+					blue: '#ECF6FF',
+					orange: '#FFF8EC'
+				},
+				'uni-color-dark': {
+					green: '#398105',
+					blue: '#0039A6',
+					orange: '#BF3313'
 				}
 			}
 		}

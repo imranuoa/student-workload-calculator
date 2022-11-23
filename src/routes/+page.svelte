@@ -3,7 +3,7 @@
 	import ResultTable from '$lib/components/results/resultTable.svelte';
 	import { courses, activeCourse, addCourse } from '$lib/../store';
 	import Config from '$lib/components/edit-activity/config.svelte';
-	import ActivityList from '$lib/add-activity/manageActivities.svelte';
+	import ActivityList from '$lib/components/add-activity/manageActivities.svelte';
 	import { fade, fly, slide } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';

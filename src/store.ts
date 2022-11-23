@@ -37,11 +37,13 @@ export const activeCourse: Writable<number> = localStorageStore(`${storeVersion}
 // export const courses: Writable<Course[]> = writable([]);
 // export const activeCourse: Writable<number> = writable(0);
 
-export const addCourse = (course = new Course('Your Course', 12)) => {
+export const addCourse = (course = new Course('Your Course', 12), setActive = true) => {
 	console.log('Adding Course!');
 	course.subscribe(notifyStore);
 	courses.update((c) => [...c, course]);
-	activeCourse.set(get(courses).length - 1);
+	if (setActive) {
+		activeCourse.set(get(courses).length - 1);
+	}
 	// goto('/');
 };
 

@@ -3,10 +3,16 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-	overflow-x: hidden;
+@font-face {
+	font-family: 'National';
+	src: url('/fonts/NationalWeb-Bold.woff2') format('woff2');
+	font-weight: bold;
 }
-
+@font-face {
+	font-family: 'National';
+	src: url('/fonts/NationalWeb-Book.woff2') format('woff2');
+	font-weight: normal;
+}
 .btn {
 	@apply rounded bg-slate-700 text-white px-3 py-1 inline-block transition select-none;
 	&.btn-block {
@@ -14,6 +20,9 @@ body {
 	}
 	&.active {
 		@apply bg-green-600;
+	}
+	&.btn-md {
+		@apply px-4 py-2;
 	}
 	&.btn-lg {
 		@apply px-5 py-2;
@@ -27,20 +36,40 @@ body {
 	&.btn-danger {
 		@apply bg-red-600;
 	}
+	&.btn-text {
+		@apply bg-transparent text-inherit font-semibold;
+	}
+	&.btn-icon {
+		@apply flex items-center justify-center gap-0.5;
+		.icon {
+			@apply text-base;
+		}
+	}
 	&:hover {
 		transform: scale(1.03);
 	}
 }
 
-h2 {
-	@apply text-xl flex justify-between my-2;
+h1,
+h2,
+h3,
+h4 {
+	@apply my-2;
+	@apply font-semibold;
+	&h2 {
+		@apply text-xl;
+	}
 	&:first-child {
 		@apply mt-0;
 	}
 }
 
-.card {
-	@apply w-full bg-white shadow rounded-lg px-10 py-7;
+.uni-header {
+	@apply mb-6 relative;
+	&:after {
+		@apply block w-56 max-w-full h-0.5 bg-uni-blue absolute -bottom-2;
+		content: '';
+	}
 }
 
 /* Compact interface for embedded layout */

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { fade, fly, slide } from 'svelte/transition';
 	import { createEventDispatcher } from 'svelte';
-	import type { ActivitySubClass } from '../activities';
-	import { activeCourse, courses } from '../../store';
+	import type { ActivitySubClass } from '$lib/activities';
+	import { activeCourse, courses } from '$lib/../store';
 	import { writable } from 'svelte/store';
 
 	$: courseMeta = $activeCourse >= 0 ? $courses[$activeCourse].meta : undefined;

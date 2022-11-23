@@ -12,6 +12,11 @@
   resolved "https://registry.yarnpkg.com/@esbuild/linux-loong64/-/linux-loong64-0.14.54.tgz#de2a4be678bd4d0d1ffbb86e6de779cde5999028"
   integrity sha512-bZBrLAIX1kpWelV0XemxBZllyRmM6vgFQQG2GdNb+r3Fkp0FOh1NJSvekXDs7jq70k4euu1cryLMfU+mTXlEpw==
 
+"@formkit/auto-animate@^1.0.0-beta.5":
+  version "1.0.0-beta.5"
+  resolved "https://registry.yarnpkg.com/@formkit/auto-animate/-/auto-animate-1.0.0-beta.5.tgz#3fe4d520a82909cdcffa8854f26bc26ca4562045"
+  integrity sha512-WoSwyhAZPOe6RB/IgicOtCHtrWwEpfKIZ/H/nxpKfnZL9CB6hhhBGU5bCdMRw7YpAUF2CDlQa+WWh+gCqz5lDg==
+
 "@iarna/toml@^2.2.5":
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/@iarna/toml/-/toml-2.2.5.tgz#b32366c89b43c6f8cefbdefac778b9c828e3ba8c"
@@ -1427,6 +1432,11 @@ svelte-local-storage-store@^0.3.1:
   resolved "https://registry.yarnpkg.com/svelte-local-storage-store/-/svelte-local-storage-store-0.3.1.tgz#0abb0a119d4a37625394bab0ed2c0fe958e81a31"
   integrity sha512-pG+jjBY8oZWQ1XRnVkLIuPPbPqBWVtj0IINQBjkZSpJ+OqMs285efd+oiGdk4vBDnqomw81SForn+KH1j3HguA==
 
+svelte-material-icons@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/svelte-material-icons/-/svelte-material-icons-2.0.4.tgz#e616057d860f86687155f4b3b6cd72c0c6bb9814"
+  integrity sha512-P3TxvZ6ZesGKknxn61GF5PAArB+w5aiBNC6ez/yEJG2bFbzRsAZj4+Vt466uoZSeCPGkEzn20u9jBPUoEcfxiA==
+
 svelte-preprocess@^4.0.0, svelte-preprocess@^4.10.7:
   version "4.10.7"
   resolved "https://registry.yarnpkg.com/svelte-preprocess/-/svelte-preprocess-4.10.7.tgz#3626de472f51ffe20c9bc71eff5a3da66797c362"
@@ -1445,9 +1455,9 @@ svelte-range-slider-pips@^2.1.0:
   integrity sha512-WpJQSXo1RG++mIKOkkfmcFho9ngzIBl7fPl0bDzpa6yFTFbxeFUVF5KkUSaiZwzs2SNT3xy6nAUeVLbVQ74JLA==
 
 svelte-table@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/svelte-table/-/svelte-table-0.5.0.tgz#e6728021b5b1cfd2edaa5870e8b9e8d31bd0e7b6"
-  integrity sha512-wh4PzJq4R6iA0YCv0tgyc4oR8xVAC2ZwzkzT+tqZTHscH+Vu8srzP4eeIRklKPggSO2yN4sDABVHriVbM5PDQQ==
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/svelte-table/-/svelte-table-0.5.2.tgz#dfc29f4584ed38de0f625a3191356d6e3b9126dc"
+  integrity sha512-zHqcKuBRB89rwcXyVkteeq+DSzVfb/Dq+As63Su5MvMvbDl4dJGDfBLIEYdZK9x9u3o0Um8Vdq4hfnojdCzANA==
 
 svelte-use-click-outside@^1.0.0:
   version "1.0.0"

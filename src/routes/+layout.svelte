@@ -39,6 +39,12 @@
 
 <svelte:head>
 	<link rel="icon" href="/favicon.svg" />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600&display=swap"
+		rel="stylesheet"
+	/>
 </svelte:head>
 
 <div class="wrapper">
@@ -85,7 +91,7 @@
 			@apply w-32 h-32;
 		}
 		h1 {
-			@apply text-5xl font-light leading-none;
+			@apply text-5xl leading-none font-light font-display italic;
 			align-self: center;
 		}
 		@media screen and (max-width: 640px) {
@@ -111,7 +117,7 @@
 	.page {
 		grid-area: page;
 		height: 100%;
-		@apply max-w-screen-lg w-full m-auto;
+		@apply max-w-screen-xl w-full m-auto px-4;
 	}
 
 	.footer-push,
