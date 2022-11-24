@@ -1,7 +1,9 @@
 <script lang="ts">
+	import ButtonRadio from '$lib/components/form-elems/buttonRadio.svelte';
 	import RangeInput from '$lib/components/form-elems/rangeInput.svelte';
 	import { Course, getCourseData, type courseData, type courseDataValid } from '$lib/course';
 	import { propertyStore } from 'svelte-writable-derived';
+	import { derived } from 'svelte/store';
 	import { cardState } from '../card';
 	import Generic from './generic.svelte';
 
@@ -22,16 +24,37 @@
 	</slot>
 	<svelte:fragment slot="details">
 		{#if state !== cardState.view}
-			<RangeInput
-				props={{
-					value: writableTarget,
-					label: 'Target Hours Per Week / Total',
-					min: 1,
-					max: 40,
-					step: 1,
-					id: 'duration'
-				}}
-			/>
+			<div class="form">
+				<RangeInput
+					colour="#55A51C"
+					colourActive="#55A51C"
+					props={{
+						value: writableTarget,
+						label: 'Target Hours Per Week / Total',
+						min: 1,
+						max: 40,
+						step: 1,
+						id: `${course.id}-TargetHours`
+					}}
+				/>
+				<ButtonRadio
+					props={{
+						id: `${course.id}-TargetFreq`,
+						value: writableTargetFreq,
+						label: 'Target Frequency',
+						options: derived(writableTarget, (wt) => [
+							`${wt} Hour${wt === 1 ? '' : 's'} Per Week`,
+							`${wt} Hour${wt === 1 ? '' : 's'} Total`
+						])
+					}}
+				/>
+			</div>
 		{/if}
 	</svelte:fragment>
 </Generic>
+
+<style lang="postcss">
+	.form {
+		@apply grid grid-flow-row gap-4;
+	}
+</style>

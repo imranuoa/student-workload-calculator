@@ -68,5 +68,8 @@
 		@apply px-4;
 		padding-left: var(--card-padding);
 		padding-right: var(--card-padding);
+		> :global(:last-child) {
+			@apply mb-4;
+		}
 	}
 </style>

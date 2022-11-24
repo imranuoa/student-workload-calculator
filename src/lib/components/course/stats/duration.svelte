@@ -24,26 +24,36 @@
 	</slot>
 	<svelte:fragment slot="details">
 		{#if state !== cardState.view}
-			<RangeInput
-				props={{
-					value: writableWeeks,
-					label: 'Number of Weeks',
-					min: 1,
-					max: 52,
-					step: 1,
-					id: 'duration'
-				}}
-			/>
-			<CheckSelect
-				props={{
-					options: derived(meta, (Dmeta) =>
-						[...Array(Dmeta.weeks).keys()].map((e) => (e + 1).toString())
-					),
-					value: writableWeekTemplate,
-					label: 'Default teaching weeks',
-					id: `courseEdit-${course.id}-defaultWeeks`
-				}}
-			/>
+			<div class="form">
+				<RangeInput
+					colour="#D2492A"
+					colourActive="#BF3313"
+					props={{
+						value: writableWeeks,
+						label: 'Number of Weeks',
+						min: 1,
+						max: 52,
+						step: 1,
+						id: 'duration'
+					}}
+				/>
+				<CheckSelect
+					props={{
+						options: derived(meta, (Dmeta) =>
+							[...Array(Dmeta.weeks).keys()].map((e) => (e + 1).toString())
+						),
+						value: writableWeekTemplate,
+						label: 'Default teaching weeks',
+						id: `courseEdit-${course.id}-defaultWeeks`
+					}}
+				/>
+			</div>
 		{/if}
 	</svelte:fragment>
 </Generic>
+
+<style lang="postcss">
+	.form {
+		@apply grid grid-flow-row gap-4;
+	}
+</style>

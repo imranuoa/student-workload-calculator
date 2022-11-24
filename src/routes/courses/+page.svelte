@@ -58,6 +58,9 @@
 				course workload.
 			</p>
 		</div>
+		<div class="create-block">
+			<CourseCard state={cardState.blank} />
+		</div>
 	</div>
 {/if}
 
@@ -73,15 +76,19 @@
 		}
 	}
 	.empty {
-		@apply flex flex-col justify-center w-full;
+		@apply flex flex-row flex-wrap justify-center items-center content-start gap-10;
 		.onboarding {
-			@apply grow;
+			@apply w-96 max-w-screen-sm;
+			@apply grow self-start;
 			h2 {
 				@apply text-3xl;
 			}
 			p {
 				@apply mb-4;
 			}
+		}
+		.create-block {
+			@apply w-full max-w-md;
 		}
 	}
 </style>

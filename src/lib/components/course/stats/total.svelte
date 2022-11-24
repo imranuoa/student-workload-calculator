@@ -15,9 +15,4 @@
 	<slot name="data" slot="data">
 		{$meta.weeks} week{$meta.weeks === 1 ? '' : 's'}
 	</slot>
-	<svelte:fragment slot="details">
-		{#if state !== cardState.view}
-			<input type="number" min="1" max="52" bind:value={$meta.weeks} placeholder="Duration" />
-		{/if}
-	</svelte:fragment>
 </Generic>
