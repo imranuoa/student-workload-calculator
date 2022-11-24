@@ -7,6 +7,7 @@
 
 	export let addActivityOpen = false;
 	export let course: Course;
+	export let hoveredActivity = -1;
 
 	$: courseMeta = course.meta;
 	$: courseActivities = course.activities;
@@ -14,10 +15,10 @@
 </script>
 
 <div class="activityList">
-	<h2>
+	<h2 class="header">
 		<span> Activities: </span>
 		<button
-			class="btn add-activity"
+			class="btn btn-primary add-activity"
 			title="Add Activity"
 			on:click={() => {
 				addActivityOpen = !addActivityOpen;
@@ -28,6 +29,7 @@
 	</h2>
 	{#if addActivityOpen}
 		<AddActivityMenu
+			bind:hoveredActivity
 			{activities}
 			on:add={({ detail }) => {
 				course?.addActivity(new detail(course.meta));
@@ -62,4 +64,7 @@
 </div>
 
 <style lang="postcss">
+	.header {
+		@apply flex justify-between mr-1;
+	}
 </style>

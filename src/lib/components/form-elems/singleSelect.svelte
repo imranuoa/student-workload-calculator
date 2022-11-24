@@ -6,7 +6,7 @@
 	let { value, label, options, key } = props;
 </script>
 
-<label class="block">
+<label class="block field-block">
 	<span class="text-gray-700">{label}</span>
 	<select class="form-select block w-full" bind:value={$value} on:change>
 		{#each $options as option, i}

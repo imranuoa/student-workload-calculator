@@ -85,15 +85,17 @@ h4 {
 		content: '';
 	}
 }
-
-/* Compact interface for embedded layout */
-.embed {
-	.card {
-		@apply rounded-none shadow-none;
-	}
+.uni-card {
+	--card-padding: theme('spacing.7');
+	@apply w-full bg-white shadow border-t-4 border-uni-blue overflow-auto m-auto;
+	@apply px-4 py-7;
 }
 
 .form-input,
 .form-select {
-	@apply rounded text-sm border-slate-300;
+	@apply rounded text-sm border-slate-300 p-2 leading-none;
+}
+
+.rangeSlider {
+	@apply text-xs;
 }

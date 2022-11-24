@@ -6,7 +6,7 @@
 	let { value, label } = props;
 </script>
 
-<label class="my-4 flex items-center">
+<label class="flex items-center field-block">
 	<input type="checkbox" bind:checked={$value} />
 	<span class="ml-2 text-gray-700">{label}</span>
 </label>

@@ -6,7 +6,7 @@
 	let { value, label } = props;
 </script>
 
-<label class="block">
+<label class="block field-block">
 	<span class="text-gray-700">{label}</span>
 	<input type="text" class="form-input mt-1 block w-full" bind:value={$value} />
 </label>

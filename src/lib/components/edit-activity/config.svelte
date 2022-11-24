@@ -43,7 +43,7 @@
 
 {#if activity}
 	<div>
-		<h2>Configuration</h2>
+		<h2 class="text-xl">Configuration</h2>
 		{#key $openActivity}
 			<div>
 				{#each activity.form as formElem}
@@ -64,7 +64,7 @@
 			</div>
 			{#if $results && filteredList.length > 0}
 				<div class="results mt-4">
-					<h2>Results</h2>
+					<h2 class="text-xl">Results</h2>
 					<p>
 						{#if $freq == Frequency.Weekly}
 							Each week, this activity takes:

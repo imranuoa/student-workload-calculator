@@ -32,7 +32,7 @@
 <div
 	class="uni-card"
 	class:createCard={!data.course}
-	class:expand={state === cardState.expanded}
+	class:expand={state === cardState.editExpanded}
 	class:create={state === cardState.create}
 	use:autoAnimate
 >
@@ -47,7 +47,15 @@
 				{/if}
 			</div>
 		{/if}
-		{#if state === cardState.edit || state === cardState.expanded}
+		{#if state === cardState.editExpanded}
+			<button
+				class="expanded-overlay"
+				on:click={() => {
+					state = cardState.edit;
+				}}
+			/>
+		{/if}
+		{#if state === cardState.edit || state === cardState.editExpanded}
 			<div class="body">
 				<ManageActivities course={data.course} />
 			</div>
@@ -101,33 +109,28 @@
 <style lang="postcss">
 	.uni-card {
 		--card-padding: theme('spacing.7');
-		@apply w-full bg-white shadow pb-0 border-t-4 border-uni-blue overflow-auto m-auto;
+		@apply px-0 py-0 grow flex flex-col;
 		@apply transition;
 		.stats {
-			@apply flex flex-col justify-between gap-2 relative z-10 bg-white;
+			@apply flex flex-col justify-between gap-2 relative z-30 bg-white;
 			padding: 0 var(--card-padding);
 		}
 		&.expand .stats,
 		&.create .stats {
 			@apply px-0;
 		}
-		&:after {
-			@apply absolute inset-0 bg-black opacity-0 transition;
-			content: '';
-			visibility: hidden;
-		}
 		&.expand {
 			.stats {
 				@apply shadow-lg pb-4 mb-4;
 			}
-			&:after {
-				@apply visible opacity-50;
+			.expanded-overlay {
+				@apply absolute inset-0 bg-black opacity-50 z-20;
 			}
 		}
 
 		.body {
 			padding: 0 var(--card-padding);
-			@apply mt-4 mb-8;
+			@apply mt-4 mb-8 grow;
 		}
 
 		.footer {

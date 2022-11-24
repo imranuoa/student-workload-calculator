@@ -7,8 +7,10 @@
 	export let props: RangeInput['props'];
 	let { value, label, min, max, step, id } = props;
 
-	export let colour = '#009AC7';
-	export let colourActive = '#00467F';
+	// export let colour = '#009AC7';
+	// export let colourActive = '#00467F';
+	export let colour = '#55a51c';
+	export let colourActive = '#55a51c';
 
 	const values = writableDerived(
 		value,
@@ -17,7 +19,7 @@
 	);
 </script>
 
-<div class="block">
+<div class="block field-block">
 	<label for={id} class="text-gray-700"> {label} </label>
 	<div class="rangeInputFlex mt-1">
 		<input type="number" {id} class="form-input" bind:value={$value} {step} />

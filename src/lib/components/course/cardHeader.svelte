@@ -19,10 +19,10 @@
 	$: writableWeekTemplate = propertyStore(meta, ['weekTemplate']);
 
 	const toggleState = () => {
-		if (state === cardState.expanded) {
+		if (state === cardState.editExpanded) {
 			state = cardState.edit;
 		} else if (state === cardState.edit) {
-			state = cardState.expanded;
+			state = cardState.editExpanded;
 		}
 	};
 </script>
@@ -33,7 +33,7 @@
 	</div>
 {:else}
 	<div class="header-block" use:autoAnimate>
-		{#if state === cardState.expanded || state === cardState.create}
+		{#if state === cardState.editExpanded || state === cardState.create}
 			<label class="coursename" for="courseEdit-{course.id}-courseName">
 				<span class="prefix">Course:</span>
 				<input
@@ -50,7 +50,7 @@
 		{#if state !== cardState.create}
 			<button
 				class="header-toggle"
-				class:expanded={state === cardState.expanded}
+				class:expanded={state === cardState.editExpanded}
 				on:click={toggleState}
 			>
 				<ChevronUp />
@@ -71,7 +71,7 @@
 		}
 	}
 	.header-block {
-		@apply bg-uni-blue w-full text-white font-bold flex items-center gap-3 z-10 relative;
+		@apply bg-uni-blue w-full text-white font-bold flex items-center gap-3 z-30 relative;
 		padding: 0 var(--card-padding);
 		@apply pb-4 pt-3;
 		.title {

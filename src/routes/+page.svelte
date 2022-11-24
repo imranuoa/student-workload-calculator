@@ -11,6 +11,8 @@
 	import { Frequency } from '$lib/course-activities/genericActivity';
 	import ResultChart from '$lib/components/results/resultChart.svelte';
 	import { Course } from '$lib/course';
+	import CourseCard from '$lib/components/course/card.svelte';
+	import { cardState } from '$lib/components/course/card';
 	// import arrowPattern from '$lib/assets/arrow-left.svg';
 
 	let addActivityOpen: boolean;
@@ -56,41 +58,48 @@
 
 {#if activeCourseInst && $activeCourseMeta && $activeCourseActivities && $totals}
 	<div class="layout">
+		<div class="header">
+			<div class="coursename">
+				<label for="courseName">Course:</label>
+				<input
+					id="courseName"
+					type="text"
+					bind:value={$activeCourseMeta.name}
+					placeholder="Course Name"
+				/>
+			</div>
+			<div class="actions">
+				<button class="btn btn-primary" on:click={openCourseConfig}>Manage Courses</button>
+			</div>
+		</div>
 		<div class="main card">
-			<div class="header">
-				<div class="coursename">
-					<label for="courseName">Course:</label>
-					<input
-						id="courseName"
-						type="text"
-						bind:value={$activeCourseMeta.name}
-						placeholder="Course Name"
-					/>
-				</div>
-				<div class="actions">
-					<button class="btn btn-primary" on:click={openCourseConfig}>Manage Courses</button>
-				</div>
-			</div>
 			<div class="activity-list">
-				<ActivityList bind:course={activeCourseInst} bind:addActivityOpen />
+				<CourseCard
+					bind:course={activeCourseInst}
+					courseIndex={$activeCourse}
+					state={cardState.edit}
+				/>
 			</div>
-			<div class="activity-config">
+			<div class="activity-config uni-card">
 				{#if openActivityInst}
 					<Config course={activeCourseInst} />
 				{:else}
-					<div class="placeholder">
-						<h2>Activity Configuration</h2>
-						<p>Select an activity to configure it.</p>
+					<div class="no-activities-results" in:fade>
+						<div class="arrows-wrap">
+							<div class="arrows" />
+						</div>
+						<div class="hint">
+							<h2>Activity Configuration</h2>
+							<p>
+								This course doesn't have anything in it! To get started, use the menu to the left to
+								add a activity.
+							</p>
+						</div>
 					</div>
 				{/if}
 			</div>
 		</div>
-		<div
-			class="results card"
-			class:danger={$totals.perCourse.total >
-				$activeCourseMeta.target *
-					($activeCourseMeta.targetFreq === Frequency.Weekly ? $activeCourseMeta.weeks : 1)}
-		>
+		<div class="results card">
 			<div class="stats">
 				<strong>{durationToString($totals.perCourse.total)}</strong> in course /
 				<strong>
@@ -113,32 +122,6 @@
 					Details...</button
 				>
 			</div>
-			<div class="indicator">
-				<div
-					class="scheduled"
-					style:width={`${
-						($totals.perCourseS.total /
-							Math.max(
-								$activeCourseMeta.target *
-									($activeCourseMeta.targetFreq === Frequency.Weekly ? $activeCourseMeta.weeks : 1),
-								$totals.perCourse.total
-							)) *
-						100
-					}%`}
-				/>
-				<div
-					class="independant"
-					style:width={`${
-						($totals.perCourseI.total /
-							Math.max(
-								$activeCourseMeta.target *
-									($activeCourseMeta.targetFreq === Frequency.Weekly ? $activeCourseMeta.weeks : 1),
-								$totals.perCourse.total
-							)) *
-						100
-					}%`}
-				/>
-			</div>
 		</div>
 		{#if showReport}
 			<div class="results-details card" transition:slide>
@@ -151,88 +134,102 @@
 			</div>
 		{/if}
 	</div>
+	<div
+		class="indicator"
+		class:danger={$totals.perCourse.total >
+			$activeCourseMeta.target *
+				($activeCourseMeta.targetFreq === Frequency.Weekly ? $activeCourseMeta.weeks : 1)}
+	>
+		<div
+			class="scheduled"
+			style:width={`${
+				($totals.perCourseS.total /
+					Math.max(
+						$activeCourseMeta.target *
+							($activeCourseMeta.targetFreq === Frequency.Weekly ? $activeCourseMeta.weeks : 1),
+						$totals.perCourse.total
+					)) *
+				100
+			}%`}
+		/>
+		<div
+			class="independant"
+			style:width={`${
+				($totals.perCourseI.total /
+					Math.max(
+						$activeCourseMeta.target *
+							($activeCourseMeta.targetFreq === Frequency.Weekly ? $activeCourseMeta.weeks : 1),
+						$totals.perCourse.total
+					)) *
+				100
+			}%`}
+		/>
+	</div>
 {/if}
 
 <style lang="postcss">
 	.layout {
-		@apply grid grid-flow-row auto-rows-auto gap-10 w-full;
-		grid-template-areas:
-			'main'
-			'summary'
-			'details';
+		@apply w-full;
 	}
-	.card {
-		@apply p-5 rounded-lg shadow bg-uni-gray-100;
+	/* .card {
+		@apply p-5 shadow bg-uni-gray-100;
+	} */
+
+	.header {
+		@apply w-full flex flex-wrap gap-x-5 gap-y-2 mb-4 justify-center;
+		.coursename {
+			@apply text-2xl leading-none flex items-center gap-4 grow;
+			label {
+				@apply block opacity-50 select-none;
+			}
+			input {
+				@apply flex-grow border-0 px-2 py-0 text-2xl bg-transparent;
+			}
+		}
+		.actions {
+			@apply flex gap-4 select-none items-center;
+			button {
+				@apply text-lg;
+			}
+		}
 	}
 
 	.main {
-		@apply grid auto-rows-auto gap-5;
-		grid-area: main;
-		grid-template-columns: 2fr 3fr;
-		grid-template-areas:
-			'header header'
-			'activity-list activity-config';
-
+		@apply flex flex-wrap gap-5 mb-4;
 		@media screen and (max-width: 768px) {
-			grid-template-columns: 1fr;
+			/* grid-template-columns: 1fr;
 			grid-template-areas:
 				'header'
 				'activity-config'
-				'activity-list';
-		}
-
-		.header {
-			grid-area: header;
-			@apply grid gap-5;
-			grid-template-columns: 1fr auto;
-			.coursename {
-				@apply text-2xl flex items-center gap-4;
-				label {
-					@apply block opacity-50 select-none;
-				}
-				input {
-					@apply flex-grow border-0 p-2 text-2xl bg-transparent;
-				}
-			}
-			.actions {
-				@apply flex gap-4 select-none items-center;
-				button {
-					@apply text-lg;
-				}
-			}
-		}
-		.activity-config,
-		.activity-list {
-			@apply p-4 rounded-lg shadow bg-white;
+				'activity-list'; */
 		}
 		.activity-list {
-			grid-area: activity-list;
+			@apply flex flex-col grow w-96;
 		}
 		.activity-config {
-			grid-area: activity-config;
+			@apply w-96 h-full;
+			flex-grow: 100;
 		}
 
-		&.noActivities {
-			.no-activities-results {
-				@apply h-96 flex items-center justify-center  relative overflow-clip;
-				.arrows-wrap {
-					@apply absolute top-0 bottom-0 m-auto right-0 z-0 opacity-20 w-full;
-					--arrow-size: 3rem;
-					--num-arrows: 4;
-					height: calc(var(--arrow-size) * var(--num-arrows));
-					.arrows {
-						@apply absolute top-0 right-0 h-full;
-						width: calc(100% + var(--arrow-size));
-						background-image: url('$lib/assets/arrow-left.svg');
-						background-repeat: repeat;
-						background-size: var(--arrow-size);
-						animation: shiftBackground 6s linear infinite;
-					}
-					mask-image: linear-gradient(to left, transparent, black, transparent);
+		.no-activities-results {
+			@apply h-96 flex items-center justify-center  relative overflow-clip;
+			.arrows-wrap {
+				@apply absolute top-0 bottom-0 m-auto right-0 z-0 opacity-20 w-full;
+				--arrow-size: 3rem;
+				--num-arrows: 4;
+				height: calc(var(--arrow-size) * var(--num-arrows));
+				.arrows {
+					@apply absolute top-0 right-0 h-full;
+					width: calc(100% + var(--arrow-size));
+					background-image: url('$lib/assets/arrow-left.svg');
+					background-repeat: repeat;
+					background-size: var(--arrow-size);
+					animation: shiftBackground 6s linear infinite;
 				}
-				.hint {
-					@apply text-center italic max-w-lg bg-white px-6 py-4 rounded shadow border-dashed border-4 border-slate-200 z-10;
-				}
+				mask-image: linear-gradient(to left, transparent, black, transparent);
+			}
+			.hint {
+				@apply italic max-w-lg bg-white px-6 py-4 border-2 border-slate-200 z-10 w-full shrink;
 			}
 		}
 	}
@@ -246,27 +243,28 @@
 		.more {
 			@apply flex gap-4 items-center;
 		}
-
+	}
+	.indicator {
+		@apply overflow-hidden h-2 fixed w-full bottom-0 left-0 flex z-40;
+		width: calc(100% + theme(width.2));
 		.scheduled,
 		.independant {
-			@apply bg-uni-color-green;
+			@apply h-full transition-all rounded-r-full;
+		}
+		.independant {
+			@apply bg-[#bddbab] -ml-2 z-10;
+		}
+
+		.scheduled {
+			@apply bg-uni-color-green z-20;
 		}
 
 		&.danger {
-			@apply ring-2;
-			.scheduled,
 			.independant {
+				@apply bg-[#f7b5b5];
+			}
+			.scheduled {
 				@apply bg-red-500;
-			}
-		}
-		.indicator {
-			@apply rounded-full overflow-hidden h-1 absolute w-full bottom-0 left-0 flex;
-			.scheduled,
-			.independant {
-				@apply h-full transition-all;
-			}
-			.independant {
-				@apply opacity-40;
 			}
 		}
 	}

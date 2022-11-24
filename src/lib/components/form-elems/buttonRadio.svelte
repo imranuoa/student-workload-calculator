@@ -6,7 +6,7 @@
 	let { id, value, label, options } = props;
 </script>
 
-<div class="block">
+<div class="block field-block">
 	<span class="text-gray-700" id={`${id}-label`}>{label}</span>
 	<div class="btn-group" role="group" aria-labelledby={`${id}-label`}>
 		{#each $options as option, i}

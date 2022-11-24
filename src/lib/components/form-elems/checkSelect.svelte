@@ -49,7 +49,7 @@
 	});
 </script>
 
-<fieldset class="block" for="rangeInput" style="--numOptions: {$options.length}">
+<fieldset class="block field-block" for="rangeInput" style="--numOptions: {$options.length}">
 	<legend class="text-gray-700" id={`${id}-label`}>
 		{label} <i class="text-sm align-baseline" aria-hidden="true">(click or drag to delete)</i>
 	</legend>

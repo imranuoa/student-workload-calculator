@@ -3,5 +3,5 @@ export enum cardState {
 	create,
 	view,
 	edit,
-	expanded
+	editExpanded
 }

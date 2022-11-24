@@ -52,25 +52,6 @@
 			</button>
 		{/each}
 	</div>
-	<div class="activity-info-wrapper">
-		{#if hoveredActivity >= 0}
-			{#key hoveredActivity}
-				<div
-					id="activity-info"
-					transition:fly={{ y: 10 }}
-					on:mouseenter={() => {
-						clearTimeout(hoveredTimeout);
-					}}
-				>
-					<h3>
-						{activities[hoveredActivity].icon}
-						{activities[hoveredActivity].label}
-					</h3>
-					<p>{activities[hoveredActivity].description}</p>
-				</div>
-			{/key}
-		{/if}
-	</div>
 </div>
 
 <style lang="postcss">
