@@ -4,7 +4,7 @@
 	import type { CheckSelectInput } from '$lib/form';
 
 	export let props: CheckSelectInput['props'];
-	let { options, value, label } = props;
+	let { id, options, value, label } = props;
 
 	let selectGroup: HTMLElement;
 	let isMouseDown = false;
@@ -50,11 +50,11 @@
 </script>
 
 <fieldset class="block" for="rangeInput" style="--numOptions: {$options.length}">
-	<legend class="text-gray-700">
+	<legend class="text-gray-700" id={`${id}-label`}>
 		{label} <i class="text-sm align-baseline" aria-hidden="true">(click or drag to delete)</i>
 	</legend>
-	<div class="daySelectGroup" bind:this={selectGroup}>
-		{#each $options as option}
+	<div class="daySelectGroup" bind:this={selectGroup} role="group" aria-labelledby={`${id}-label`}>
+		{#each $options as option, i}
 			<div
 				class="daySelectLabel"
 				on:dragover={dragOver}
@@ -63,8 +63,14 @@
 				on:drop={stopSelecting}
 				draggable="true"
 			>
-				<input type="checkbox" bind:group={$value} value={option} id={option} />
-				<label for={option} class="daySelectText">
+				<input
+					type="checkbox"
+					name={id}
+					bind:group={$value}
+					value={option}
+					id={`${id}-option${i}`}
+				/>
+				<label for={`${id}-option${i}`} class="daySelectText">
 					{option}
 				</label>
 			</div>
@@ -111,11 +117,11 @@
 					@apply h-0 transition-none;
 				}
 			}
-			:focus + .daySelectText {
+			:focus-visible + .daySelectText {
 				@apply outline outline-2 outline-slate-300;
 				outline-offset: -2px;
 			}
-			:focus:checked + .daySelectText {
+			:focus-visible:checked + .daySelectText {
 				@apply outline outline-2 outline-slate-300;
 				outline-offset: -2px;
 			}

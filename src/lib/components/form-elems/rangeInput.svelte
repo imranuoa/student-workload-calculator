@@ -21,8 +21,16 @@
 	<label for={id} class="text-gray-700"> {label} </label>
 	<div class="rangeInputFlex mt-1">
 		<input type="number" {id} class="form-input" bind:value={$value} {step} />
-		<div class="range" --range-handle-inactive={color} --range-handle-focus={colorActive}>
-			<RangeSlider range="min" bind:values={$values} {min} {max} {step} />
+		<div class="range" aria-hidden="true" tabindex="-1">
+			<RangeSlider
+				--range-handle-inactive={colour}
+				--range-handle-focus={colourActive}
+				range="min"
+				bind:values={$values}
+				{min}
+				{max}
+				{step}
+			/>
 		</div>
 	</div>
 </div>

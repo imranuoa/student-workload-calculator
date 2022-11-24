@@ -6,6 +6,7 @@ import SingleSelect from '$lib/components/form-elems/singleSelect.svelte';
 import numberInput from '$lib/components/form-elems/numberInput.svelte';
 import conditionalInputs from '$lib/components/form-elems/conditionalInputs.svelte';
 import checkboxInput from '$lib/components/form-elems/checkboxInput.svelte';
+import buttonRadio from '$lib/components/form-elems/buttonRadio.svelte';
 
 export type formProps = { id: string; label: string; value: Readable<any>; [key: string]: any };
 
@@ -93,6 +94,23 @@ export class CheckSelectInput extends FormElement {
 export class SingleSelectInput extends FormElement {
 	props;
 	activity = SingleSelect;
+	constructor(
+		id: string,
+		value: Writable<number>, // Index
+		label: string,
+		props: {
+			options: Readable<string[] | any[]>;
+			key?: (option: any) => string;
+		}
+	) {
+		super(id, value, label);
+		this.props = { id, label, value, ...props };
+	}
+}
+
+export class ButtonRadioInput extends FormElement {
+	props;
+	activity = buttonRadio;
 	constructor(
 		id: string,
 		value: Writable<number>, // Index

@@ -13,13 +13,27 @@
 	src: url('/fonts/NationalWeb-Book.woff2') format('woff2');
 	font-weight: normal;
 }
+
+.btn-group {
+	@apply flex rounded-full overflow-clip flex-wrap border-uni-color-green border-2 mt-2;
+	> .btn {
+		@apply rounded-none text-sm px-4 py-1 grow text-center bg-white text-black;
+		&.active {
+			@apply bg-uni-color-green text-white;
+		}
+		&:hover {
+			@apply scale-100;
+		}
+	}
+}
+
 .btn {
-	@apply rounded bg-slate-700 text-white px-3 py-1 inline-block transition select-none;
+	@apply rounded bg-slate-700 text-white px-3 py-1 inline-block transition select-none cursor-pointer;
 	&.btn-block {
 		@apply block w-full;
 	}
 	&.active {
-		@apply bg-green-600;
+		@apply bg-green-600 text-white;
 	}
 	&.btn-md {
 		@apply px-4 py-2;
