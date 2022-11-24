@@ -81,7 +81,7 @@
 		input {
 			@apply m-auto z-10 outline outline-2 outline-blue-500 opacity-0 pointer-events-none;
 			grid-area: icon;
-			&:focus {
+			&:focus-visible {
 				@apply opacity-100;
 			}
 		}
