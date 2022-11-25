@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ChevronUp from 'svelte-material-icons/ChevronUp.svelte';
+	import ChevronDown from 'svelte-material-icons/ChevronDown.svelte';
 	import RangeInput from '$lib/components/form-elems/rangeInput.svelte';
 	import { Course, getCourseData, type courseData, type courseDataValid } from '$lib/course';
 	import { propertyStore } from 'svelte-writable-derived';
@@ -53,7 +53,7 @@
 				class:expanded={state === cardState.editExpanded}
 				on:click={toggleState}
 			>
-				<ChevronUp />
+				<ChevronDown />
 			</button>
 		{/if}
 	</div>
@@ -64,7 +64,7 @@
 		padding: 0 var(--card-padding);
 		@apply pt-4;
 		.uni-header {
-			@apply text-2xl uppercase font-semibold font-display italic;
+			@apply text-2xl font-semibold font-display italic;
 			&:after {
 				@apply w-3/5;
 			}
