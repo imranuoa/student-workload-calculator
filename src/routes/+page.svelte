@@ -104,8 +104,8 @@
 						<div class="hint">
 							<h2>Activity Configuration</h2>
 							<p>
-								This course doesn't have anything in it! To get started, use the menu to the left to
-								add a activity.
+								This course doesn't have anything in it! To get started, use the course menu to add
+								an activity.
 							</p>
 						</div>
 					</div>
