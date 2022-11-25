@@ -2,6 +2,7 @@
 	import ButtonRadio from '$lib/components/form-elems/buttonRadio.svelte';
 	import RangeInput from '$lib/components/form-elems/rangeInput.svelte';
 	import { Course, getCourseData, type courseData, type courseDataValid } from '$lib/course';
+	import { Frequency } from '$lib/course-activities/genericActivity';
 	import { propertyStore } from 'svelte-writable-derived';
 	import { derived } from 'svelte/store';
 	import { cardState } from '../card';
@@ -30,7 +31,7 @@
 					colourActive="#55A51C"
 					props={{
 						value: writableTarget,
-						label: 'Target Hours Per Week / Total',
+						label: `Workload target (hours)`,
 						min: 1,
 						max: 40,
 						step: 1,
