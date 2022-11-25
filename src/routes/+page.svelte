@@ -26,6 +26,13 @@
 	$: openActivity = activeCourseInst?.openActivity;
 	$: openActivityInst = $activeCourseActivities?.[$openActivity !== undefined ? $openActivity : -1];
 
+	$: isDanger =
+		$totals &&
+		$activeCourseMeta &&
+		$totals.perCourse.total >
+			$activeCourseMeta.target *
+				($activeCourseMeta.targetFreq === Frequency.Weekly ? $activeCourseMeta.weeks : 1);
+
 	// If openActivity is >0 and doesn't resolve, reset it to -1
 	$: if (
 		$openActivity &&
@@ -124,22 +131,25 @@
 			</div>
 		</div>
 		{#if showReport}
-			<div class="results-details card" transition:slide>
-				<ResultTable
-					activities={activeCourseInst.activities}
-					meta={activeCourseInst.meta}
-					openActivity={activeCourseInst.openActivity}
-				/>
-				<ResultChart activities={activeCourseInst.activities} meta={activeCourseInst.meta} />
+			<div class="results-details" transition:slide>
+				<div class="table">
+					<ResultTable
+						activities={activeCourseInst.activities}
+						meta={activeCourseInst.meta}
+						openActivity={activeCourseInst.openActivity}
+					/>
+				</div>
+				<div class="chart">
+					<ResultChart
+						{isDanger}
+						activities={activeCourseInst.activities}
+						meta={activeCourseInst.meta}
+					/>
+				</div>
 			</div>
 		{/if}
 	</div>
-	<div
-		class="indicator"
-		class:danger={$totals.perCourse.total >
-			$activeCourseMeta.target *
-				($activeCourseMeta.targetFreq === Frequency.Weekly ? $activeCourseMeta.weeks : 1)}
-	>
+	<div class="indicator" class:danger={isDanger}>
 		<div
 			class="scheduled"
 			style:width={`${
@@ -235,13 +245,20 @@
 	}
 
 	.results {
-		@apply grid items-center relative overflow-auto;
-		@apply outline outline-0 ring-red-500 ring-0 transition-all;
-		grid-area: summary;
+		@apply grid items-center relative mb-4;
 		grid-template-columns: 1fr auto;
 
 		.more {
 			@apply flex gap-4 items-center;
+		}
+	}
+	.results-details {
+		@apply w-full flex flex-wrap gap-4;
+		.table {
+			@apply grow w-96;
+		}
+		.chart {
+			@apply grow w-96;
 		}
 	}
 	.indicator {
@@ -267,11 +284,6 @@
 				@apply bg-red-500;
 			}
 		}
-	}
-
-	.results-details {
-		@apply bg-white ring-black ring-2 relative z-20;
-		grid-area: details;
 	}
 
 	:global(.pulsehint) {
