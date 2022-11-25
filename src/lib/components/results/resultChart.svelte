@@ -139,7 +139,7 @@
 					},
 					title: {
 						display: true,
-						text: 'Workload by week (estimated)' + `${target}`
+						text: 'Workload by week (estimated)'
 					},
 					annotation: {
 						annotations: {
