@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ArrowLeft from 'svelte-material-icons/ArrowLeft.svelte';
 	import { clickOutside } from 'svelte-use-click-outside';
 	import ResultTable from '$lib/components/results/resultTable.svelte';
 	import { courses, activeCourse, addCourse } from '$lib/../store';
@@ -66,6 +67,14 @@
 {#if activeCourseInst && $activeCourseMeta && $activeCourseActivities && $totals}
 	<div class="layout">
 		<div class="header">
+			<div class="actions">
+				<button class="btn btn-primary btn-icon" on:click={openCourseConfig}>
+					<div class="icon">
+						<ArrowLeft />
+					</div>
+					Dashboard
+				</button>
+			</div>
 			<div class="coursename">
 				<label for="courseName">Course:</label>
 				<input
@@ -74,9 +83,6 @@
 					bind:value={$activeCourseMeta.name}
 					placeholder="Course Name"
 				/>
-			</div>
-			<div class="actions">
-				<button class="btn btn-primary" on:click={openCourseConfig}>Manage Courses</button>
 			</div>
 		</div>
 		<div class="main card">
@@ -186,9 +192,12 @@
 	} */
 
 	.header {
-		@apply w-full flex flex-wrap gap-x-5 gap-y-2 mb-4 justify-center;
+		@apply w-full flex flex-wrap gap-x-5 gap-y-2 mb-4 justify-start;
 		.coursename {
 			@apply text-2xl leading-none flex items-center gap-4 grow;
+			@media (max-width: 640px) {
+				@apply hidden;
+			}
 			label {
 				@apply block opacity-50 select-none;
 			}
@@ -205,19 +214,19 @@
 	}
 
 	.main {
-		@apply flex flex-wrap gap-5 mb-4;
+		@apply grid gap-5 mb-4;
+		grid-template-columns: 380px 1fr;
+		@media screen and (min-width: 768px) and (max-width: 1000px) {
+			grid-template-columns: 2fr 3fr;
+		}
 		@media screen and (max-width: 768px) {
-			/* grid-template-columns: 1fr;
-			grid-template-areas:
-				'header'
-				'activity-config'
-				'activity-list'; */
+			grid-template-columns: 1fr;
 		}
 		.activity-list {
-			@apply flex flex-col grow w-96;
+			@apply flex flex-col grow w-full;
 		}
 		.activity-config {
-			@apply w-96 h-full;
+			@apply w-full h-full my-0;
 			flex-grow: 100;
 		}
 

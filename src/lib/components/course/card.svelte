@@ -34,6 +34,7 @@
 	class:createCard={!data.course}
 	class:expand={state === cardState.editExpanded}
 	class:create={state === cardState.create}
+	class:edit={state === cardState.edit}
 	use:autoAnimate
 >
 	{#if data.course}
@@ -49,6 +50,7 @@
 		{/if}
 		{#if state === cardState.editExpanded}
 			<button
+				aria-label="Close Overlay"
 				class="expanded-overlay"
 				on:click={() => {
 					state = cardState.edit;
@@ -109,12 +111,14 @@
 <style lang="postcss">
 	.uni-card {
 		--card-padding: theme('spacing.7');
-		@apply px-0 py-0 grow flex flex-col;
+		@apply px-0 py-0 m-0 grow flex flex-col relative;
 		@apply transition;
 		.stats {
 			@apply flex flex-col justify-between gap-2 relative z-30 bg-white;
 			padding: 0 var(--card-padding);
 		}
+
+		&.edit .stats,
 		&.expand .stats,
 		&.create .stats {
 			@apply px-0;
@@ -130,7 +134,7 @@
 
 		.body {
 			padding: 0 var(--card-padding);
-			@apply mt-4 mb-8 grow;
+			@apply mt-4 mb-8 grow relative;
 		}
 
 		.footer {

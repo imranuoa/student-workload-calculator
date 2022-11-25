@@ -102,7 +102,7 @@
 				@apply w-24 h-24;
 			}
 			h1 {
-				@apply text-3xl;
+				@apply text-3xl hidden;
 			}
 		}
 		@media screen and (max-width: 280px) {

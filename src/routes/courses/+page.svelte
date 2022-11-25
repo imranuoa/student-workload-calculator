@@ -73,6 +73,12 @@
 		}
 		.editPane-items {
 			@apply gap-8 grid grid-cols-3  items-center md:items-start;
+			@media screen and (min-width: 768px) and (max-width: 1100px) {
+				@apply grid-cols-2;
+			}
+			@media screen and (max-width: 768px) {
+				@apply grid-cols-1;
+			}
 		}
 	}
 	.empty {
