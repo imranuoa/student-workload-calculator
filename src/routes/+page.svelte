@@ -221,6 +221,9 @@
 		}
 		@media screen and (max-width: 768px) {
 			grid-template-columns: 1fr;
+			.arrows-wrap {
+				@apply hidden;
+			}
 		}
 		.activity-list {
 			@apply flex flex-col grow w-full;
