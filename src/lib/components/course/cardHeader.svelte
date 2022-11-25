@@ -64,7 +64,7 @@
 		padding: 0 var(--card-padding);
 		@apply pt-4;
 		.uni-header {
-			@apply text-2xl uppercase font-semibold font-sans;
+			@apply text-2xl uppercase font-semibold font-display italic;
 			&:after {
 				@apply w-3/5;
 			}
@@ -75,10 +75,10 @@
 		padding: 0 var(--card-padding);
 		@apply pb-4 pt-3;
 		.title {
-			@apply w-full m-0 text-2xl uppercase font-semibold font-sans;
+			@apply w-full m-0 text-2xl font-semibold font-display italic;
 		}
 		.coursename {
-			@apply text-2xl flex items-center gap-2 border-b-2 border-gray-200;
+			@apply text-2xl font-semibold font-display italic flex items-center gap-2 border-b-2 border-gray-200;
 			.prefix {
 				@apply block opacity-50;
 			}
