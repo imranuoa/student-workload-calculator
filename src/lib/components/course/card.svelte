@@ -1,6 +1,8 @@
 <script lang="ts">
 	import autoAnimate from '$lib/autoAnimate';
 	import ArrowRight from 'svelte-material-icons/ArrowRight.svelte';
+	import Delete from 'svelte-material-icons/Delete.svelte';
+	import Close from 'svelte-material-icons/Close.svelte';
 	import { Course, getCourseData, type courseMeta } from '$lib/course';
 	import type { Activity } from '$lib/course-activities/genericActivity';
 	import type { Readable } from 'svelte/store';
@@ -8,7 +10,7 @@
 	import Time from './stats/time.svelte';
 	import Total from './stats/total.svelte';
 	import { cardState } from './card';
-	import { addCourse, openCourse } from '$lib/../store';
+	import { addCourse, deleteCourse, openCourse } from '$lib/../store';
 	import CardHeader from './cardHeader.svelte';
 	import ManageActivities from '../add-activity/manageActivities.svelte';
 	import { goto } from '$app/navigation';
@@ -75,6 +77,19 @@
 					</div>
 					Open
 				</button>
+				<button
+					class="btn btn-md btn-text btn-icon"
+					on:click={() => {
+						confirm(`Are you sure you want to delete this course ("${$meta?.name}")?`) &&
+							courseIndex !== undefined &&
+							deleteCourse(courseIndex);
+					}}
+				>
+					<div class="icon">
+						<Delete />
+					</div>
+					Delete
+				</button>
 			{:else if state === cardState.create}
 				<button
 					class="btn btn-md btn-primary btn-icon"
@@ -90,6 +105,18 @@
 						<ArrowRight />
 					</div>
 					Continue
+				</button>
+				<button
+					class="btn btn-md btn-icon"
+					on:click={() => {
+						course = undefined;
+						state = cardState.blank;
+					}}
+				>
+					<div class="icon">
+						<Close />
+					</div>
+					Cancel
 				</button>
 			{/if}
 		</div>
@@ -138,7 +165,7 @@
 		}
 
 		.footer {
-			@apply flex justify-end gap-2 mt-4 h-9;
+			@apply flex justify-between flex-row-reverse gap-2 mt-4 h-9;
 			@apply bg-uni-gray-100 border-t-2 border-uni-gray-300 border-opacity-30 text-uni-gray-400 text-sm;
 		}
 		&.create .footer {
