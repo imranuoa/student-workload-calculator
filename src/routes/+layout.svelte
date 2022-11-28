@@ -70,9 +70,11 @@
 		<div class="reset-data">
 			<button on:click={() => resetPrompt()}>Reset Data</button>
 		</div>
-		<div class="export-data">
-			<button on:click={() => exportCourseData()}>Export Data</button>
-		</div>
+		{#if $page.url.pathname.startsWith('/courses')}
+			<div class="export-data">
+				<button on:click={() => exportCourseData()}>Export Data</button>
+			</div>
+		{/if}
 	</div>
 </div>
 

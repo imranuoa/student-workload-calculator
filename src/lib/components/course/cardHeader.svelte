@@ -34,13 +34,14 @@
 		<h3 class="uni-header">{$meta.name}</h3>
 	</div>
 {:else}
-	<button
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<div
 		class="header-block"
 		class:cursor-pointer={state === cardState.edit}
-		on:click={(e) => {
-			toggleState(e);
-		}}
 		use:autoAnimate
+		on:click={(e) => {
+			if (state === cardState.edit) toggleState(e);
+		}}
 	>
 		{#if state === cardState.editExpanded || state === cardState.create}
 			<label class="coursename" for="courseEdit-{course.id}-courseName">
@@ -57,11 +58,18 @@
 			<h3 class="title">{$meta.name}</h3>
 		{/if}
 		{#if state !== cardState.create}
-			<div class="header-toggle" class:expanded={state === cardState.editExpanded}>
+			<button
+				class="header-toggle"
+				class:expanded={state === cardState.editExpanded}
+				on:click={(e) => {
+					toggleState(e);
+				}}
+				title={state === cardState.editExpanded ? 'Collapse' : 'Expand'}
+			>
 				<ChevronDown />
-			</div>
+			</button>
 		{/if}
-	</button>
+	</div>
 {/if}
 
 <style lang="postcss">

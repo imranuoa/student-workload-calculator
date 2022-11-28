@@ -10,20 +10,6 @@
 		name: 'Your Course',
 		weeks: 12
 	};
-
-	const findImport = () => {
-		const input = document.createElement('input');
-		input.type = 'file';
-		input.multiple = false;
-		input.accept = 'application/json';
-		input.onchange = async () => {
-			if (!input.files?.length) return;
-			const file = input.files[0];
-			const content = await file.text();
-			importCourseData(content);
-		};
-		input.click();
-	};
 </script>
 
 <svelte:head>

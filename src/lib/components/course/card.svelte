@@ -15,7 +15,14 @@
 	import Time from './stats/time.svelte';
 	import Total from './stats/total.svelte';
 	import { cardState } from './card';
-	import { addCourse, deleteCourse, exportCourseData, openCourse } from '$lib/../store';
+	import {
+		activeCourse,
+		addCourse,
+		deleteCourse,
+		exportCourseData,
+		importCourseData,
+		openCourse
+	} from '$lib/../store';
 	import CardHeader from './cardHeader.svelte';
 	import ManageActivities from '../add-activity/manageActivities.svelte';
 	import { goto } from '$app/navigation';
@@ -35,6 +42,15 @@
 	const createCourse = () => {
 		course = new Course('Your Course', 12);
 		state = cardState.create;
+	};
+
+	const handleFileUpload = async (e: Event) => {
+		const target = e.target as HTMLInputElement;
+		if (!target.files?.length) return;
+		const file = target.files[0];
+		const content = await file.text();
+		importCourseData(content);
+		target.value = '';
 	};
 </script>
 
@@ -118,6 +134,8 @@
 						if (!isEditing) {
 							console.log('add course', course);
 							course && addCourse(course);
+						} else {
+							if (courseIndex !== undefined) $activeCourse = courseIndex;
 						}
 						goto('/');
 						isEditing = false;
@@ -178,7 +196,7 @@
 					<button
 						class="btn btn-text btn-icon"
 						on:click={() => {
-							if (!data.course || !courseIndex) return;
+							if (!data.course || courseIndex === undefined) return;
 							exportCourseData(courseIndex);
 						}}
 					>
@@ -200,7 +218,17 @@
 				<h3>Create course</h3>
 			</button>
 			<!-- svelte-ignore a11y-invalid-attribute -->
-			<p>Or <button class="link">upload a course</button></p>
+			<p>
+				Or <label class="link">
+					upload a course
+					<input
+						class="hidden"
+						type="file"
+						accept="application/json"
+						on:change={handleFileUpload}
+					/>
+				</label>
+			</p>
 		</div>
 	{/if}
 </div>
@@ -250,7 +278,7 @@
 			p {
 				@apply text-lg;
 				.link {
-					@apply text-uni-blue underline underline-offset-2;
+					@apply text-uni-blue underline underline-offset-2 cursor-pointer;
 				}
 			}
 		}

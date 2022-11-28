@@ -3,6 +3,7 @@ import { Course, type serializedCourse } from '$lib/course';
 import { get, writable, type Writable } from 'svelte/store';
 import { PrimaryMeeting } from '$lib/course-activities/primaryMeeting';
 import { goto } from '$app/navigation';
+import { nanoid } from 'nanoid';
 
 const storeVersion = 'v2';
 
@@ -78,12 +79,48 @@ export const exportCourseData = (course: false | number = false) => {
 	link.click();
 };
 
-export const importCourseData = (data: string) => {
+export const importCourseData = (data?: string) => {
+	if (!data) {
+		const input = document.createElement('input');
+		input.type = 'file';
+		input.multiple = false;
+		input.accept = 'application/json';
+		input.onchange = async () => {
+			if (!input.files?.length) return;
+			const file = input.files[0];
+			const content = await file.text();
+			importCourseData(content);
+		};
+		input.click();
+		return;
+	}
 	try {
 		const courseData = JSON.parse(data);
-		courseData.forEach((c: any) => {
+		courseData.forEach((c: serializedCourse) => {
+			const matchedCourseId = get(courses).find((cx) => cx.id === c.id);
+			if (matchedCourseId) {
+				c.id = nanoid();
+			}
 			const course = Course.deserialize(c);
 			if (course) {
+				let nameAttempts = 0;
+				while (
+					get(courses).find((c) => get(c.meta).name === get(course.meta).name) !== undefined &&
+					nameAttempts < 10
+				) {
+					nameAttempts++;
+					if (nameAttempts === 1) {
+						course.meta.update((m) => ({
+							...m,
+							name: m.name + ` (imported)`
+						}));
+					} else {
+						course.meta.update((m) => ({
+							...m,
+							name: m.name.replace(/ \(\d+\)$/, '') + ` (${nameAttempts})`
+						}));
+					}
+				}
 				course.subscribe(notifyStore);
 				courses.update((c) => [...c, course]);
 			}
