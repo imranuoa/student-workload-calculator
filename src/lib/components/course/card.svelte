@@ -1,16 +1,21 @@
 <script lang="ts">
 	import autoAnimate from '$lib/autoAnimate';
 	import ArrowRight from 'svelte-material-icons/ArrowRight.svelte';
+	import ArrowLeft from 'svelte-material-icons/ArrowLeft.svelte';
+	import Pencil from 'svelte-material-icons/Pencil.svelte';
 	import Delete from 'svelte-material-icons/Delete.svelte';
+	import Download from 'svelte-material-icons/Download.svelte';
+	import TableArrowDown from 'svelte-material-icons/TableArrowDown.svelte';
+	import FileExportOutline from 'svelte-material-icons/FileExportOutline.svelte';
 	import Close from 'svelte-material-icons/Close.svelte';
-	import { Course, getCourseData, type courseMeta } from '$lib/course';
+	import { Course, downloadJSON, downloadCSV, getCourseData, type courseMeta } from '$lib/course';
 	import type { Activity } from '$lib/course-activities/genericActivity';
 	import type { Readable } from 'svelte/store';
 	import Duration from './stats/duration.svelte';
 	import Time from './stats/time.svelte';
 	import Total from './stats/total.svelte';
 	import { cardState } from './card';
-	import { addCourse, deleteCourse, openCourse } from '$lib/../store';
+	import { addCourse, deleteCourse, exportCourseData, openCourse } from '$lib/../store';
 	import CardHeader from './cardHeader.svelte';
 	import ManageActivities from '../add-activity/manageActivities.svelte';
 	import { goto } from '$app/navigation';
@@ -18,6 +23,8 @@
 	export let course: Course | undefined = undefined;
 	export let courseIndex: number | undefined = undefined;
 	export let state: cardState = course ? cardState.view : cardState.blank;
+
+	let isEditing = false;
 
 	$: meta = course?.meta;
 	$: activities = course?.activities;
@@ -66,17 +73,31 @@
 		{/if}
 		<div class="footer">
 			{#if state === cardState.view}
-				<button
-					class="btn btn-md btn-text btn-icon"
-					on:click={() => {
-						courseIndex !== undefined && openCourse(courseIndex);
-					}}
-				>
-					<div class="icon">
-						<ArrowRight />
-					</div>
-					Open
-				</button>
+				<div class="group flex">
+					<button
+						class="btn btn-md btn-text btn-icon"
+						on:click={() => {
+							isEditing = true;
+							state = cardState.create;
+						}}
+					>
+						<div class="icon">
+							<Pencil />
+						</div>
+						Edit
+					</button>
+					<button
+						class="btn btn-md btn-text btn-icon"
+						on:click={() => {
+							courseIndex !== undefined && openCourse(courseIndex);
+						}}
+					>
+						<div class="icon">
+							<ArrowRight />
+						</div>
+						Open
+					</button>
+				</div>
 				<button
 					class="btn btn-md btn-text btn-icon"
 					on:click={() => {
@@ -94,11 +115,12 @@
 				<button
 					class="btn btn-md btn-primary btn-icon"
 					on:click={() => {
-						console.log('add course', course);
-						course && addCourse(course);
-						course = undefined;
-						state = cardState.blank;
+						if (!isEditing) {
+							console.log('add course', course);
+							course && addCourse(course);
+						}
 						goto('/');
+						isEditing = false;
 					}}
 				>
 					<div class="icon">
@@ -107,17 +129,65 @@
 					Continue
 				</button>
 				<button
-					class="btn btn-md btn-icon"
+					class="btn btn-md btn-text btn-icon"
 					on:click={() => {
-						course = undefined;
-						state = cardState.blank;
+						if (isEditing) {
+							state = cardState.view;
+							isEditing = false;
+						} else {
+							course = undefined;
+							state = cardState.blank;
+						}
 					}}
 				>
 					<div class="icon">
 						<Close />
 					</div>
-					Cancel
+					{#if isEditing}
+						Close
+					{:else}
+						Cancel
+					{/if}
 				</button>
+			{:else if state == cardState.edit || state === cardState.editExpanded}
+				<div class="group flex">
+					<button
+						class="btn btn-text btn-icon"
+						on:click={() => {
+							if (!data.course) return;
+							downloadCSV(data.activities, data.meta.name);
+						}}
+					>
+						<div class="icon">
+							<Download />
+						</div>
+						Download (JSON)
+					</button>
+					<button
+						class="btn btn-text btn-icon"
+						on:click={() => {
+							if (!data.course) return;
+							downloadJSON(data.activities, data.meta.name);
+						}}
+					>
+						<div class="icon">
+							<TableArrowDown />
+						</div>
+						Download (CSV)
+					</button>
+					<button
+						class="btn btn-text btn-icon"
+						on:click={() => {
+							if (!data.course || !courseIndex) return;
+							exportCourseData(courseIndex);
+						}}
+					>
+						<div class="icon">
+							<FileExportOutline />
+						</div>
+						Export
+					</button>
+				</div>
 			{/if}
 		</div>
 	{:else}
@@ -141,8 +211,9 @@
 		@apply px-0 py-0 m-0 grow flex flex-col relative;
 		@apply transition;
 		.stats {
-			@apply flex flex-col justify-between gap-2 relative z-30 bg-white;
+			@apply flex flex-col justify-between gap-2 relative z-30 bg-white transition;
 			padding: 0 var(--card-padding);
+			transition-property: padding;
 		}
 
 		&.edit .stats,

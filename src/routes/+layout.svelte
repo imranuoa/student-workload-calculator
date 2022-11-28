@@ -3,7 +3,7 @@
 
 	import '../app.postcss';
 	import { fade, fly, slide } from 'svelte/transition';
-	import { courses, activeCourse } from '../store';
+	import { courses, activeCourse, exportCourseData } from '../store';
 	import Logo from '$lib/assets/logo.svelte';
 	import { page } from '$app/stores';
 	import { Course } from '$lib/course';
@@ -70,6 +70,9 @@
 		<div class="reset-data">
 			<button on:click={() => resetPrompt()}>Reset Data</button>
 		</div>
+		<div class="export-data">
+			<button on:click={() => exportCourseData()}>Export Data</button>
+		</div>
 	</div>
 </div>
 
@@ -126,12 +129,13 @@
 	}
 
 	.footer {
-		@apply fixed bottom-0 flex justify-end p-5 pt-0 w-full h-12 items-end;
-		.reset-data {
-			button {
-				@apply text-red-700 border-red-700;
-				@apply border-b border-dashed leading-4;
-			}
+		@apply fixed bottom-0 flex justify-end p-5 pt-0 w-full h-12 items-end gap-4;
+		.reset-data button {
+			@apply text-red-700 border-red-700;
+			@apply border-b border-dashed leading-4;
+		}
+		.export-data button {
+			@apply text-uni-color-green font-semibold;
 		}
 	}
 </style>

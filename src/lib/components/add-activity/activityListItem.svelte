@@ -75,7 +75,7 @@
 
 <style lang="postcss">
 	.activity-row {
-		@apply grid p-1 items-center rounded transition relative;
+		@apply grid p-1 items-center rounded transition relative cursor-pointer;
 		grid-template-columns: 4ch 1fr auto auto;
 		grid-template-areas: 'icon name hours delete';
 		input {

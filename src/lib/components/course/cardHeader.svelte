@@ -18,12 +18,14 @@
 	$: writableTargetFreq = propertyStore(meta, ['targetFreq']);
 	$: writableWeekTemplate = propertyStore(meta, ['weekTemplate']);
 
-	const toggleState = () => {
+	const toggleState = (e: MouseEvent) => {
 		if (state === cardState.editExpanded) {
 			state = cardState.edit;
 		} else if (state === cardState.edit) {
 			state = cardState.editExpanded;
 		}
+		e.stopPropagation();
+		return false;
 	};
 </script>
 
@@ -32,7 +34,14 @@
 		<h3 class="uni-header">{$meta.name}</h3>
 	</div>
 {:else}
-	<div class="header-block" use:autoAnimate>
+	<button
+		class="header-block"
+		class:cursor-pointer={state === cardState.edit}
+		on:click={(e) => {
+			toggleState(e);
+		}}
+		use:autoAnimate
+	>
 		{#if state === cardState.editExpanded || state === cardState.create}
 			<label class="coursename" for="courseEdit-{course.id}-courseName">
 				<span class="prefix">Course:</span>
@@ -48,15 +57,11 @@
 			<h3 class="title">{$meta.name}</h3>
 		{/if}
 		{#if state !== cardState.create}
-			<button
-				class="header-toggle"
-				class:expanded={state === cardState.editExpanded}
-				on:click={toggleState}
-			>
+			<div class="header-toggle" class:expanded={state === cardState.editExpanded}>
 				<ChevronDown />
-			</button>
+			</div>
 		{/if}
-	</div>
+	</button>
 {/if}
 
 <style lang="postcss">
@@ -71,9 +76,9 @@
 		}
 	}
 	.header-block {
-		@apply bg-uni-blue w-full text-white font-bold flex items-center gap-3 z-30 relative;
+		@apply bg-uni-blue w-full text-white text-left font-bold flex items-center gap-3 z-30 relative;
 		padding: 0 var(--card-padding);
-		@apply pb-4 pt-3;
+		@apply py-4;
 		.title {
 			@apply w-full m-0 text-2xl font-semibold font-display italic;
 		}

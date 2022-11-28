@@ -1,11 +1,14 @@
 import { nanoid } from 'nanoid';
 import { derived, get, writable, type Readable, type Writable } from 'svelte/store';
+import csvDownload from 'json-to-csv-export';
+
 import activities, {
 	getActivityClass,
 	type derivedCalculated,
 	type serializedActivity
 } from '$lib/activities';
 import { Frequency, type Activity } from '$lib/course-activities/genericActivity';
+import { onMount } from 'svelte';
 
 const median = (numbers: number[]) => {
 	const sorted = Array.from(numbers).sort((a, b) => a - b);
@@ -51,6 +54,11 @@ export class Course {
 	public get id() {
 		return this._id;
 	}
+
+	static safeName(name: string) {
+		return name.toLowerCase().replace(/[^a-zA-Z0-9]/g, '_');
+	}
+
 	static serialize(c: Course): serializedCourse {
 		const activities = get(c.activities).map((activity) => {
 			const compClass = getActivityClass(activity);
@@ -240,3 +248,45 @@ export const getCourseData = (
 		activities: activities!,
 		totals: totals!
 	} as courseData);
+
+const buildData = (activities: Activity[]) => {
+	if (!activities) return [];
+	return activities.map((a) => {
+		const derived = get(a.derivedCalculated);
+		return {
+			name: get(a.instanceName),
+			results: get(a.results),
+			gradeWorth: get(a.gradeWorth),
+			derived: {
+				perWeekI: derived.perWeekI,
+				perWeekS: derived.perWeekS,
+				perCourseI: derived.perCourseI,
+				perCourseS: derived.perCourseS
+			}
+		};
+	});
+};
+
+export let downloadJSON = (activities: Activity[], courseName = '') => {
+	const data = buildData(activities);
+	console.log('download files');
+	const json = JSON.stringify(data, null, 2);
+	const blob = new Blob([json], { type: 'application/json' });
+	const url = URL.createObjectURL(blob);
+	const link = document.createElement('a');
+	link.href = url;
+	link.download = `course-${courseName}-export.json`;
+	link.click();
+};
+export let downloadCSV = (activities: Activity[], courseName = '') => {
+	const data = buildData(activities);
+	csvDownload({
+		data: data.map((c) => ({
+			name: c.name,
+			worth: `${c.gradeWorth}%`,
+			...c.derived,
+			...c.results
+		})),
+		filename: `course-${courseName}-activities.csv`
+	});
+};

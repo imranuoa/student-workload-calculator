@@ -1,5 +1,5 @@
 import { writable as localStorageStore } from 'svelte-local-storage-store';
-import { Course } from '$lib/course';
+import { Course, type serializedCourse } from '$lib/course';
 import { get, writable, type Writable } from 'svelte/store';
 import { PrimaryMeeting } from '$lib/course-activities/primaryMeeting';
 import { goto } from '$app/navigation';
@@ -60,14 +60,21 @@ export const openCourse = (i: number) => {
 	goto('/');
 };
 
-export const exportCourseData = () => {
-	const courseData = get(courses).map((c) => Course.serialize(c));
+export const exportCourseData = (course: false | number = false) => {
+	let courseData: serializedCourse[];
+	if (course === false) {
+		courseData = get(courses).map((c) => Course.serialize(c));
+	} else {
+		courseData = [Course.serialize(get(courses)[course])];
+	}
 	const json = JSON.stringify(courseData, null, 2);
 	const blob = new Blob([json], { type: 'application/json' });
 	const url = URL.createObjectURL(blob);
 	const link = document.createElement('a');
 	link.href = url;
-	link.download = 'activities.json';
+	link.download = `course-${
+		courseData.length === 1 ? Course.safeName(courseData[0].meta.name) : new Date().toISOString()
+	}.json`;
 	link.click();
 };
 

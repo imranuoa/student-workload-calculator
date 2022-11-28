@@ -108,11 +108,6 @@
 		]
 	};
 
-	$: average = ({ chart }: { chart: Chart }) => {
-		const values = ctx.chart.data.datasets[0].data;
-		return values.reduce((a, b) => a + b, 0) / values.length;
-	};
-
 	let chart: Chart;
 
 	$: if (chart && $activities) {
