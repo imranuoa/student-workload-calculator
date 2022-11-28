@@ -1,7 +1,8 @@
 import { get, readable, writable, type Readable, type Writable } from 'svelte/store';
 import { formTypes, type FormElement, type formProps, type TextInput } from './form';
+import Duration from 'humanize-duration';
 
-const formElems = import.meta.glob('$lib/form-elems/*.svelte', { eager: true });
+const formElems = import.meta.glob('$lib/components/form-elems/*.svelte', { eager: true });
 
 type serializedFormElem = {
 	type: string;
@@ -102,4 +103,14 @@ export const readableSerialize = {
 	beforeSerialize: (value: Readable<any>) => {
 		return get(value);
 	}
+};
+
+export const durationToString = (value: number, occurences = 1): string => {
+	if (!occurences) return '0 hours';
+	return Duration(value * occurences * 60 * 60 * 1000, {
+		units: ['h', 'm'],
+		round: true,
+		conjunction: ' and ',
+		serialComma: false
+	});
 };

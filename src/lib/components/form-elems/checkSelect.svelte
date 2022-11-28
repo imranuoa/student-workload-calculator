@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import './formStyles.postcss';
-	import type { CheckSelectInput } from '../form';
+	import type { CheckSelectInput } from '$lib/form';
 
 	export let props: CheckSelectInput['props'];
-	let { options, value, label } = props;
+	let { id, options, value, label } = props;
 
 	let selectGroup: HTMLElement;
 	let isMouseDown = false;
@@ -49,12 +49,12 @@
 	});
 </script>
 
-<fieldset class="block" for="rangeInput" style="--numOptions: {$options.length}">
-	<legend class="text-gray-700">
+<fieldset class="block field-block" for="rangeInput" style="--numOptions: {$options.length}">
+	<legend class="text-gray-700" id={`${id}-label`}>
 		{label} <i class="text-sm align-baseline" aria-hidden="true">(click or drag to delete)</i>
 	</legend>
-	<div class="daySelectGroup" bind:this={selectGroup}>
-		{#each $options as option}
+	<div class="daySelectGroup" bind:this={selectGroup} role="group" aria-labelledby={`${id}-label`}>
+		{#each $options as option, i}
 			<div
 				class="daySelectLabel"
 				on:dragover={dragOver}
@@ -63,8 +63,14 @@
 				on:drop={stopSelecting}
 				draggable="true"
 			>
-				<input type="checkbox" bind:group={$value} value={option} id={option} />
-				<label for={option} class="daySelectText">
+				<input
+					type="checkbox"
+					name={id}
+					bind:group={$value}
+					value={option}
+					id={`${id}-option${i}`}
+				/>
+				<label for={`${id}-option${i}`} class="daySelectText">
 					{option}
 				</label>
 			</div>
@@ -73,11 +79,15 @@
 </fieldset>
 
 <style lang="postcss">
+	fieldset {
+		@apply min-w-0;
+	}
 	.daySelectGroup {
-		@apply grid rounded shadow select-none overflow-clip overflow-x-auto;
+		@apply flex rounded shadow select-none overflow-clip overflow-x-auto;
 		@apply bg-gray-200;
-		grid-template-columns: repeat(var(--numOptions), minmax(2.3ch, 1fr));
+		/* grid-template-columns: repeat(var(--numOptions), minmax(2.3ch, 1fr)); */
 		.daySelectLabel {
+			min-width: 2.5ch;
 			@apply grow flex;
 			input {
 				@apply absolute opacity-0 pointer-events-none;
@@ -107,11 +117,11 @@
 					@apply h-0 transition-none;
 				}
 			}
-			:focus + .daySelectText {
+			:focus-visible + .daySelectText {
 				@apply outline outline-2 outline-slate-300;
 				outline-offset: -2px;
 			}
-			:focus:checked + .daySelectText {
+			:focus-visible:checked + .daySelectText {
 				@apply outline outline-2 outline-slate-300;
 				outline-offset: -2px;
 			}

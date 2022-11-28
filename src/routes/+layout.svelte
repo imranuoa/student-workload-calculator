@@ -2,8 +2,12 @@
 	import { BarLoader } from 'svelte-loading-spinners';
 
 	import '../app.postcss';
-	import { fade } from 'svelte/transition';
-	import { courses, activeCourse } from '../store';
+	import { fade, fly, slide } from 'svelte/transition';
+	import { courses, activeCourse, exportCourseData } from '../store';
+	import Logo from '$lib/assets/logo.svelte';
+	import { page } from '$app/stores';
+	import { Course } from '$lib/course';
+	import { Frequency } from '$lib/course-activities/genericActivity';
 
 	const resetPrompt = () => {
 		if (
@@ -18,27 +22,39 @@
 
 	$: activeCourseInst = $activeCourse >= 0 ? $courses[$activeCourse] : undefined;
 	$: activeCourseMeta = activeCourseInst?.meta;
+	$: activeCourseActivities = activeCourseInst?.activities;
+	$: totals = $activeCourseActivities && Course.getTotal($activeCourseActivities);
+
+	$: isDanger = (() => {
+		if ($totals && $activeCourseMeta) {
+			return (
+				$totals.perCourse.total >
+				$activeCourseMeta.target *
+					($activeCourseMeta.targetFreq === Frequency.Weekly ? $activeCourseMeta.weeks : 1)
+			);
+		}
+		return false;
+	})();
 </script>
 
 <svelte:head>
 	<link rel="icon" href="/favicon.svg" />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600&display=swap"
+		rel="stylesheet"
+	/>
 </svelte:head>
 
 <div class="wrapper">
 	<div class="layout">
 		<header>
-			<div class="title flex">
-				<a href="/"><h1>Student Workload Calculator</h1></a>
-			</div>
-			<p>
-				This planning tool is for instructors who wish to estimate the expected student time
-				commitment in a course based on the assigned learning activities. The tool is designed to be
-				used for courses that represent the blended learning spectrum from face-to-face to fully
-				online. Based on the input provided, the tool calculates the total time commitment expected,
-				and allocates activities into scheduled (set by the institution, typically live meetings)
-				and independent (at the discretion of the student within the parameters set by course
-				deadlines) activities.
-			</p>
+			<Logo score={$totals?.perWeek.total} {isDanger} />
+			<h1>
+				Student Workload
+				<br />Calculator
+			</h1>
 		</header>
 		<div class="page">
 			<!-- {#if !$hasLoaded}
@@ -54,6 +70,11 @@
 		<div class="reset-data">
 			<button on:click={() => resetPrompt()}>Reset Data</button>
 		</div>
+		{#if $page.url.pathname.startsWith('/courses')}
+			<div class="export-data">
+				<button on:click={() => exportCourseData()}>Export Data</button>
+			</div>
+		{/if}
 	</div>
 </div>
 
@@ -65,29 +86,43 @@
 			'header'
 			'page'
 			'footer';
-		background: linear-gradient(180deg, #f5f5f5 0%, #e5e5e5 100%);
 	}
 	header {
-		@apply flex gap-5 pt-5 pl-5 pr-5;
+		@apply flex gap-5 m-5 mb-0;
 		grid-area: header;
-		justify-content: space-evenly;
+		justify-content: center;
 		flex-wrap: wrap;
+		:global(svg) {
+			@apply w-32 h-32;
+		}
 		h1 {
-			@apply text-5xl font-light;
-			min-width: 7ch;
-			max-width: 10ch;
+			@apply text-5xl leading-none font-light font-display italic;
 			align-self: center;
 		}
-		p {
-			max-width: 85ch;
-			/* min-width: 40ch; */
-			@apply font-light italic text-justify;
+		@media screen and (max-width: 640px) {
+			& {
+				@apply h-auto;
+			}
+			:global(svg) {
+				@apply w-24 h-24;
+			}
+			h1 {
+				@apply text-3xl hidden;
+			}
+		}
+		@media screen and (max-width: 280px) {
+			:global(svg) {
+				@apply hidden;
+			}
+			h1 {
+				@apply text-xl text-center;
+			}
 		}
 	}
 	.page {
 		grid-area: page;
-		overflow-x: auto;
 		height: 100%;
+		@apply max-w-screen-xl w-full m-auto px-4;
 	}
 
 	.footer-push,
@@ -96,12 +131,13 @@
 	}
 
 	.footer {
-		@apply fixed bottom-0 flex justify-end p-5 pt-0 w-full h-12 items-end;
-		.reset-data {
-			button {
-				@apply text-red-700 border-red-700;
-				@apply border-b border-dashed leading-4;
-			}
+		@apply fixed bottom-0 flex justify-end p-5 pt-0 w-full h-12 items-end gap-4;
+		.reset-data button {
+			@apply text-red-700 border-red-700;
+			@apply border-b border-dashed leading-4;
+		}
+		.export-data button {
+			@apply text-uni-color-green font-semibold;
 		}
 	}
 </style>

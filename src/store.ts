@@ -1,15 +1,15 @@
 import { writable as localStorageStore } from 'svelte-local-storage-store';
-import { Course } from '$lib/course';
+import { Course, type serializedCourse } from '$lib/course';
 import { get, writable, type Writable } from 'svelte/store';
 import { PrimaryMeeting } from '$lib/course-activities/primaryMeeting';
 import { goto } from '$app/navigation';
+import { nanoid } from 'nanoid';
 
 const storeVersion = 'v2';
 
 const serializer = {
 	stringify(value: Course[]) {
 		const serialized = value.map((c) => Course.serialize(c));
-		console.log(serialized);
 		return JSON.stringify(serialized);
 	},
 	parse(value: string) {
@@ -38,11 +38,13 @@ export const activeCourse: Writable<number> = localStorageStore(`${storeVersion}
 // export const courses: Writable<Course[]> = writable([]);
 // export const activeCourse: Writable<number> = writable(0);
 
-export const addCourse = (course = new Course('Your Course', 12)) => {
+export const addCourse = (course = new Course('Your Course', 12), setActive = true) => {
 	console.log('Adding Course!');
 	course.subscribe(notifyStore);
 	courses.update((c) => [...c, course]);
-	activeCourse.set(get(courses).length - 1);
+	if (setActive) {
+		activeCourse.set(get(courses).length - 1);
+	}
 	// goto('/');
 };
 
@@ -59,23 +61,66 @@ export const openCourse = (i: number) => {
 	goto('/');
 };
 
-export const exportCourseData = () => {
-	const courseData = get(courses).map((c) => Course.serialize(c));
+export const exportCourseData = (course: false | number = false) => {
+	let courseData: serializedCourse[];
+	if (course === false) {
+		courseData = get(courses).map((c) => Course.serialize(c));
+	} else {
+		courseData = [Course.serialize(get(courses)[course])];
+	}
 	const json = JSON.stringify(courseData, null, 2);
 	const blob = new Blob([json], { type: 'application/json' });
 	const url = URL.createObjectURL(blob);
 	const link = document.createElement('a');
 	link.href = url;
-	link.download = 'activities.json';
+	link.download = `course-${
+		courseData.length === 1 ? Course.safeName(courseData[0].meta.name) : new Date().toISOString()
+	}.json`;
 	link.click();
 };
 
-export const importCourseData = (data: string) => {
+export const importCourseData = (data?: string) => {
+	if (!data) {
+		const input = document.createElement('input');
+		input.type = 'file';
+		input.multiple = false;
+		input.accept = 'application/json';
+		input.onchange = async () => {
+			if (!input.files?.length) return;
+			const file = input.files[0];
+			const content = await file.text();
+			importCourseData(content);
+		};
+		input.click();
+		return;
+	}
 	try {
 		const courseData = JSON.parse(data);
-		courseData.forEach((c: any) => {
+		courseData.forEach((c: serializedCourse) => {
+			const matchedCourseId = get(courses).find((cx) => cx.id === c.id);
+			if (matchedCourseId) {
+				c.id = nanoid();
+			}
 			const course = Course.deserialize(c);
 			if (course) {
+				let nameAttempts = 0;
+				while (
+					get(courses).find((c) => get(c.meta).name === get(course.meta).name) !== undefined &&
+					nameAttempts < 10
+				) {
+					nameAttempts++;
+					if (nameAttempts === 1) {
+						course.meta.update((m) => ({
+							...m,
+							name: m.name + ` (imported)`
+						}));
+					} else {
+						course.meta.update((m) => ({
+							...m,
+							name: m.name.replace(/ \(\d+\)$/, '') + ` (${nameAttempts})`
+						}));
+					}
+				}
 				course.subscribe(notifyStore);
 				courses.update((c) => [...c, course]);
 			}

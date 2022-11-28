@@ -1,10 +1,14 @@
 <script lang="ts">
 	import { derived, get, readable, type Readable } from 'svelte/store';
 
-	import { Chart, registerables } from 'chart.js/dist/chart.mjs';
-	Chart.register(...registerables);
+	// import { Chart, registerables } from 'chart.js/dist/chart.mjs';
+	import { Chart, registerables } from 'chart.js';
+	import annotationPlugin from 'chartjs-plugin-annotation';
 
-	import type { Activity } from '$lib/course-activities/genericActivity';
+	Chart.register(...registerables);
+	Chart.register(annotationPlugin);
+
+	import { Frequency, type Activity } from '$lib/course-activities/genericActivity';
 	import { onMount } from 'svelte';
 	import type { Course, courseMeta } from '$lib/course';
 
@@ -68,23 +72,26 @@
 
 	let canvas: HTMLCanvasElement;
 
+	$: target = $meta.targetFreq === Frequency.Course ? $meta.target / courseWeeks : $meta.target;
+	export let isDanger = false;
+
 	$: data = {
-		labels: Array.from({ length: courseWeeks }, (_, i) => `Week ${i + 1}`),
+		labels: Array.from({ length: courseWeeks }, (_, i) => `W${i + 1}`),
 		datasets: [
 			{
 				...datasetPrefs,
 				label: 'Independent',
 				data: $independantSum,
-				borderColor: 'rgb(75, 192, 192)',
-				backgroundColor: 'rgba(75, 192, 192,1)',
+				// borderColor: 'rgb(75, 192, 192)',
+				backgroundColor: isDanger ? '#f7b5b5' : '#bddbab',
 				order: 3
 			},
 			{
 				...datasetPrefs,
 				label: 'Scheduled',
 				data: $scheduledSum,
-				borderColor: 'rgb(255, 99, 132)',
-				backgroundColor: 'rgba(255, 99, 132,1)',
+				// borderColor: 'rgb(255, 99, 132)',
+				backgroundColor: isDanger ? '#A71930' : '#55a51c',
 				order: 2
 			},
 			{
@@ -93,6 +100,7 @@
 				label: 'Grade',
 				data: $gradesSum,
 				borderColor: '#FFD700',
+				backgroundColor: 'transparent',
 				yAxisID: 'grade',
 				order: 1,
 				hidden: true
@@ -103,9 +111,11 @@
 	let chart: Chart;
 
 	$: if (chart && $activities) {
-		chart.data.datasets[0].data = $independantSum;
-		chart.data.datasets[1].data = $scheduledSum;
-		chart.data.datasets[2].data = $gradesSum;
+		console.log(isDanger);
+		chart.data.datasets.forEach((dataset: any, i: number) => {
+			dataset.data = data.datasets[i].data;
+			dataset.backgroundColor = data.datasets[i]?.backgroundColor;
+		});
 		chart.update();
 	}
 
@@ -125,6 +135,25 @@
 					title: {
 						display: true,
 						text: 'Workload by week (estimated)'
+					},
+					annotation: {
+						annotations: {
+							target: {
+								type: 'line',
+								yMin: (ctx) => target,
+								yMax: (ctx) => target,
+								label: {
+									content: 'Target',
+									backgroundColor: '#00467F',
+									position: 'end',
+									display: true
+								},
+								borderColor: '#00467F',
+								borderWidth: 3,
+								z: 2,
+								yScaleID: 'y'
+							}
+						}
 					}
 				},
 				interaction: {
@@ -166,6 +195,6 @@
 
 <style lang="postcss">
 	.chartWrapper {
-		@apply max-w-4xl mx-auto mt-10;
+		@apply max-w-4xl mx-auto;
 	}
 </style>

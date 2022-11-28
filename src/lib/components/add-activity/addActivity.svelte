@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { fade, fly, slide } from 'svelte/transition';
 	import { createEventDispatcher } from 'svelte';
-	import type { ActivitySubClass } from '../activities';
-	import { activeCourse, courses } from '../../store';
+	import type { ActivitySubClass } from '$lib/activities';
+	import { activeCourse, courses } from '$lib/../store';
 	import { writable } from 'svelte/store';
 
 	$: courseMeta = $activeCourse >= 0 ? $courses[$activeCourse].meta : undefined;
@@ -11,7 +11,7 @@
 
 	export let activities: ActivitySubClass[];
 
-	let hoveredActivity = -1;
+	export let hoveredActivity = -1;
 	let hoveredTimeout: number;
 
 	let isFocused = false;
@@ -52,32 +52,13 @@
 			</button>
 		{/each}
 	</div>
-	<div class="activity-info-wrapper">
-		{#if hoveredActivity >= 0}
-			{#key hoveredActivity}
-				<div
-					id="activity-info"
-					transition:fly={{ y: 10 }}
-					on:mouseenter={() => {
-						clearTimeout(hoveredTimeout);
-					}}
-				>
-					<h3>
-						{activities[hoveredActivity].icon}
-						{activities[hoveredActivity].label}
-					</h3>
-					<p>{activities[hoveredActivity].description}</p>
-				</div>
-			{/key}
-		{/if}
-	</div>
 </div>
 
 <style lang="postcss">
 	.activityWrapper {
 		@apply relative;
 		.activity-grid {
-			@apply grid grid-cols-5 gap-2;
+			@apply grid grid-cols-4 gap-2;
 			.btn {
 				/* Default */
 				@apply flex flex-col items-center justify-center w-full relative rounded-lg  outline-blue-400 outline-0 outline overflow-hidden bg-gray-50 text-black;

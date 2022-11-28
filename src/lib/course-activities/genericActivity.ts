@@ -1,6 +1,6 @@
 import { derived, get, writable, type Readable, type Writable } from 'svelte/store';
 import type { courseMeta } from '../course';
-import type { FormElement } from '../form';
+import type { FormElement } from '$lib/form';
 import type {
 	serializedActivity,
 	calculatedResults,

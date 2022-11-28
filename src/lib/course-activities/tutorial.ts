@@ -1,6 +1,6 @@
 import { get, derived, writable, type Readable, type Writable, readable } from 'svelte/store';
 import type { courseMeta } from '../course';
-import { RangeInput, TextInput, CheckSelectInput, CheckboxInput } from '../form';
+import { RangeInput, TextInput, CheckSelectInput, CheckboxInput } from '$lib/form';
 import { Activity, Frequency } from '$lib/course-activities/genericActivity';
 import type { serializedActivity, calculatedResults, derivedCalculated } from '../activities';
 

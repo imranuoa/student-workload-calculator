@@ -75,13 +75,13 @@
 
 <style lang="postcss">
 	.activity-row {
-		@apply grid p-1 items-center rounded transition relative;
+		@apply grid p-1 items-center rounded transition relative cursor-pointer;
 		grid-template-columns: 4ch 1fr auto auto;
 		grid-template-areas: 'icon name hours delete';
 		input {
 			@apply m-auto z-10 outline outline-2 outline-blue-500 opacity-0 pointer-events-none;
 			grid-area: icon;
-			&:focus {
+			&:focus-visible {
 				@apply opacity-100;
 			}
 		}

@@ -3,35 +3,101 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+	font-family: 'National';
+	src: url('/fonts/NationalWeb-Bold.woff2') format('woff2');
+	font-weight: bold;
+	font-feature-settings: 'lnum';
+}
+@font-face {
+	font-family: 'National';
+	src: url('/fonts/NationalWeb-Book.woff2') format('woff2');
+	font-weight: normal;
+	font-feature-settings: 'lnum';
+}
+
+.btn-group {
+	@apply flex rounded-full overflow-clip flex-wrap border-uni-color-green border-2 mt-2;
+	> .btn {
+		@apply rounded-none text-sm px-4 py-1 grow text-center bg-white text-black;
+		&.active {
+			@apply bg-uni-color-green text-white;
+		}
+		&:hover {
+			@apply scale-100;
+		}
+	}
+}
+
 .btn {
-	@apply rounded shadow bg-slate-700 text-white px-3 py-1 inline-block transition;
+	@apply rounded bg-slate-700 text-white px-3 py-1 inline-block transition select-none cursor-pointer;
 	&.btn-block {
 		@apply block w-full;
 	}
 	&.active {
-		@apply bg-green-600;
+		@apply bg-green-600 text-white;
+	}
+	&.btn-md {
+		@apply px-4 py-2;
 	}
 	&.btn-lg {
 		@apply px-5 py-2;
 	}
 	&.btn-primary {
-		@apply bg-blue-600;
+		@apply bg-uni-color-green;
+		&.active {
+			@apply bg-lime-800;
+		}
 	}
 	&.btn-danger {
 		@apply bg-red-600;
+	}
+	&.btn-text {
+		@apply bg-transparent text-inherit font-semibold;
+	}
+	&.btn-icon {
+		@apply flex items-center justify-center gap-0.5;
+		.icon {
+			@apply text-base;
+		}
 	}
 	&:hover {
 		transform: scale(1.03);
 	}
 }
 
-h2 {
-	@apply text-xl flex justify-between my-2;
+h1,
+h2,
+h3,
+h4 {
+	@apply my-2;
+	@apply font-semibold;
+	&h2 {
+		@apply text-xl;
+	}
 	&:first-child {
 		@apply mt-0;
 	}
 }
 
-.card {
-	@apply max-w-prose w-full bg-white shadow rounded-lg px-10 py-7;
+.uni-header {
+	@apply mb-6 relative;
+	&:after {
+		@apply block w-56 max-w-full h-0.5 bg-uni-blue absolute -bottom-2;
+		content: '';
+	}
+}
+.uni-card {
+	--card-padding: theme('spacing.7');
+	@apply w-full bg-white shadow border-t-4 border-uni-blue m-auto;
+	@apply px-4 py-7;
+}
+
+.form-input,
+.form-select {
+	@apply rounded text-sm border-slate-300 p-2 leading-none;
+}
+
+.rangeSlider {
+	@apply text-xs;
 }

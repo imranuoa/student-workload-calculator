@@ -1,25 +1,38 @@
 <script lang="ts">
+	import ArrowLeft from 'svelte-material-icons/ArrowLeft.svelte';
 	import { clickOutside } from 'svelte-use-click-outside';
-	import ResultTable from '$lib/results/resultTable.svelte';
-	import { courses, activeCourse, addCourse } from '../store';
-	import Config from '$lib/edit-activity/config.svelte';
-	import ActivityList from '$lib/add-activity/manageActivities.svelte';
-	import { fade } from 'svelte/transition';
+	import ResultTable from '$lib/components/results/resultTable.svelte';
+	import { courses, activeCourse, addCourse } from '$lib/../store';
+	import Config from '$lib/components/edit-activity/config.svelte';
+	import ActivityList from '$lib/components/add-activity/manageActivities.svelte';
+	import { fade, fly, slide } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import ResultChart from '$lib/results/resultChart.svelte';
+	import { durationToString } from '$lib/serialize';
+	import { Frequency } from '$lib/course-activities/genericActivity';
+	import ResultChart from '$lib/components/results/resultChart.svelte';
+	import { Course } from '$lib/course';
+	import CourseCard from '$lib/components/course/card.svelte';
+	import { cardState } from '$lib/components/course/card';
 	// import arrowPattern from '$lib/assets/arrow-left.svg';
 
 	let addActivityOpen: boolean;
+	let showReport: boolean = false;
 
 	$: activeCourseInst = $activeCourse >= 0 ? $courses[$activeCourse] : undefined;
 	$: activeCourseMeta = activeCourseInst?.meta;
 	$: activeCourseActivities = activeCourseInst?.activities;
+	$: totals = $activeCourseActivities && Course.getTotal($activeCourseActivities);
+	$: gradeTotals = $activeCourseActivities && Course.getGradeTotals($activeCourseActivities);
 	$: openActivity = activeCourseInst?.openActivity;
-	$: openActivityInst =
-		$openActivity !== undefined && $openActivity >= 0
-			? $activeCourseActivities?.[$openActivity]
-			: undefined;
+	$: openActivityInst = $activeCourseActivities?.[$openActivity !== undefined ? $openActivity : -1];
+
+	$: isDanger =
+		$totals &&
+		$activeCourseMeta &&
+		$totals.perCourse.total >
+			$activeCourseMeta.target *
+				($activeCourseMeta.targetFreq === Frequency.Weekly ? $activeCourseMeta.weeks : 1);
 
 	// If openActivity is >0 and doesn't resolve, reset it to -1
 	$: if (
@@ -39,11 +52,8 @@
 	});
 
 	const openCourseConfig = () => {
-		goto('/configure');
+		goto('/courses');
 	};
-
-	let resultsWidth: number;
-	let resultsHeight: number;
 </script>
 
 <svelte:head>
@@ -54,165 +64,236 @@
 	{/if}
 </svelte:head>
 
-{#if activeCourseInst && $activeCourseMeta && $activeCourseActivities}
-	{#key $activeCourse}
-		<div
-			class="calculator-layout"
-			class:expandActivities={addActivityOpen}
-			class:hideConfig={!openActivityInst}
-			class:noActivities={$activeCourseActivities.length === 0}
-			class:hasActivities={$activeCourseActivities.length > 0}
-		>
-			<div
-				class="activities"
-				use:clickOutside={() => {
-					addActivityOpen = false;
-				}}
-			>
-				<div class="title">
-					<a href="/configure" class="btn configure" title="return to course list">
-						<span aria-hidden="true"> &leftarrow; </span>
-					</a>
-					{#if activeCourseMeta}
-						<h2>{$activeCourseMeta.name}</h2>
-					{/if}
-				</div>
-				<hr class="my-2" />
-				<ActivityList bind:activeCourse={activeCourseInst} bind:addActivityOpen />
+{#if activeCourseInst && $activeCourseMeta && $activeCourseActivities && $totals}
+	<div class="layout">
+		<div class="header">
+			<div class="actions">
+				<button class="btn btn-primary btn-icon" on:click={openCourseConfig}>
+					<div class="icon">
+						<ArrowLeft />
+					</div>
+					Dashboard
+				</button>
 			</div>
-			{#if activeCourseInst}
-				<div class="config">
-					<Config activities={activeCourseActivities} {openActivity} />
-				</div>
-				<div class="results" bind:clientWidth={resultsWidth} bind:clientHeight={resultsHeight}>
-					{#if activeCourseActivities && activeCourseMeta && $activeCourseActivities && $activeCourseMeta && $activeCourseActivities.length > 0}
-						<ResultTable
-							activities={$activeCourseActivities}
-							courseWeeks={$activeCourseMeta.weeks}
-							bind:openActivity={$openActivity}
-							on:selectActivity={({ detail }) => {
-								const matchedIndex = $activeCourseActivities?.findIndex((c) => c == detail);
-								if (matchedIndex === $openActivity) $openActivity = -1;
-								else if (matchedIndex !== -1) $openActivity = matchedIndex;
-							}}
-						/>
-						<ResultChart activities={activeCourseActivities} meta={activeCourseMeta} />
-					{:else}
-						<div class="no-activities-results" in:fade>
-							<div class="arrows-wrap">
-								<div class="arrows" />
-							</div>
-							<p class="hint">
-								This course doesn't have anything in it! To get started, use the menu to the left to
-								add a activity.
+			<div class="coursename">
+				<label for="courseName">Course:</label>
+				<input
+					id="courseName"
+					type="text"
+					bind:value={$activeCourseMeta.name}
+					placeholder="Course Name"
+				/>
+			</div>
+		</div>
+		<div class="main card">
+			<div class="activity-list">
+				<CourseCard
+					bind:course={activeCourseInst}
+					courseIndex={$activeCourse}
+					state={cardState.edit}
+				/>
+			</div>
+			<div class="activity-config uni-card">
+				{#if openActivityInst}
+					<Config course={activeCourseInst} />
+				{:else}
+					<div class="no-activities-results" in:fade>
+						<div class="arrows-wrap">
+							<div class="arrows" />
+						</div>
+						<div class="hint">
+							<h2>Activity Configuration</h2>
+							<p>
+								This course doesn't have anything in it! To get started, use the course menu to add
+								an activity.
 							</p>
 						</div>
-					{/if}
-				</div>
-			{/if}
+					</div>
+				{/if}
+			</div>
 		</div>
-	{/key}
+		<div class="results card">
+			<div class="stats">
+				<strong>{durationToString($totals.perCourse.total)}</strong> in course /
+				<strong>
+					{durationToString($totals.perWeek.total)}
+				</strong>
+				per week
+			</div>
+			<div class="more">
+				<i
+					>({$activeCourseMeta.target} hr{#if $activeCourseMeta.targetFreq == Frequency.Weekly}/week{/if}
+					target)
+				</i>
+				<button
+					class="btn btn-primary"
+					class:active={showReport}
+					on:click={() => {
+						showReport = !showReport;
+					}}
+				>
+					Details...</button
+				>
+			</div>
+		</div>
+		{#if showReport}
+			<div class="results-details" transition:slide>
+				<div class="table">
+					<ResultTable
+						activities={activeCourseInst.activities}
+						meta={activeCourseInst.meta}
+						openActivity={activeCourseInst.openActivity}
+					/>
+				</div>
+				<div class="chart">
+					<ResultChart
+						{isDanger}
+						activities={activeCourseInst.activities}
+						meta={activeCourseInst.meta}
+					/>
+				</div>
+			</div>
+		{/if}
+	</div>
+	<div class="indicator" class:danger={isDanger}>
+		<div
+			class="scheduled"
+			style:width={`${
+				($totals.perCourseS.total /
+					Math.max(
+						$activeCourseMeta.target *
+							($activeCourseMeta.targetFreq === Frequency.Weekly ? $activeCourseMeta.weeks : 1),
+						$totals.perCourse.total
+					)) *
+				100
+			}%`}
+		/>
+		<div
+			class="independant"
+			style:width={`${
+				($totals.perCourseI.total /
+					Math.max(
+						$activeCourseMeta.target *
+							($activeCourseMeta.targetFreq === Frequency.Weekly ? $activeCourseMeta.weeks : 1),
+						$totals.perCourse.total
+					)) *
+				100
+			}%`}
+		/>
+	</div>
 {/if}
 
 <style lang="postcss">
-	.calculator-layout {
-		@apply flex gap-8 p-8 min-h-full pb-5;
-		--activities-pane-width: 20rem;
-		--activities-pane-extra-width: 0rem;
-		--config-pane-width: 25rem;
+	.layout {
+		@apply w-full;
+	}
+	/* .card {
+		@apply p-5 shadow bg-uni-gray-100;
+	} */
 
-		.activities {
-			@apply shadow-lg bg-white p-4 rounded-r-lg transition-all z-10 -ml-8;
-			width: calc(var(--activities-pane-width) + var(--activities-pane-extra-width));
-			.title {
-				@apply grid items-center gap-4;
-				grid-template-columns: auto 1fr;
-				grid-template-areas: 'button title';
-				.btn {
-					grid-area: button;
-				}
+	.header {
+		@apply w-full flex flex-wrap gap-x-5 gap-y-2 mb-4 justify-start;
+		.coursename {
+			@apply text-2xl leading-none flex items-center gap-4 grow;
+			@media (max-width: 640px) {
+				@apply hidden;
+			}
+			label {
+				@apply block opacity-50 select-none;
+			}
+			input {
+				@apply flex-grow border-0 px-2 py-0 text-2xl bg-transparent;
 			}
 		}
+		.actions {
+			@apply flex gap-4 select-none items-center;
+			button {
+				@apply text-lg;
+			}
+		}
+	}
 
-		.config,
-		.results {
-			@apply duration-150 ease-in-out z-0;
-			@apply pt-4;
-			transition-property: margin-left, opacity;
-			margin-left: 0;
+	.main {
+		@apply grid gap-5 mb-4;
+		grid-template-columns: 380px 1fr;
+		@media screen and (min-width: 768px) and (max-width: 1000px) {
+			grid-template-columns: 2fr 3fr;
 		}
-		.results {
-			@apply basis-0;
-			flex-grow: 999;
+		@media screen and (max-width: 768px) {
+			grid-template-columns: 1fr;
+			.arrows-wrap {
+				@apply hidden;
+			}
 		}
-		.config {
-			@apply flex-grow;
-			flex-basis: var(--config-pane-width);
+		.activity-list {
+			@apply flex flex-col grow w-full;
 		}
-		&.hideConfig {
-			.activities {
-				@apply shadow-xl;
-				--activities-pane-extra-width: 10rem;
-				z-index: 10;
-			}
-			&.expandActivities {
-				.activities {
-					@apply shadow-2xl;
-					--activities-pane-extra-width: 20rem;
-					margin-right: -10rem;
-				}
-			}
-			.config {
-				margin-left: calc(var(--config-pane-width) * -1);
-			}
-			.results {
-				margin-left: -2.5rem;
-			}
+		.activity-config {
+			@apply w-full h-full my-0;
+			flex-grow: 100;
 		}
 
-		&.expandActivities {
-			--activities-pane-extra-width: 20rem;
-			.activities {
-				@apply shadow-xl;
-				z-index: 10;
+		.no-activities-results {
+			@apply h-96 flex items-center justify-center  relative overflow-clip;
+			.arrows-wrap {
+				@apply absolute top-0 bottom-0 m-auto right-0 z-0 opacity-20 w-full;
+				--arrow-size: 3rem;
+				--num-arrows: 4;
+				height: calc(var(--arrow-size) * var(--num-arrows));
+				.arrows {
+					@apply absolute top-0 right-0 h-full;
+					width: calc(100% + var(--arrow-size));
+					background-image: url('$lib/assets/arrow-left.svg');
+					background-repeat: repeat;
+					background-size: var(--arrow-size);
+					animation: shiftBackground 6s linear infinite;
+				}
+				mask-image: linear-gradient(to left, transparent, black, transparent);
 			}
-			.config,
-			.results {
-				@apply opacity-30 pointer-events-none;
-			}
-			.config {
-				margin-left: calc(var(--activities-pane-extra-width) * -1);
+			.hint {
+				@apply italic max-w-lg bg-white px-6 py-4 border-2 border-slate-200 z-10 w-full shrink;
 			}
 		}
+	}
 
-		&.noActivities {
-			.activities {
-				@apply shadow-2xl pulsehint;
-				:global(.add-activity) {
-					@apply pulsehint transition;
-					@apply bg-blue-600;
-				}
+	.results {
+		@apply grid items-center relative mb-4;
+		grid-template-columns: 1fr auto;
+
+		.more {
+			@apply flex gap-4 items-center;
+		}
+	}
+	.results-details {
+		@apply w-full flex flex-wrap gap-4;
+		.table {
+			@apply grow w-96;
+		}
+		.chart {
+			@apply grow w-96;
+		}
+	}
+	.indicator {
+		@apply overflow-hidden h-2 fixed w-full bottom-0 left-0 flex z-40;
+		width: calc(100% + theme(width.2));
+		.scheduled,
+		.independant {
+			@apply h-full transition-all rounded-r-full;
+		}
+		.independant {
+			@apply bg-[#bddbab] -ml-2 z-10;
+		}
+
+		.scheduled {
+			@apply bg-uni-color-green z-20;
+		}
+
+		&.danger {
+			.independant {
+				@apply bg-[#f7b5b5];
 			}
-			.no-activities-results {
-				@apply h-96 flex items-center justify-center  relative overflow-clip;
-				.arrows-wrap {
-					@apply absolute top-0 bottom-0 m-auto right-0 z-0 opacity-20 w-full;
-					--arrow-size: 3rem;
-					--num-arrows: 4;
-					height: calc(var(--arrow-size) * var(--num-arrows));
-					.arrows {
-						@apply absolute top-0 right-0 h-full;
-						width: calc(100% + var(--arrow-size));
-						background-image: url('$lib/assets/arrow-left.svg');
-						background-repeat: repeat;
-						background-size: var(--arrow-size);
-						animation: shiftBackground 6s linear infinite;
-					}
-					mask-image: linear-gradient(to left, transparent, black, transparent);
-				}
-				.hint {
-					@apply text-center italic max-w-lg bg-white px-6 py-4 rounded shadow border-dashed border-4 border-slate-200 z-10;
-				}
+			.scheduled {
+				@apply bg-red-500;
 			}
 		}
 	}
@@ -230,55 +311,6 @@
 		}
 	}
 
-	@media screen and (max-width: 1600px) {
-		.calculator-layout {
-			.results {
-				@apply max-w-2xl;
-			}
-		}
-	}
-
-	@media screen and (max-width: 1400px) {
-		.calculator-layout {
-			@apply flex-wrap;
-			.results {
-				@apply w-full max-w-full basis-full;
-			}
-			&.noActivities {
-				.no-activities-results {
-					@apply hidden;
-				}
-				.activities {
-					@apply ml-0 rounded-lg w-full;
-				}
-			}
-		}
-	}
-	@media screen and (max-width: 1024px) {
-		.calculator-layout.hasActivities {
-			.activities,
-			.config {
-				@apply grow ml-0 rounded-lg basis-80;
-				width: 50%;
-			}
-			.results {
-				@apply basis-full overflow-x-auto;
-			}
-			&.hideConfig {
-				.activities {
-					@apply shadow-lg;
-				}
-				.activities,
-				.config,
-				.results {
-					@apply mx-0;
-				}
-				.config {
-					@apply hidden;
-				}
-			}
-		}
-	}
 	@keyframes shiftBackground {
 		from {
 			transform: translateX(3rem);

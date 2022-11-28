@@ -1,11 +1,12 @@
 import type { Readable, Writable } from 'svelte/store';
-import rangeInput from './form-elems/rangeInput.svelte';
-import checkSelect from './form-elems/checkSelect.svelte';
-import textInput from './form-elems/textInput.svelte';
-import SingleSelect from './form-elems/singleSelect.svelte';
-import numberInput from './form-elems/numberInput.svelte';
-import conditionalInputs from './form-elems/conditionalInputs.svelte';
-import checkboxInput from './form-elems/checkboxInput.svelte';
+import rangeInput from '$lib/components/form-elems/rangeInput.svelte';
+import checkSelect from '$lib/components/form-elems/checkSelect.svelte';
+import textInput from '$lib/components/form-elems/textInput.svelte';
+import SingleSelect from '$lib/components/form-elems/singleSelect.svelte';
+import numberInput from '$lib/components/form-elems/numberInput.svelte';
+import conditionalInputs from '$lib/components/form-elems/conditionalInputs.svelte';
+import checkboxInput from '$lib/components/form-elems/checkboxInput.svelte';
+import buttonRadio from '$lib/components/form-elems/buttonRadio.svelte';
 
 export type formProps = { id: string; label: string; value: Readable<any>; [key: string]: any };
 
@@ -93,6 +94,23 @@ export class CheckSelectInput extends FormElement {
 export class SingleSelectInput extends FormElement {
 	props;
 	activity = SingleSelect;
+	constructor(
+		id: string,
+		value: Writable<number>, // Index
+		label: string,
+		props: {
+			options: Readable<string[] | any[]>;
+			key?: (option: any) => string;
+		}
+	) {
+		super(id, value, label);
+		this.props = { id, label, value, ...props };
+	}
+}
+
+export class ButtonRadioInput extends FormElement {
+	props;
+	activity = buttonRadio;
 	constructor(
 		id: string,
 		value: Writable<number>, // Index

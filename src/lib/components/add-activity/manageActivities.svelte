@@ -1,23 +1,24 @@
 <script lang="ts">
-	import AddActivityMenu from '$lib/add-activity/addActivity.svelte';
+	import AddActivityMenu from '$lib/components/add-activity/addActivity.svelte';
 	import type { Course } from '$lib/course';
 	import { activities } from '$lib/activities';
 	import { fade } from 'svelte/transition';
 	import ActivityListItem from './activityListItem.svelte';
 
 	export let addActivityOpen = false;
-	export let activeCourse: Course;
+	export let course: Course;
+	export let hoveredActivity = -1;
 
-	$: courseMeta = activeCourse.meta;
-	$: courseActivities = activeCourse.activities;
-	$: courseOpenActivity = activeCourse.openActivity;
+	$: courseMeta = course.meta;
+	$: courseActivities = course.activities;
+	$: courseOpenActivity = course.openActivity;
 </script>
 
 <div class="activityList">
-	<h2>
+	<h2 class="header">
 		<span> Activities: </span>
 		<button
-			class="btn add-activity"
+			class="btn btn-primary add-activity"
 			title="Add Activity"
 			on:click={() => {
 				addActivityOpen = !addActivityOpen;
@@ -28,9 +29,10 @@
 	</h2>
 	{#if addActivityOpen}
 		<AddActivityMenu
+			bind:hoveredActivity
 			{activities}
 			on:add={({ detail }) => {
-				activeCourse?.addActivity(new detail(activeCourse.meta));
+				course?.addActivity(new detail(course.meta));
 				addActivityOpen = false;
 			}}
 		/>
@@ -50,10 +52,10 @@
 				<ActivityListItem
 					{activity}
 					active={$courseOpenActivity === i}
-					on:delete={() => activeCourse?.removeActivity(i)}
+					on:delete={() => course?.removeActivity(i)}
 					on:select={() => {
-						if ($courseOpenActivity === i) activeCourse.openActivity.set(-1);
-						else activeCourse.openActivity.set(i);
+						if ($courseOpenActivity === i) course.openActivity.set(-1);
+						else course.openActivity.set(i);
 					}}
 				/>
 			{/each}
@@ -62,4 +64,7 @@
 </div>
 
 <style lang="postcss">
+	.header {
+		@apply flex justify-between mr-1;
+	}
 </style>
