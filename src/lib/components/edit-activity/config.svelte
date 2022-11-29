@@ -11,7 +11,7 @@
 	$: openActivity = course.openActivity;
 	$: activities = course.activities;
 	$: activity = $activities && $openActivity !== undefined ? $activities[$openActivity] : undefined;
-	$: instanceName = activity.instanceName;
+	$: instanceName = activity?.instanceName;
 
 	$: results = activity ? activity.results : undefined;
 	$: freq = activity ? activity.freq : undefined;
@@ -47,8 +47,8 @@
 	<div>
 		{#key $openActivity}
 			<h2 class="text-xl activityTitle">
-				<span class="icon" style={`color:${getActivityClass(activity).hexColour	}`}>
-					<svelte:component this={getActivityClass(activity).icon}/>
+				<span class="icon" style={`color:${getActivityClass(activity).hexColour}`}>
+					<svelte:component this={getActivityClass(activity).icon} />
 				</span>
 				{getActivityClass(activity).label}: {$instanceName}
 			</h2>
@@ -96,9 +96,9 @@
 {/if}
 
 <style lang="postcss">
-	.activityTitle{
+	.activityTitle {
 		@apply flex items-center gap-2;
-		 .icon {
+		.icon {
 			@apply inline-block h-full;
 		}
 	}

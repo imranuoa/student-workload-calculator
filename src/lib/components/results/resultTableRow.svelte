@@ -1,10 +1,7 @@
 <script lang="ts">
-	import type { Readable } from 'svelte/store';
-	import { createEventDispatcher } from 'svelte';
 	import { Frequency, type Activity } from '$lib/course-activities/genericActivity';
 	import { getActivityClass } from '$lib/activities';
-
-	const dispatch = createEventDispatcher();
+	import type { courseMeta } from '$lib/course';
 
 	export let activity: Activity;
 
@@ -21,6 +18,7 @@
 	export let gradeTotals: { median: number; total: number };
 	export let courseWeeks: number;
 	export let active: boolean | null = null;
+	export let courseMeta: courseMeta | undefined;
 
 	$: derivedCalculated = activity.derivedCalculated;
 	$: instanceName = activity.instanceName;
@@ -30,11 +28,20 @@
 	$: perCourseI = $derivedCalculated.perCourseI;
 	$: perCourseS = $derivedCalculated.perCourseS;
 	$: gradeWorth = activity.gradeWorth;
+
+	$: targetPerCourse =
+		courseMeta &&
+		courseMeta.target * (courseMeta.targetFreq === Frequency.Weekly ? courseMeta.weeks : 1);
+	$: targetPerWeek =
+		courseMeta &&
+		courseMeta.target / (courseMeta.targetFreq === Frequency.Weekly ? 1 : courseMeta.weeks);
+	$: warningPerCourse = targetPerCourse && 0.6 * targetPerCourse;
+	$: warningPerWeek = targetPerWeek && 0.6 * targetPerWeek;
 </script>
 
 <tr class:active class:clickable={active !== null}>
-	<td class="name" on:click={() => dispatch('click', activity)}>
-		{#if $freq == Frequency.Weekly}
+	<td class="name">
+		<!-- {#if $freq == Frequency.Weekly}
 			<span class="pill weekly" title="Occurs Weekly">
 				<span aria-hidden="true"> W </span>
 			</span>
@@ -42,15 +49,17 @@
 			<span class="pill coursely" title="Occurs once">
 				<span aria-hidden="true"> C </span>
 			</span>
-		{/if}
-		{$instanceName}
+		{/if} -->
 		<span class="icon" aria-hidden="true">
-			{getActivityClass(activity).icon}
+			<svelte:component this={getActivityClass(activity).icon} />
+		</span>
+		<span class="name">
+			{$instanceName}
 		</span>
 	</td>
 	<td
-		class:warning={perWeekI > 4}
-		class:danger={perWeekI > 10}
+		class:warning={warningPerWeek && perWeekI > warningPerWeek}
+		class:danger={targetPerWeek && perWeekI > targetPerWeek}
 		style="--comparison: {totals.perWeek.total > 0
 			? (perWeekI / totals.perWeek.total) * 100
 			: perWeekI > 0
@@ -61,8 +70,8 @@
 		<div class="comparison" />
 	</td>
 	<td
-		class:warning={perWeekS > 4}
-		class:danger={perWeekS > 10}
+		class:warning={warningPerWeek && perWeekS > warningPerWeek}
+		class:danger={targetPerWeek && perWeekS > targetPerWeek}
 		style="--comparison: {totals.perWeek.total > 0
 			? (perWeekS / totals.perWeek.total) * 100
 			: perWeekS > 0
@@ -73,8 +82,8 @@
 		<div class="comparison" />
 	</td>
 	<td
-		class:warning={perCourseI / courseWeeks > 4}
-		class:danger={perCourseI / courseWeeks > 10}
+		class:warning={warningPerCourse && perCourseI > warningPerCourse}
+		class:danger={targetPerCourse && perCourseI > targetPerCourse}
 		style="--comparison: {totals.perCourse.total > 0
 			? (perCourseI / totals.perCourse.total) * 100
 			: perCourseI > 0
@@ -85,8 +94,8 @@
 		<div class="comparison" />
 	</td>
 	<td
-		class:warning={perCourseS / courseWeeks > 4}
-		class:danger={perCourseS / courseWeeks > 10}
+		class:warning={warningPerCourse && perCourseS > warningPerCourse}
+		class:danger={targetPerCourse && perCourseS > targetPerCourse}
 		style="--comparison: {totals.perCourse.total > 0
 			? (perCourseS / totals.perCourse.total) * 100
 			: perCourseS > 0
@@ -122,6 +131,11 @@
 	tr {
 		@apply h-10 text-center relative;
 		@apply border-b border-slate-300;
+		.name {
+			.icon {
+				@apply inline-block align-middle;
+			}
+		}
 		&.clickable .name {
 			@apply cursor-pointer;
 		}

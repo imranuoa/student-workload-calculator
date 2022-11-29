@@ -71,7 +71,7 @@ export abstract class Activity {
 	// About the activity
 	static type = 'Activity';
 	static label: string;
-	static icon: ComponentType | string;
+	static icon: ComponentType;
 	static colour: validColors = 'uni-gray.500';
 	static get hexColour() {
 		return getBrandColor(this.colour);

@@ -100,6 +100,7 @@
 				gradeTotals={$gradeTotals}
 				courseWeeks={$meta.weeks}
 				active={openActivityInst === activity}
+				courseMeta={$meta}
 				on:click={() => dispatch('selectActivity', activity)}
 			/>
 		{/each}
