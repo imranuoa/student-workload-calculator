@@ -43,9 +43,10 @@
 						id: `${course.id}-TargetFreq`,
 						value: writableTargetFreq,
 						label: 'Target Frequency',
+						prefix: derived(writableTarget, (wt) => `${wt} Hour${wt === 1 ? '' : 's'}`),
 						options: derived(writableTarget, (wt) => [
-							`${wt} Hour${wt === 1 ? '' : 's'} Per Week`,
-							`${wt} Hour${wt === 1 ? '' : 's'} Total`
+							`Per week`,
+							`Overall`
 						])
 					}}
 				/>

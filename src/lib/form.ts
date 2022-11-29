@@ -118,6 +118,7 @@ export class ButtonRadioInput extends FormElement {
 		label: string,
 		props: {
 			options: Readable<string[] | any[]>;
+			prefix: Readable<string>;
 			key?: (option: any) => string;
 		}
 	) {
