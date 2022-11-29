@@ -3,13 +3,13 @@ import type { courseMeta } from '../course';
 import * as form from '$lib/form';
 import { Activity, Frequency } from '$lib/course-activities/genericActivity';
 import type { calculatedResults, derivedCalculated } from '../activities';
-import vhs from 'svelte-material-icons/vhs.svelte';
+import Vhs from 'svelte-material-icons/Vhs.svelte';
 
 export class VideoOrPodcast extends Activity {
 	static readonly writables = ['instanceName', 'gradeWorth', 'perCourse', 'length'];
 	static type = 'VideoOrPodcast';
 	static label = 'Video / Podcast';
-	static icon = vhs;
+	static icon = Vhs;
 	static colour: typeof Activity.colour = 'uni-color.purple'; //📼';
 	static description =
 		'This activity accommodates the time involved in watching or listening to media (e.g., recorded lectures, assigned films). The hours from this activity are assigned to the independent category and reflected in workload summary accordingly.';
