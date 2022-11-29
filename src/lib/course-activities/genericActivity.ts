@@ -7,6 +7,26 @@ import type {
 	derivedCalculated,
 	ActivitySubClass
 } from '../activities';
+import type { ComponentType } from 'svelte';
+
+import { colors } from '@/brand.json';
+// import tailwindConfig from '@/../tailwind.config.cjs';
+
+const brandColors = colors;
+type ThemeToString<N extends string, C extends string> = `${C}.${N}`;
+type NumberToString<N extends number | string> = `${N}`;
+type brandCast<C extends keyof typeof brandColors> = ThemeToString<
+	NumberToString<(string | number) & keyof typeof brandColors[C]>,
+	C
+>;
+type validColors = brandCast<'uni-color'> | brandCast<'uni-gray'>;
+const getBrandColor = (color: validColors) => {
+	const [c, n] = color.split('.');
+	const brandC = c as keyof typeof brandColors;
+	const cat = brandColors[brandC];
+	const brandN = n as keyof typeof cat;
+	return cat[brandN] as string;
+};
 
 export enum Frequency {
 	Weekly = 0,
@@ -51,7 +71,11 @@ export abstract class Activity {
 	// About the activity
 	static type = 'Activity';
 	static label: string;
-	static icon: string;
+	static icon: ComponentType | string;
+	static colour: validColors = 'uni-gray.500';
+	static get hexColour() {
+		return getBrandColor(this.colour);
+	}
 	static description: string;
 	gradeWorth = writable(0); // Percent 1-100
 	abstract form: FormElement[];

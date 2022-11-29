@@ -3,6 +3,7 @@ import type { courseMeta } from '../course';
 import * as form from '$lib/form';
 import { Activity, Frequency } from '$lib/course-activities/genericActivity';
 import type { calculatedResults, derivedCalculated } from '../activities';
+import TextBoxCheckOutline from 'svelte-material-icons/TextBoxCheckOutline.svelte';
 
 enum format {
 	Independent = 0,
@@ -20,7 +21,8 @@ export class Quiz extends Activity {
 	];
 	static type = 'Quiz';
 	static label = 'Quiz';
-	static icon = '⁉️';
+	static icon = TextBoxCheckOutline;
+	static colour: typeof Activity.colour = 'uni-color.rose'; //⁉️';
 	static description =
 		'This activity is focused on quizzes, which can be either be held in an asynchronous (typically online) or synchronous (within a Primary Class Meeting) manner.';
 	freq = readable(Frequency.Course);

@@ -14,6 +14,7 @@
 	import { Course } from '$lib/course';
 	import CourseCard from '$lib/components/course/card.svelte';
 	import { cardState } from '$lib/components/course/card';
+	import { getActivityClass } from '$lib/activities';
 	// import arrowPattern from '$lib/assets/arrow-left.svg';
 
 	let addActivityOpen: boolean;
@@ -93,20 +94,28 @@
 					state={cardState.edit}
 				/>
 			</div>
-			<div class="activity-config uni-card">
+			<div class="activity-config uni-card" style={openActivityInst && `
+				--accent-color:${getActivityClass(openActivityInst).hexColour}
+				`}>
 				{#if openActivityInst}
 					<Config course={activeCourseInst} />
 				{:else}
 					<div class="no-activities-results" in:fade>
-						<div class="arrows-wrap">
-							<div class="arrows" />
-						</div>
+						{#if !$activeCourseActivities.length}
+							<div class="arrows-wrap" in:fade>
+								<div class="arrows" />
+							</div>
+						{/if}
 						<div class="hint">
 							<h2>Activity Configuration</h2>
-							<p>
-								This course doesn't have anything in it! To get started, use the course menu to add
-								an activity.
-							</p>
+							{#if $activeCourseActivities.length}
+								<p>Select an activity from the list to configure it.</p>
+							{:else}
+								<p>
+									This course doesn't have anything in it! To get started, use the course menu to
+									add an activity.
+								</p>
+							{/if}
 						</div>
 					</div>
 				{/if}

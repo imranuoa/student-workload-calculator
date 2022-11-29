@@ -29,6 +29,9 @@
 		{#each activities as activity, i}
 			<button
 				class="btn"
+				style={`
+					--bg-color: ${activity.hexColour};
+				`}
 				on:click={() => dispatch('add', activity)}
 				on:mouseenter={() => {
 					clearTimeout(hoveredTimeout);
@@ -47,7 +50,15 @@
 				}}
 				aria-details="activity-info"
 			>
-				<span class="icon">{activity.icon}</span>
+				<span class="icon">
+					{#if typeof activity.icon === 'string'}
+						{activity.icon}
+					{:else}
+						<span style={`color: ${activity.hexColour}`}>
+							<svelte:component this={activity.icon} />
+						</span>
+					{/if}
+				</span>
 				<span class="label">{activity.label}</span>
 			</button>
 		{/each}
@@ -58,13 +69,17 @@
 	.activityWrapper {
 		@apply relative;
 		.activity-grid {
-			@apply grid grid-cols-4 gap-2;
+			@apply grid grid-cols-4 gap-1 auto-cols-fr auto-rows-fr;
 			.btn {
 				/* Default */
-				@apply flex flex-col items-center justify-center w-full relative rounded-lg  outline-blue-400 outline-0 outline overflow-hidden bg-gray-50 text-black;
+				@apply flex flex-col items-center justify-center w-full relative py-2;
+				@apply rounded outline-blue-400 outline-0 outline overflow-hidden bg-white text-black;
 				/* On Hover */
 				@apply transition hover:shadow-md hover:outline-2 focus:shadow-md
 focus:outline-2;
+				background-image:
+					linear-gradient(45deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+					linear-gradient(90deg,var(--bg-color) 0%,var(--bg-color) 100%);
 				.icon {
 					@apply text-2xl;
 				}

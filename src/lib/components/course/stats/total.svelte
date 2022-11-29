@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { Course, getCourseData, type courseData, type courseDataValid } from '$lib/course';
-	import { cardState } from '../card';
+	import type { cardState } from '../card';
 	import Generic from './generic.svelte';
 
 	export let course: Course;
-	export let state: cardState;
+	// export let state: cardState;
 
 	$: meta = course?.meta;
 	$: activities = course?.activities;

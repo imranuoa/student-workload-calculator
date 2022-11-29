@@ -3,6 +3,7 @@ import type { courseMeta } from '../course';
 import * as form from '$lib/form';
 import { Activity, Frequency } from '$lib/course-activities/genericActivity';
 import type { calculatedResults, derivedCalculated } from '../activities';
+import SchoolOutline from 'svelte-material-icons/SchoolOutline.svelte';
 
 export class FinalExam extends Activity {
 	static readonly writables = [
@@ -14,7 +15,8 @@ export class FinalExam extends Activity {
 	];
 	static type = 'FinalExam';
 	static label = 'Final Exam';
-	static icon = '🕰';
+	static icon = SchoolOutline;
+	static colour: typeof Activity.colour = 'uni-gray.400'; //🕰';
 	static description =
 		'This is the Final Exam activity where you can choose to either include your exam within your allocated class weeks or independent of them. The Final Exam hours will be tracked seperately so that you are easily able to differentiate between the two.';
 	freq = readable(Frequency.Course);

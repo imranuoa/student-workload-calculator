@@ -3,6 +3,7 @@ import type { courseMeta } from '../course';
 import * as form from '$lib/form';
 import { Activity, Frequency } from '$lib/course-activities/genericActivity';
 import type { calculatedResults, derivedCalculated } from '../activities';
+import PuzzleEditOutline from 'svelte-material-icons/PuzzleEditOutline.svelte';
 
 export class CustomAssignment extends Activity {
 	static readonly writables = [
@@ -17,7 +18,8 @@ export class CustomAssignment extends Activity {
 	];
 	static type = 'CustomAssignment';
 	static label = 'Custom Assignment';
-	static icon = '✨';
+	static icon = PuzzleEditOutline;
+	static colour: typeof Activity.colour = 'uni-color.purple';
 	static description =
 		'This component may be used for assignments that fall outside of the categories above such as group work, projects, and discipline-specific assignments. The hours in this component can be assigned to either the scheduled or independent categories based on whether the scheduled checkbox is checked. When the scheduled box is checked (the default state), the hours are assigned to the scheduled totals. If the check is removed, all hours are assigned to the independent category and reflected in workload summary accordingly. Note that you may optionally add preparation time (e.g., for group meetings) and post-assignment time (e.g., a reflection).';
 	instanceName = writable('Custom Assignment');

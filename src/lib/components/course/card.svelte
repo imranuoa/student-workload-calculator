@@ -69,7 +69,7 @@
 				<Duration course={data.course} bind:state />
 				<Time course={data.course} bind:state />
 				{#if state === cardState.view}
-					<Total course={data.course} bind:state />
+					<Total course={data.course} />
 				{/if}
 			</div>
 		{/if}
@@ -242,6 +242,10 @@
 			@apply flex flex-col justify-between gap-2 relative z-30 bg-white transition;
 			padding: 0 var(--card-padding);
 			transition-property: padding;
+		}
+
+		&.edit, &.expand {
+			@apply border-t-0;
 		}
 
 		&.edit .stats,

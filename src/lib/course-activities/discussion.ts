@@ -11,6 +11,7 @@ import {
 } from '$lib/form';
 import { Activity, Frequency } from '$lib/course-activities/genericActivity';
 import type { calculatedResults, derivedCalculated } from '../activities';
+import ForumOutline from 'svelte-material-icons/ForumOutline.svelte';
 
 enum isSync {
 	Asynchronous = 0,
@@ -33,7 +34,8 @@ export class Discussion extends Activity {
 	];
 	static type = 'Discussion';
 	static label = 'Discussion';
-	static icon = '💬';
+	static icon = ForumOutline;
+	static colour: typeof Activity.colour = 'uni-color.fushia'; //💬';
 	static description =
 		'This activity is focused on discussions, which can be either be held in an asynchronous (typically online) or synchronous (within a live session) manner.';
 	freq = readable(Frequency.Course);

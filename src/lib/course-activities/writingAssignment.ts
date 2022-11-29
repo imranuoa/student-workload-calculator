@@ -3,6 +3,7 @@ import type { courseMeta } from '../course';
 import * as form from '$lib/form';
 import { Activity, Frequency } from '$lib/course-activities/genericActivity';
 import type { calculatedResults, derivedCalculated } from '../activities';
+import FileDocumentEditOutline from 'svelte-material-icons/FileDocumentEditOutline.svelte';
 
 enum format {
 	Independent = 0,
@@ -40,7 +41,8 @@ export class WritingAssignment extends Activity {
 	];
 	static type = 'WritingAssignment';
 	static label = 'Writing Assignment';
-	static icon = '📝';
+	static icon = FileDocumentEditOutline;
+	static colour: typeof Activity.colour = 'uni-color.orange'; //📝';
 	static description =
 		'This activity is focused on writing assignments or activities such as essays, creating short stories, and research papers. A writing assignment may be independent or scheduled (for in-class writing assignments).';
 	freq = readable(Frequency.Course);

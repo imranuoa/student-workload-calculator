@@ -7,11 +7,12 @@ import numberInput from '$lib/components/form-elems/numberInput.svelte';
 import conditionalInputs from '$lib/components/form-elems/conditionalInputs.svelte';
 import checkboxInput from '$lib/components/form-elems/checkboxInput.svelte';
 import buttonRadio from '$lib/components/form-elems/buttonRadio.svelte';
+import type { ComponentType } from 'svelte';
 
 export type formProps = { id: string; label: string; value: Readable<any>; [key: string]: any };
 
 export abstract class FormElement {
-	abstract activity: any;
+	abstract activity: ComponentType;
 	abstract props: formProps;
 	constructor(id: string, value: Readable<any>, label: string, props?: object) {}
 }

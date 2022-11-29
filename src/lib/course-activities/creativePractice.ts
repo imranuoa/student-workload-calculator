@@ -3,6 +3,7 @@ import type { courseMeta } from '../course';
 import { RangeInput, TextInput, CheckSelectInput, NumberInput } from '$lib/form';
 import { Activity, Frequency } from '$lib/course-activities/genericActivity';
 import type { serializedActivity, calculatedResults, derivedCalculated } from '../activities';
+import PaletteOutline from 'svelte-material-icons/PaletteOutline.svelte';
 
 export class CreativePractice extends Activity {
 	static readonly writables = [
@@ -16,7 +17,8 @@ export class CreativePractice extends Activity {
 	];
 	static type = 'CreativePractice';
 	static label = 'Creative Practice';
-	static icon = '🎨';
+	static icon = PaletteOutline;
+	static colour: typeof Activity.colour = 'uni-color.orange';
 	static description =
 		'This activity is focused on Creative Practice Sessions, which include activities that fall within the creative arts. This component can have scheduled and independent activities. When the scheduled box is checked (the default state), the Preparation per Session portion is added to scheduled hours; preparation and post-session inputs are added to independent hours. If the check is removed, all hours are assigned to the independent category and reflected in workload summary accordingly.';
 	freq = readable(Frequency.Course);

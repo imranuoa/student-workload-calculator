@@ -13,7 +13,11 @@
 			<input type="radio" id={`${id}-option${i}`} name={id} value={i} bind:group={$value} />
 			<label for={`${id}-option${i}`} class="btn btn-icon">
 				<span class="icon">
-					<Check />
+					{#if $value === i}
+						<Check />
+					{:else}
+						&nbsp;
+					{/if}
 				</span>
 				<span>{option}</span>
 			</label>

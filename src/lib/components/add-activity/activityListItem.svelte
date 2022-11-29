@@ -38,6 +38,8 @@
 			language: 'shortEn'
 		});
 	};
+
+	$:activityClass = getActivityClass(activity);
 </script>
 
 <label class="activity-row" class:active for="select-activity-{$instanceName}">
@@ -50,7 +52,13 @@
 		checked={active}
 	/>
 	<span class="icon">
-		{getActivityClass(activity).icon}
+		{#if typeof activityClass.icon === 'string'}
+			{activityClass.icon}
+		{:else}
+			<span style={`color: ${activityClass.hexColour}`}>
+				<svelte:component this={activityClass.icon} />
+			</span>
+		{/if}
 	</span>
 	<span class="name">
 		{$instanceName}
@@ -92,7 +100,7 @@
 			@apply bg-gray-200;
 		}
 		.icon {
-			@apply text-center;
+			@apply text-center flex items-center justify-center;
 			grid-area: icon;
 		}
 		.name {

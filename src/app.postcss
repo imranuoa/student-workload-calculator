@@ -16,6 +16,10 @@
 	font-feature-settings: 'lnum';
 }
 
+:root {
+	--accent-color: theme(colors.uni-blue.DEFAULT);
+}
+
 .btn-group {
 	@apply flex rounded-full overflow-clip flex-wrap border-uni-color-green border-2 mt-2;
 	> .btn {
@@ -89,8 +93,9 @@ h4 {
 }
 .uni-card {
 	--card-padding: theme('spacing.7');
-	@apply w-full bg-white shadow border-t-4 border-uni-blue m-auto;
+	@apply w-full bg-white shadow border-t-4 m-auto transition;
 	@apply px-4 py-7;
+	border-color: var(--accent-color);
 }
 
 .form-input,

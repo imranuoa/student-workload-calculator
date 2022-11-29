@@ -5,11 +5,13 @@
 	import RangeInput from '$lib/components/form-elems/rangeInput.svelte';
 	import type { Course } from '$lib/course';
 	import { durationToString } from '$lib/serialize';
+	import { getActivityClass } from '$lib/activities';
 
 	export let course: Course;
 	$: openActivity = course.openActivity;
 	$: activities = course.activities;
 	$: activity = $activities && $openActivity !== undefined ? $activities[$openActivity] : undefined;
+	$: instanceName = activity.instanceName;
 
 	$: results = activity ? activity.results : undefined;
 	$: freq = activity ? activity.freq : undefined;
@@ -43,8 +45,13 @@
 
 {#if activity}
 	<div>
-		<h2 class="text-xl">Configuration</h2>
 		{#key $openActivity}
+			<h2 class="text-xl activityTitle">
+				<span class="icon" style={`color:${getActivityClass(activity).hexColour	}`}>
+					<svelte:component this={getActivityClass(activity).icon}/>
+				</span>
+				{getActivityClass(activity).label}: {$instanceName}
+			</h2>
 			<div>
 				{#each activity.form as formElem}
 					<svelte:component this={formElem && formElem.activity} props={formElem.props} />
@@ -87,3 +94,12 @@
 		{/key}
 	</div>
 {/if}
+
+<style lang="postcss">
+	.activityTitle{
+		@apply flex items-center gap-2;
+		 .icon {
+			@apply inline-block h-full;
+		}
+	}
+</style>

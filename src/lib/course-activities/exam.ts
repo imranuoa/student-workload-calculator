@@ -3,6 +3,7 @@ import type { courseMeta } from '../course';
 import * as form from '$lib/form';
 import { Activity, Frequency } from '$lib/course-activities/genericActivity';
 import type { calculatedResults, derivedCalculated } from '../activities';
+import FileClockOutline from 'svelte-material-icons/FileClockOutline.svelte';
 
 enum format {
 	Independent = 0,
@@ -20,7 +21,8 @@ export class Exam extends Activity {
 	];
 	static type = 'Exam';
 	static label = 'Exam';
-	static icon = '⏰';
+	static icon = FileClockOutline;
+	static colour: typeof Activity.colour = 'uni-gray.500'; //⏰';
 	static description =
 		'This activity is focused on major assessments, which can be either be held in an asynchronous (typically online) or synchronous (within a Primary Class Meeting) manner.';
 	freq = readable(Frequency.Course);

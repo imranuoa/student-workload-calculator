@@ -3,6 +3,7 @@ import type { courseMeta } from '../course';
 import { RangeInput, TextInput, CheckSelectInput, NumberInput } from '$lib/form';
 import { Activity, Frequency } from '$lib/course-activities/genericActivity';
 import type { serializedActivity, calculatedResults, derivedCalculated } from '../activities';
+import AccountHardHatOutline from 'svelte-material-icons/AccountHardHatOutline.svelte';
 
 export class PracticalExperience extends Activity {
 	static readonly writables = [
@@ -15,7 +16,8 @@ export class PracticalExperience extends Activity {
 	];
 	static type = 'PracticalExperience';
 	static label = 'Practical Experience';
-	static icon = '🌏';
+	static icon = AccountHardHatOutline;
+	static colour: typeof Activity.colour = 'uni-color.teal-alt'; //🌏';
 	static description =
 		'This activity is focused on practical experience within a course. This could be a field trip, practicum, or placement. This activity is not scheduled, but is instead a part of the course.';
 	freq = readable(Frequency.Course);

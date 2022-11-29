@@ -3,6 +3,7 @@ import type { courseMeta } from '../course';
 import { RangeInput, TextInput, CheckSelectInput, CheckboxInput } from '$lib/form';
 import { Activity, Frequency } from '$lib/course-activities/genericActivity';
 import type { serializedActivity, calculatedResults, derivedCalculated } from '../activities';
+import AccountGroupOutline from 'svelte-material-icons/AccountGroupOutline.svelte';
 
 export class Tutorial extends Activity {
 	static readonly writables = [
@@ -16,7 +17,8 @@ export class Tutorial extends Activity {
 	];
 	static type = 'Tutorial';
 	static label = 'Tutorial';
-	static icon = '🙋';
+	static icon = AccountGroupOutline;
+	static colour: typeof Activity.colour = 'uni-color.turqoise'; //🙋';
 	static description =
 		'This activity is focused on the tutorial portion of courses; these sessions are commonly focused on providing students with an opportunity to practice and/or reinforce learning. The Tutorial activity has both scheduled and independent components. When the scheduled box is checked (the default state), the hours per tutorial portion is added to scheduled hours; and the preparation time is added to independent hours. If the check is removed, all hours are assigned to the independent category and reflected in workload summary accordingly.';
 	freq = readable(Frequency.Weekly);

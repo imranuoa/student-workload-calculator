@@ -3,6 +3,7 @@ import type { courseMeta } from '../course';
 import { RangeInput, TextInput, CheckSelectInput } from '$lib/form';
 import { Activity, Frequency } from '$lib/course-activities/genericActivity';
 import type { serializedActivity, calculatedResults, derivedCalculated } from '../activities';
+import CalendarAccountOutline from 'svelte-material-icons/CalendarAccountOutline.svelte';
 
 export class PrimaryMeeting extends Activity {
 	static readonly writables = [
@@ -14,7 +15,8 @@ export class PrimaryMeeting extends Activity {
 	];
 	static type = 'PrimaryMeeting';
 	static label = 'Primary Meeting';
-	static icon = '🧑‍🏫';
+	static icon = CalendarAccountOutline;
+	static colour: typeof Activity.colour = 'uni-color.green'; //🧑‍🏫';
 	static description =
 		'Primary meeting time for the course. This is the time that students are expected to be in class.';
 	freq = readable(Frequency.Weekly);

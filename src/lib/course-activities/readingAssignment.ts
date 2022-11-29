@@ -3,6 +3,7 @@ import type { courseMeta } from '../course';
 import * as form from '$lib/form';
 import { Activity, Frequency } from '$lib/course-activities/genericActivity';
 import type { calculatedResults, derivedCalculated } from '../activities';
+import BookOpenPageVariantOutline from 'svelte-material-icons/BookOpenPageVariantOutline.svelte';
 
 enum pageDensity {
 	low = 0,
@@ -36,7 +37,8 @@ export class ReadingAssignment extends Activity {
 	];
 	static type = 'ReadingAssignment';
 	static label = 'Reading Assignment';
-	static icon = '📚';
+	static icon = BookOpenPageVariantOutline;
+	static colour: typeof Activity.colour = 'uni-color.orange'; //📚';
 	static description =
 		'This activity is focused on independent readings such as assigned textbook readings, readings of short stories, novel excerpts, etc. The hours from this activity will be assigned to the independent category and reflected in workload summary accordingly.';
 	freq = readable(Frequency.Weekly);

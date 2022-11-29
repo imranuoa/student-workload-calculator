@@ -3,6 +3,7 @@ import type { courseMeta } from '../course';
 import { RangeInput, TextInput, CheckSelectInput, CheckboxInput } from '$lib/form';
 import { Activity, Frequency } from '$lib/course-activities/genericActivity';
 import type { serializedActivity, calculatedResults, derivedCalculated } from '../activities';
+import TestTube from 'svelte-material-icons/TestTube.svelte';
 
 export class Lab extends Activity {
 	static readonly writables = [
@@ -17,7 +18,8 @@ export class Lab extends Activity {
 	];
 	static type = 'Lab';
 	static label = 'Lab';
-	static icon = '🥼';
+	static icon = TestTube;
+	static colour: typeof Activity.colour = 'uni-color.blue'; //🥼';
 	static description =
 		'This activity is focused on the Laboratory portion of courses. Labs can have scheduled and independent activities. When the scheduled box is checked (the default state), the hours per lab portion is added to scheduled hours; preparation and post-lab inputs are added to independent hours. If the check is removed, all hours are assigned to the independent category and reflected in workload summary accordingly.';
 	freq = readable(Frequency.Weekly);
