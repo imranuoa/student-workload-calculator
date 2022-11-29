@@ -39,7 +39,7 @@
 	{/if}
 	{#if $courseActivities.length === 0 && !addActivityOpen}
 		<p in:fade class="text-gray-500 text-center italic m-5">
-			You don't have any activities to this course yet! Why not <button
+			You don't have any activities in this course yet! Why not <button
 				class="italic font-bold underline"
 				on:click={() => {
 					addActivityOpen = !addActivityOpen;
