@@ -3,11 +3,13 @@
 
 	import '../app.postcss';
 	import { fade, fly, slide } from 'svelte/transition';
+	import Check from 'svelte-material-icons/Check.svelte';
 	import { courses, activeCourse, exportCourseData } from '../store';
 	import Logo from '$lib/assets/logo.svelte';
 	import { page } from '$app/stores';
 	import { Course } from '$lib/course';
 	import { Frequency } from '$lib/course-activities/genericActivity';
+	import { writable as storedWritable } from 'svelte-local-storage-store';
 
 	const resetPrompt = () => {
 		if (
@@ -35,6 +37,9 @@
 		}
 		return false;
 	})();
+
+	const noticeName = 'beta-v1.0.0';
+	const showNotice = storedWritable(`showNotice-${noticeName}`, true);
 </script>
 
 <svelte:head>
@@ -55,6 +60,32 @@
 				Student Workload
 				<br />Calculator
 			</h1>
+			{#if $showNotice}
+				<div class="notice-wrapper" transition:slide>
+					<div class="notice">
+						<span class="notice-header">Heads up! You're using a new tool 🛠️</span>
+						<span class="note">
+							This tool is in open beta and is available for general testing. Please report any bugs
+							or issues to <a href="mailto:z.millerwaugh@auckland.ac.nz"
+								>z.millerwaugh@auckland.ac.nz</a
+							>.
+						</span>
+						<div class="action">
+							<button
+								class="btn btn-icon btn-primary notice-close"
+								on:click={() => {
+									$showNotice = false;
+								}}
+							>
+								<div class="icon">
+									<Check />
+								</div>
+								Hide
+							</button>
+						</div>
+					</div>
+				</div>
+			{/if}
 		</header>
 		<div class="page">
 			<!-- {#if !$hasLoaded}
@@ -69,6 +100,9 @@
 	<div class="footer">
 		<div class="reset-data">
 			<button on:click={() => resetPrompt()}>Reset Data</button>
+		</div>
+		<div class="send-info">
+			Contact: <span class="select-all">z.millerwaugh@auckland.ac.nz</span>
 		</div>
 		{#if $page.url.pathname.startsWith('/courses')}
 			<div class="export-data">
@@ -92,18 +126,40 @@
 		grid-area: header;
 		justify-content: center;
 		flex-wrap: wrap;
-		:global(svg) {
+		& > :global(svg) {
 			@apply w-32 h-32;
 		}
 		h1 {
 			@apply text-5xl leading-none font-light font-display italic;
 			align-self: center;
 		}
+		.notice-wrapper {
+			@apply w-full flex flex-wrap flex-col align-middle items-center;
+			.notice {
+				@apply text-center mt-5 rounded shadow bg-uni-color-light-orange;
+				.notice-header {
+					@apply px-6 py-4 text-2xl font-bold w-full block;
+				}
+				.note {
+					@apply px-6 py-4;
+					a {
+						@apply underline text-uni-color-dark-orange font-bold;
+					}
+				}
+				.action {
+					@apply flex justify-center mt-4;
+					button {
+						@apply w-full rounded-t-none hover:scale-100 hover:opacity-80;
+					}
+				}
+			}
+		}
+
 		@media screen and (max-width: 640px) {
 			& {
 				@apply h-auto;
 			}
-			:global(svg) {
+			& > :global(svg) {
 				@apply w-24 h-24;
 			}
 			h1 {
@@ -111,7 +167,7 @@
 			}
 		}
 		@media screen and (max-width: 280px) {
-			:global(svg) {
+			& > :global(svg) {
 				@apply hidden;
 			}
 			h1 {
