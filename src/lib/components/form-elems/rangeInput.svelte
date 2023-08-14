@@ -22,7 +22,7 @@
 <div class="block field-block">
 	<label for={id} class="text-gray-700"> {label} </label>
 	<div class="rangeInputFlex mt-1">
-		<input type="number" {id} class="form-input" bind:value={$value} {step} />
+		<input type="number" {id} class="form-input" bind:value={$value} />
 		<div class="range" aria-hidden="true" tabindex="-1">
 			<RangeSlider
 				--range-handle-inactive={colour}
