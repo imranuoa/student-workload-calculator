@@ -25,6 +25,9 @@
 	<svelte:fragment slot="details">
 		{#if state !== cardState.view}
 			<div class="form">
+				<p class="hint">
+					Select how many weeks your course will run, and which weeks are non-teaching weeks.
+				</p>
 				<RangeInput
 					colour="#D2492A"
 					colourActive="#BF3313"
@@ -55,5 +58,9 @@
 <style lang="postcss">
 	.form {
 		@apply grid grid-flow-row gap-4;
+	}
+
+	.hint {
+		@apply text-sm mb-0 mt-2;
 	}
 </style>

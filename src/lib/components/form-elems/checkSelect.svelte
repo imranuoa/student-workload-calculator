@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import './formStyles.postcss';
 	import type { CheckSelectInput } from '$lib/form';
+	import { fade } from 'svelte/transition';
 
 	export let props: CheckSelectInput['props'];
 	let { id, options, value, label } = props;
@@ -72,6 +73,11 @@
 				/>
 				<label for={`${id}-option${i}`} class="daySelectText">
 					{option}
+					<span class="selected-option" aria-hidden="true">
+						{#if $value.includes(option)}
+							<span transition:fade> ✅ </span>
+						{:else}{/if}
+					</span>
 				</label>
 			</div>
 		{/each}
@@ -91,6 +97,10 @@
 			@apply grow flex;
 			input {
 				@apply absolute opacity-0 pointer-events-none;
+			}
+			.selected-option {
+				@apply block;
+				font-size: 0.6rem;
 			}
 			.daySelectText {
 				@apply grow py-2 text-center bg-white text-sm cursor-pointer transition opacity-50;

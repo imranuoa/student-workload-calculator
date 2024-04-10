@@ -26,6 +26,10 @@
 	<svelte:fragment slot="details">
 		{#if state !== cardState.view}
 			<div class="form">
+				<p class="hint">
+					Select the number of hours you expect students students to spend on this course. This can
+					either be per week, or overall.
+				</p>
 				<RangeInput
 					colour="#55A51C"
 					colourActive="#55A51C"
@@ -44,10 +48,7 @@
 						value: writableTargetFreq,
 						label: 'Target Frequency',
 						prefix: derived(writableTarget, (wt) => `${wt} Hour${wt === 1 ? '' : 's'}`),
-						options: derived(writableTarget, (wt) => [
-							`Per week`,
-							`Overall`
-						])
+						options: derived(writableTarget, (wt) => [`Per week`, `Overall`])
 					}}
 				/>
 			</div>
@@ -58,5 +59,9 @@
 <style lang="postcss">
 	.form {
 		@apply grid grid-flow-row gap-4;
+	}
+
+	.hint {
+		@apply text-sm mb-0 mt-2;
 	}
 </style>

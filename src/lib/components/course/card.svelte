@@ -173,7 +173,7 @@
 						class="btn btn-text btn-icon"
 						on:click={() => {
 							if (!data.course) return;
-							downloadCSV(data.activities, data.meta.name);
+							downloadJSON(data.activities, data.meta.name);
 						}}
 					>
 						<div class="icon">
@@ -185,7 +185,7 @@
 						class="btn btn-text btn-icon"
 						on:click={() => {
 							if (!data.course) return;
-							downloadJSON(data.activities, data.meta.name);
+							downloadCSV(data.activities, data.meta.name);
 						}}
 					>
 						<div class="icon">
@@ -220,7 +220,7 @@
 			<!-- svelte-ignore a11y-invalid-attribute -->
 			<p>
 				Or <label class="link">
-					upload a course
+					upload a Workload Calculator file
 					<input
 						class="hidden"
 						type="file"
@@ -244,7 +244,8 @@
 			transition-property: padding;
 		}
 
-		&.edit, &.expand {
+		&.edit,
+		&.expand {
 			@apply border-t-0;
 		}
 
