@@ -66,8 +66,9 @@
 						<span class="notice-header">Heads up! You're using a new tool 🛠️</span>
 						<span class="note">
 							This tool is in open beta and is available for general testing. Please report any bugs
-							or issues to <a href="mailto:z.millerwaugh@auckland.ac.nz"
-								>z.millerwaugh@auckland.ac.nz</a
+							or issues to <a
+								href="https://uoaprod.service-now.com/sp?id=sc_cat_item&table=sc_cat_item&sys_id=ce73ca981bfb65147f9952c91d4bcb32"
+								>Ranga Auaha Ako</a
 							>.
 						</span>
 						<div class="action">
@@ -102,7 +103,10 @@
 			<button on:click={() => resetPrompt()}>Reset Data</button>
 		</div>
 		<div class="send-info">
-			Contact: <span class="select-all">z.millerwaugh@auckland.ac.nz</span>
+			Created by <a
+				href="https://uoaprod.service-now.com/sp?id=sc_cat_item&table=sc_cat_item&sys_id=ce73ca981bfb65147f9952c91d4bcb32"
+				>Ranga Auaha Ako</a
+			>
 		</div>
 		{#if $page.url.pathname.startsWith('/courses')}
 			<div class="export-data">

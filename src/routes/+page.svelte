@@ -1,4 +1,6 @@
 <script lang="ts">
+	import CourseIndicator from '$lib/components/course/course-indicator.svelte';
+
 	import ArrowLeft from 'svelte-material-icons/ArrowLeft.svelte';
 	import { clickOutside } from 'svelte-use-click-outside';
 	import ResultTable from '$lib/components/results/resultTable.svelte';
@@ -94,9 +96,13 @@
 					state={cardState.edit}
 				/>
 			</div>
-			<div class="activity-config uni-card" style={openActivityInst && `
+			<div
+				class="activity-config uni-card"
+				style={openActivityInst &&
+					`
 				--accent-color:${getActivityClass(openActivityInst).hexColour}
-				`}>
+				`}
+			>
 				{#if openActivityInst}
 					<Config course={activeCourseInst} />
 				{:else}
@@ -164,32 +170,13 @@
 			</div>
 		{/if}
 	</div>
-	<div class="indicator" class:danger={isDanger}>
-		<div
-			class="scheduled"
-			style:width={`${
-				($totals.perCourseS.total /
-					Math.max(
-						$activeCourseMeta.target *
-							($activeCourseMeta.targetFreq === Frequency.Weekly ? $activeCourseMeta.weeks : 1),
-						$totals.perCourse.total
-					)) *
-				100
-			}%`}
+	{#if totals && activeCourseMeta}
+		<CourseIndicator
+			{totals}
+			{activeCourseMeta}
+			options={{ background: false, bottomOfScreen: true }}
 		/>
-		<div
-			class="independant"
-			style:width={`${
-				($totals.perCourseI.total /
-					Math.max(
-						$activeCourseMeta.target *
-							($activeCourseMeta.targetFreq === Frequency.Weekly ? $activeCourseMeta.weeks : 1),
-						$totals.perCourse.total
-					)) *
-				100
-			}%`}
-		/>
-	</div>
+	{/if}
 {/if}
 
 <style lang="postcss">
@@ -201,7 +188,7 @@
 	} */
 
 	.header {
-		@apply w-full flex flex-wrap gap-x-5 gap-y-2 mb-4 justify-start;
+		@apply w-full flex flex-wrap gap-x-5 gap-y-2 my-2 justify-start;
 		.coursename {
 			@apply text-2xl leading-none flex items-center gap-4 grow;
 			@media (max-width: 640px) {
