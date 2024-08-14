@@ -51,5 +51,6 @@
 		"svelte-table": "^0.5.0",
 		"svelte-use-click-outside": "^1.0.0",
 		"svelte-writable-derived": "^2.1.5"
-	}
+	},
+	"packageManager": "yarn@4.4.0"
 }
