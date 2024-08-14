@@ -17,6 +17,7 @@
 	import CourseCard from '$lib/components/course/card.svelte';
 	import { cardState } from '$lib/components/course/card';
 	import { getActivityClass } from '$lib/activities';
+	import { base } from '$app/paths';
 	// import arrowPattern from '$lib/assets/arrow-left.svg';
 
 	let addActivityOpen: boolean;
@@ -55,7 +56,7 @@
 	});
 
 	const openCourseConfig = () => {
-		goto('/courses');
+		goto(base + '/courses');
 	};
 </script>
 

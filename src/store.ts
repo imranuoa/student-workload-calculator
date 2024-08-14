@@ -4,6 +4,7 @@ import { get, writable, type Writable } from 'svelte/store';
 import { PrimaryMeeting } from '$lib/course-activities/primaryMeeting';
 import { goto } from '$app/navigation';
 import { nanoid } from 'nanoid';
+import { base } from '$app/paths';
 
 const storeVersion = 'v2';
 
@@ -58,7 +59,7 @@ export const deleteCourse = (i: number) => {
 
 export const openCourse = (i: number) => {
 	activeCourse.set(i);
-	goto('/');
+	goto(base + '/');
 };
 
 export const exportCourseData = (course: false | number = false) => {

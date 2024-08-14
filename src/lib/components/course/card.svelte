@@ -26,6 +26,7 @@
 	import CardHeader from './cardHeader.svelte';
 	import ManageActivities from '../add-activity/manageActivities.svelte';
 	import { goto } from '$app/navigation';
+	import { base } from '$app/paths';
 
 	export let course: Course | undefined = undefined;
 	export let courseIndex: number | undefined = undefined;
@@ -137,7 +138,7 @@
 						} else {
 							if (courseIndex !== undefined) $activeCourse = courseIndex;
 						}
-						goto('/');
+						goto(base + '/');
 						isEditing = false;
 					}}
 				>
