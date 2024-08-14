@@ -10,6 +10,7 @@
 	import { Course } from '$lib/course';
 	import { Frequency } from '$lib/course-activities/genericActivity';
 	import { writable as storedWritable } from 'svelte-local-storage-store';
+	import { base } from '$app/paths';
 
 	const resetPrompt = () => {
 		if (
@@ -43,7 +44,7 @@
 </script>
 
 <svelte:head>
-	<link rel="icon" href="/favicon.svg" />
+	<link rel="icon" href="{base}/favicon.svg" />
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 	<link

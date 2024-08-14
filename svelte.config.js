@@ -15,8 +15,10 @@ const config = {
 		adapter: adapter({}),
 		alias: {
 			'@': './src'
+		},
+		paths: {
+			base: process.env.BASE_URL || ''
 		}
 	}
 };
-
 export default config;
