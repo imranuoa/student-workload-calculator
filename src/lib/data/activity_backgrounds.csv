@@ -1,0 +1,80 @@
+activity,background
+Lecture,"<p class='text-xs text-justify text-gray-500'>This component tracks the number of hours students are expected to attend meetings (virtual or face-to-face) with the entire class. Typically, this type of meeting is recorded in a student information system as the “primary” meeting of a course, and instructional approaches may vary widely (e.g., lecture, seminar, active learning session of a flipped classroom delivery). The Primary Class Meeting component is synchronous and categorized as scheduled (S).</p>
+<p></p>
+
+<p class='text-xs text-justify text-gray-500'>Note that you are able to associate some components (e.g., synchronous discussions and scheduled writing assignments, exams, and quizzes) with the Primary Class Meeting in order to add a preparation time in association with those activities.</p>
+
+
+<h6>Calculations</h6>
+<ul class='list-disc list-inside pl-6 text-xs text-justify text-gray-500'>
+<li class='-indent-4 pl-4'>The number of hours per week is calculated by first multiplying the number of Meetings per Week by Meeting Length (Hours) and then dividing that product by the number of weeks.</li>
+<li class='-indent-4 pl-4 mt-2'>The number of hours per term is calculated by multiplying the number of Meetings per Week by Meeting Length (Hours).</li></ul>
+<p class='italic text-xs'>[Source: <a class='underline decoration-sky-500' href='https://ubcoapps.elearning.ubc.ca/time-estimator'>Student Course Time Estimator]</a></p>
+"
+Creative Practice Sessions,"<p class='text-xs'>This component is focused on Creative Practice Sessions, which include activities that fall within the creative arts. This component can have scheduled and independent activities. When the scheduled box is checked (the default state), the Preparation per Session portion is added to scheduled hours; preparation and post-session inputs are added to independent hours. If the check is removed, all hours are assigned to the independent category and reflected in workload summary accordingly.</p>
+<p class='italic text-xs'>[Source: <a class='underline text-xs' href='https://ubcoapps.elearning.ubc.ca/time-estimator'>Student Course Time Estimator]</a></p>"
+Discussion,"<p class='text-xs'>This component is focused on discussions, which can be either be held in an asynchronous (typically online) or synchronous (within a live session) manner. Note that there is a pull down that allows you to select the format, and the options will change accordingly. If both a relevant, you can add this component more than once.</p>
+
+<h6>Asynchronous (I)</h6>
+<p class='text-xs'>Asynchronous discussions are designed to allow you to set the number of original posts (something a student has to research and post on their own) and the minimum number of replies to other posts. This parameter is challenging to quantify, as typically you expect that students will have to respond to responses on their own post, so you may want to build that into the expectation of numbers. Note that you can set the length parameter for both of these.</p>
+<ul class='list-disc list-inside pl-6 text-xs text-justify text-gray-500'>
+<li>By default, the average (Avg.) post length is based on the Reflection/Narrative, Minimal Drafting writing assignment estimate of 250 words per hour.</li>
+<li>By default, the average (Avg.) response length is based on half of a Reflection/Narrative, Minimal Drafting writing assignment estimate of 125 words per half an hour.</li>
+<li>You are able to change these averages using the Avg post length and Avg response length numeric fields.</li>
+</ul>
+<p class='text-xs'>The number of hours will be assigned to the independent category and reflected in workload summary accordingly.</p>
+
+<h6>Synchronous (S)</h6>
+<ul class='list-disc list-inside pl-6 text-xs text-justify text-gray-500'>
+<li>The Synchronous Discussion is associated with the Primary Class Meeting component and is designed to allow an instructor to take into account the preparation time required of an in class discussion.</li>
+<li>The only time that will be added to the total will be a preparation time, classified as independent.</li>
+</ul> <p class='italic text-xs'>[Source: <a class='underline decoration-sky-500' href='https://ubcoapps.elearning.ubc.ca/time-estimator'>Student Course Time Estimator]</a></p>"
+Exam,"<p class='text-xs'>This component is focused on major assessments, which can be either be held in an asynchronous (typically online) or synchronous (within a Primary Class Meeting) manner.</p>
+
+<p class='text-xs'>Note that there is a pull down that allows you to select the format, and the options will change accordingly. If both are relevant, we suggest you add this component twice.</p>
+
+<h6>Scheduled Exam</h6>
+<ul class='list-disc list-inside pl-6 text-xs text-justify text-gray-500'>
+<li>The Scheduled Exam is associated with the Primary Class Meeting component and is designed to allow an instructor to take into account the preparation time required to prepare for the exam.</li>
+<li>The only time that will be added to the total will be a preparation time, classified as independent.</li></ul>
+<h6>Independent Exam</h6>
+<ul class='list-disc list-inside pl-6 text-xs text-justify text-gray-500'><li>The Independent Exam is one that is taken at a time of the student’s discretion, usually within a set date and time constraint. Both preparation time and exam time are assigned to the independent category and reflected in workload summary accordingly.</li></ul>
+<p class='italic text-xs'>[Source: <a class='underline decoration-sky-500' href='https://ubcoapps.elearning.ubc.ca/time-estimator'>Student Course Time Estimator]</a></p>"
+Final Exam,"<p class='text-xs'>This is the Final Exam component where you can choose to either include your exam within your allocated class weeks or independent of them. The Final Exam hours will be tracked seperately so that you are easily able to differentiate between the two.</p>
+<p class='italic text-xs'>[Source: <a class='underline decoration-sky-500' href='https://ubcoapps.elearning.ubc.ca/time-estimator'>Student Course Time Estimator]</a></p>"
+Lab,"<p class='text-xs'>This component is focused on the Laboratory portion of courses. Labs can have scheduled and independent activities. When the scheduled box is checked (the default state), the hours per lab portion is added to scheduled hours; preparation and post-lab inputs are added to independent hours. If the check is removed, all hours are assigned to the independent category and reflected in workload summary accordingly.</p>
+<p class='italic text-xs'>[Source: <a class='underline decoration-sky-500' href='https://ubcoapps.elearning.ubc.ca/time-estimator'>Student Course Time Estimator]</a></p>"
+Practical Experience,"<p class='text-xs'>Please visit below source for details</p>
+<p class='italic text-xs'>[Source: <a class='underline decoration-sky-500' href='https://ubcoapps.elearning.ubc.ca/time-estimator'>Student Course Time Estimator]</a></p>"
+Quiz,"<p class='text-xs'>This component is focused on quizzes, which can be either be held in an asynchronous (typically online) or synchronous (within a Primary Class Meeting) manner.</p>
+
+<p class='text-xs'>Note that there is a pull down that allows you to select the format, and the options will change accordingly. If both are relevant, you can add this component more than once.</p>
+
+<h6>Scheduled Quiz</h6>
+<ul class='list-disc list-inside pl-6 text-xs text-justify text-gray-500'>
+<li>The Scheduled Quiz is associated with the Primary Class Meeting component and is designed to allow an instructor to take into account the preparation time required to prepare for the quiz.</li>
+<li>The only time that will be added to the total will be a preparation time, classified as independent.</li></ul>
+<h6>Independent Quiz</h6>
+<ul class='list-disc list-inside pl-6 text-xs text-justify text-gray-500'><li>
+The Independent Quiz is one that is taken at a time of the student’s discretion, usually within a set date and time constraint. Both preparation time and quiz time are assigned to the independent category and reflected in workload summary accordingly.</li></ul>
+<p class='italic text-xs'>[Source: <a class='underline decoration-sky-500' href='https://ubcoapps.elearning.ubc.ca/time-estimator'>Student Course Time Estimator]</a></p>"
+Reading Assignment,"<p class='text-xs'>This component is focused on independent readings such as assigned textbook readings, readings of short stories, novel excerpts, etc. The hours from this component will be assigned to the independent category and reflected in workload summary accordingly.</p>
+
+<p class='text-xs'>This component allows you to set the number of Pages per Week a student is expected to read, and uses Page Density, Difficulty and Purpose as variables to calculate the length of time.</p>
+
+<p class='text-xs'>The table below shows how the calculations are derived, and has been cited from the work of Barre, Brown, and Esarey (See <a class='underline decoration-sky-500' href='https://cte.rice.edu/workload#howcalculated'>Estimation details</a> ). Note that the rows in the table that are yellow are the ones with the highest level of certainty.</p>
+<p class='italic text-xs'>[Source: <a class='underline decoration-sky-500' href='https://ubcoapps.elearning.ubc.ca/time-estimator'>Student Course Time Estimator]</a></p>"
+Tutorial,"<p class='text-xs'>This component is focused on the tutorial portion of courses; these sessions are commonly focused on providing students with an opportunity to practice and/or reinforce learning. The Tutorial component has both scheduled and independent components. When the scheduled box is checked (the default state), the hours per tutorial portion is added to scheduled hours; and the preparation time is added to independent hours. If the check is removed, all hours are assigned to the independent category and reflected in workload summary accordingly.</p>
+<p class='italic text-xs'>[Source: <a class='underline decoration-sky-500' href='https://ubcoapps.elearning.ubc.ca/time-estimator'>Student Course Time Estimator]</a></p>"
+Video / Podcast,"<p class='text-xs'>This component accommodates the time involved in watching or listening to media (e.g., recorded lectures, assigned films). The hours from this component are assigned to the independent category and reflected in workload summary accordingly.</p>
+<p class='italic text-xs'>[Source: <a class='underline decoration-sky-500' href='https://ubcoapps.elearning.ubc.ca/time-estimator'>Student Course Time Estimator]</a></p>"
+Writing Assignment,"<p class='text-xs'>This component is focused on writing assignments or activities such as essays, creating short stories, and research papers. A writing assignment may be independent or scheduled (for in-class writing assignments).</p>
+
+<p class='text-xs'>The in-class writing assignment option allows you to set the number of assignments, but will only add the preparation time component to the time estimate totals. The writing itself will be accommodated in the live class meeting time.</p>
+
+<p class='text-xs'>The independent writing assignment component allows you to set the number of assignments and uses the number of Pages per Assignment, Genre and Drafting as variables to calculate the length of time it will take for that assignment to be completed.</p>
+
+<p class='text-xs'>The Table below shows how the calculations are derived, and has been cited from the work of Barre, Brown, and Esarey (See <a class='underline decoration-sky-500' href='https://cte.rice.edu/workload#howcalculated'>Estimation details</a> ). Note that the rows in the table that are yellow are the ones with the highest level of certainty.</p>
+<p class='italic text-xs'>[Source: <a class='underline decoration-sky-500' href='https://ubcoapps.elearning.ubc.ca/time-estimator'>Student Course Time Estimator]</a></p>"
+Custom Assignment,"<p class='text-xs'>This component may be used for assignments that fall outside of the categories above such as group work, projects, and discipline-specific assignments. The hours in this component can be assigned to either the scheduled or independent categories based on whether the scheduled checkbox is checked. When the scheduled box is checked (the default state), the hours are assigned to the scheduled totals. If the check is removed, all hours are assigned to the independent category and reflected in workload summary accordingly. Note that you may optionally add preparation time (e.g., for group meetings) and post-assignment time (e.g., a reflection).</p>
+<p class='italic text-xs'>[Source: <a class='underline decoration-sky-500' href='https://ubcoapps.elearning.ubc.ca/time-estimator'>Student Course Time Estimator]</a></p>"

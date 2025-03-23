@@ -56,11 +56,14 @@
 <div class="wrapper">
 	<div class="layout">
 		<header>
-			<Logo score={$totals?.perWeek.total} {isDanger} />
-			<h1>
-				Student Workload
-				<br />Calculator
-			</h1>
+			
+				<Logo score={$totals?.perWeek.total} {isDanger} />
+				
+				<h1 class="text-left font-display ">
+					Student Workload
+					<br />Calculator
+				</h1>
+							
 			{#if $showNotice}
 				<div class="notice-wrapper" transition:slide>
 					<div class="notice">
@@ -85,16 +88,74 @@
 								Hide
 							</button>
 						</div>
+						
+						
 					</div>
 				</div>
 			{/if}
+			
 		</header>
+
+		
+		
 		<div class="page">
 			<!-- {#if !$hasLoaded}
 				<div class="absolute top-0 left-0 w-full h-full text-center flex justify-center items-center">
 					<BarLoader size="60" color="#000" unit="px" />
 				</div>
 			{/if} -->
+			
+			<div class="grid grid-cols-2 gap-1">
+				<div class="flex flex-col bg-white border shadow-sm   dark:shadow-blue-700/10">
+					<div class="bg-gray-100   py-1 px-1 md:py-[2px] md:px-4 bg-blue-900 dark:border-blue-200">
+						
+					  </div>
+					
+					<div class="p-4 md:p-5">
+						<h3 class="text-lg font-bold text-gray-800 dark:text-black">
+							About this tool
+						  </h3>
+						  <div class="uni-header"></div>
+						<p class="mt-2 text-black text-justify">
+							This planning tool is for instructors who wish to estimate the expected student time commitment in a course based on the assigned learning activities. The tool is designed to be used for courses that represent the blended learning spectrum from face-to-face to fully online. Based on the input provided, the tool calculates the total time commitment expected, and allocates activities into scheduled (set by the institution, typically live meetings) and independent (at the discretion of the student within the parameters set by course deadlines) activities.
+						</p>
+						
+					  </div>
+				</div>
+				<div class="flex flex-col bg-white border shadow-sm  dark:border-orage-700 dark:shadow-orage-700/70">
+					<div class="bg-gray-100   py-1 px-1 md:py-[2px] md:px-4 bg-blue-900 dark:border-blue-200">
+						
+					</div>
+					
+					<div class="p-4 md:p-5">
+						<h3 class="text-lg font-bold text-gray-800 dark:text-black">
+							Instructions
+						  </h3>
+						  <div class="uni-header"></div>
+						<ol type="1" class="list-decimal mt-2 px-9 marker:text-black list-disc ps-5 space-y-2 text-sm text-black dark:text-black text-left">
+							<li>
+								Set your course duration (in weeks). Once any component has been added to the Workload, the course duration can not be changed.
+							</li>
+							<li>
+								Add a course component by selecting the radio button next to the component, adjusting the provided options and clicking on “Add to Workload Summary”. Note that information about each component will appear in Background panel.
+							</li>
+							<li>
+								Once a component is added, the “Workload Summary” panel will document the components and provide a summary.
+							</li>
+							<li>
+								Note that items can be removed by clicking on the x next to the component in the summary.
+							</li>
+							<li>
+								Keep adding components until complete.
+							</li>
+							<li>
+								Download a detailed workload summary by using the button provided.
+							</li>
+						  </ol>
+						
+					  </div>
+				</div>
+			</div>
 			<slot />
 		</div>
 		<div class="footer-push" />

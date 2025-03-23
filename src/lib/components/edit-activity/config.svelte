@@ -6,8 +6,13 @@
 	import type { Course } from '$lib/course';
 	import { durationToString } from '$lib/serialize';
 	import { getActivityClass } from '$lib/activities';
+	import Information from 'svelte-material-icons/Information.svelte';
+	import { onMount } from 'svelte';
+    import { data, loadCsvData, type CsvRow } from '$lib/data/csvActivityBackgrounds';
 
+	
 	export let course: Course;
+	let showInfo = false;
 	$: openActivity = course.openActivity;
 	$: activities = course.activities;
 	$: activity = $activities && $openActivity !== undefined ? $activities[$openActivity] : undefined;
@@ -38,9 +43,18 @@
 					formatted: durationToString($results.postActivityHoursPer, $results.occurences),
 					label: 'of time post activity'
 				}
+			
 		  ]
 		: [];
 	$: filteredList = resultsList.filter((item) => item.value > 0);
+
+	//Code related to Show Info for each activity
+
+	console.log($data);
+
+	onMount(async () => {
+    	await loadCsvData();
+  	});
 </script>
 
 {#if activity}
@@ -51,6 +65,32 @@
 					<svelte:component this={getActivityClass(activity).icon} />
 				</span>
 				{getActivityClass(activity).label}: {$instanceName}
+				
+				<button on:click={() => showInfo = !showInfo} class="text-uni-blue" ><Information  size="30"/></button>
+				{#if showInfo}
+					<div class="info-card">
+						<p>Background of {$instanceName}</p>
+						<!-- Add more details here based on the instance name -->
+						{#if $data.length > 0}
+							<div>
+															
+								{#each $data as item (item)}
+									{#if item.activity.trim().toUpperCase().normalize("NFC") === $instanceName.trim().toUpperCase().normalize("NFC") }
+										<div class="uni-card space-y-4  text-justify text-gray-500">{@html item.background.trim()}</div>
+									{/if}
+									
+								{/each}
+								
+							</div>
+						{:else if $data.length === 0}
+								<p>Loading data...</p>
+						{:else}
+								<p>Error loading data</p>
+						{/if}
+
+
+					</div>
+				{/if}
 			</h2>
 			<div>
 				{#each activity.form as formElem}
@@ -102,4 +142,11 @@
 			@apply inline-block h-full;
 		}
 	}
+
+	list-outside {
+		@apply list-outside space-x-2 ;
+	}
+
+
+
 </style>

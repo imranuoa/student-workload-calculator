@@ -5,10 +5,13 @@
 	import { propertyStore } from 'svelte-writable-derived';
 	import { cardState } from './card';
 	import autoAnimate from '$lib/autoAnimate';
+	import { error } from '@sveltejs/kit';
+	import AlertCircle from 'svelte-material-icons/AlertCircle.svelte';
 
 	export let course: Course;
 	export let state: cardState;
-
+	export let errorMessage: string = ''; 
+	
 	$: meta = course?.meta;
 	$: activities = course?.activities;
 	$: totals = $activities && Course.getTotal($activities);
@@ -27,6 +30,10 @@
 		e.stopPropagation();
 		return false;
 	};
+
+	console.log(errorMessage);
+
+
 </script>
 
 {#if state === cardState.view}
@@ -43,16 +50,33 @@
 			if (state === cardState.edit) toggleState(e);
 		}}
 	>
+	
 		{#if state === cardState.editExpanded || state === cardState.create}
-			<label class="coursename" for="courseEdit-{course.id}-courseName">
-				<span class="prefix">Course:</span>
-				<input
+			<label class="coursename"  class:error={errorMessage}  for="courseEdit-{course.id}-courseName">
+				<div class="error">
+					{#if errorMessage}
+						<div class="flex justify-normal">														
+							<p class="w-30 mr-2"><AlertCircle size="30" /></p>
+							<p>{errorMessage}</p>
+						</div>
+					{/if}
+				</div>
+					
+				
+				<div class="input-wrapper">
+					<span class="prefix">Course:</span>
+					<input
 					type="text"
-					bind:value={$meta.name}
+					bind:value={$meta.name} 
+					
 					id="courseEdit-{course.id}-courseName"
 					placeholder="Title"
+					aria-invalid={!!errorMessage}
+            		aria-describedby="error-{course.id}"
 				/>
-				<!-- <span class="suffix">✐</span> -->
+				</div>
+				
+				
 			</label>
 		{:else}
 			<h3 class="title">{$meta.name}</h3>
@@ -84,21 +108,61 @@
 		}
 	}
 	.header-block {
-		@apply bg-uni-blue w-full text-white text-left font-bold flex items-center gap-3 z-30 relative;
+		@apply bg-uni-blue w-full text-white text-left font-bold flex flex-col items-center gap-3 z-30 relative;
 		padding: 0 var(--card-padding);
 		@apply py-4;
+		.error{
+			@apply text-red-300 text-lg;
+		}
 		.title {
 			@apply w-full m-0 text-2xl font-semibold font-display italic;
 		}
 		.coursename {
-			@apply text-2xl font-semibold font-display italic flex items-center gap-2 border-b-2 border-gray-200;
+			@apply text-2xl font-semibold font-display italic flex flex-col items-center gap-2 border-b-2 border-gray-200;
 			.prefix {
-				@apply block opacity-50;
+				@apply block opacity-50 flex flex-row ;
 			}
 			input {
 				@apply flex-grow border-0 p-0 px-2 text-2xl bg-white bg-opacity-0 text-white placeholder-white placeholder-opacity-50 w-full rounded focus:ring-0 transition focus:bg-opacity-10 focus:placeholder-transparent;
 			}
-		}
+
+			/* @apply border-b-2 border-gray-200; */
+        
+			 @apply text-2xl font-semibold font-display italic flex items-center gap-2; 
+    
+    /* &.error {
+        .input-wrapper {
+            @apply border-b-2 border-red-400;  Subtler red border 
+        }
+        
+        .error-hint {
+            @apply text-red-300 text-sm flex items-center gap-1 mt-1;
+        }
+        
+        .error-icon {
+            @apply w-4 h-4;   Smaller icon 
+        }
+    }
+    */
+    .input-wrapper {
+        @apply flex   pb-1;
+    }
+     
+    /* input {
+        /* Existing input styles 
+        @apply flex-grow border-0 p-0 px-2 text-2xl bg-transparent 
+               placeholder-white placeholder-opacity-50 
+               focus:ring-0 focus:bg-opacity-10;
+    } */
+
+			
+            
+           
+
+
+        }
+ 
+						
 		.header-toggle {
 			@apply text-3xl transition transform;
 			&.expanded {

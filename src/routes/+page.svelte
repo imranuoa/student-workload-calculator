@@ -86,6 +86,7 @@
 					type="text"
 					bind:value={$activeCourseMeta.name}
 					placeholder="Course Name"
+					readonly
 				/>
 			</div>
 		</div>

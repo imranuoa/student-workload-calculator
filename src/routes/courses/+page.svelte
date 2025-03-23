@@ -30,7 +30,7 @@
 	<div class="empty">
 		<div class="onboarding">
 			<h2 class="uni-header">Student Workload Calculator Dashboard</h2>
-			<p>
+			<!-- <p>
 				This planning tool is for instructors who wish to estimate the expected student time
 				commitment in a course based on the assigned learning activities. The tool is designed to be
 				used for courses that represent the blended learning spectrum from face-to-face to fully
@@ -38,7 +38,7 @@
 				and allocates activities into scheduled (set by the institution, typically live meetings)
 				and independent (at the discretion of the student within the parameters set by course
 				deadlines) activities.
-			</p>
+			</p> -->
 			<p>
 				When you are ready to get started, use the “Create Course” button to begin estimating your
 				course workload.
@@ -68,7 +68,7 @@
 		}
 	}
 	.empty {
-		@apply flex flex-row flex-wrap justify-center items-center content-start gap-10;
+		@apply flex flex-row flex-wrap justify-center items-center content-start gap-10 pt-5;
 		.onboarding {
 			@apply w-96 max-w-screen-sm;
 			@apply grow self-start;

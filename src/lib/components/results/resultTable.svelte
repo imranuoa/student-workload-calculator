@@ -44,6 +44,22 @@
 		});
 	};
 
+	// Debugging output for the console to see the data - Imran
+	console.log('Result Table', $activities.map((a) => {
+			const derived = get(a.derivedCalculated);
+			return {
+				name: get(a.instanceName),
+				results: get(a.results),
+				gradeWorth: get(a.gradeWorth),
+				derived: {
+					perWeekI: derived.perWeekI,
+					perWeekS: derived.perWeekS,
+					perCourseI: derived.perCourseI,
+					perCourseS: derived.perCourseS
+				}
+			};
+		}));
+
 	let downloadJSON: Function;
 	let downloadXLSX: Function;
 	onMount(() => {

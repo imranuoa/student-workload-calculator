@@ -132,7 +132,12 @@ export class Course {
 				};
 			}
 		);
+
+		
 	}
+
+	
+
 	static getGradeTotals(activities: Activity[]) {
 		return derived(
 			activities.map((a) => a.gradeWorth),

@@ -8,6 +8,8 @@
 	import TableArrowDown from 'svelte-material-icons/TableArrowDown.svelte';
 	import FileExportOutline from 'svelte-material-icons/FileExportOutline.svelte';
 	import Close from 'svelte-material-icons/Close.svelte';
+	import Creation from 'svelte-material-icons/Creation.svelte';
+	import Upload from 'svelte-material-icons/Upload.svelte';
 	import { Course, downloadJSON, downloadCSV, getCourseData, type courseMeta } from '$lib/course';
 	import type { Activity } from '$lib/course-activities/genericActivity';
 	import type { Readable } from 'svelte/store';
@@ -27,12 +29,15 @@
 	import ManageActivities from '../add-activity/manageActivities.svelte';
 	import { goto } from '$app/navigation';
 	import { base } from '$app/paths';
+	
+	
 
 	export let course: Course | undefined = undefined;
 	export let courseIndex: number | undefined = undefined;
 	export let state: cardState = course ? cardState.view : cardState.blank;
 
 	let isEditing = false;
+	$: errorMessage = "";
 
 	$: meta = course?.meta;
 	$: activities = course?.activities;
@@ -53,6 +58,23 @@
 		importCourseData(content);
 		target.value = '';
 	};
+
+
+	//Course name validation
+
+	const validateCourseName = (name: string): boolean => {
+        if (name === "Your Course" || name.trim() === "") {
+            errorMessage = "Please enter the course name.";
+            return false;
+        } else if (name.length < 5) {
+            errorMessage = "The course name must be at least 5 characters long.";
+            return false;
+        } else {
+            errorMessage = "";
+            return true;
+        }
+    };
+
 </script>
 
 <div
@@ -64,7 +86,7 @@
 	use:autoAnimate
 >
 	{#if data.course}
-		<CardHeader course={data.course} bind:state />
+		<CardHeader course={data.course} bind:state errorMessage={errorMessage}/>
 		{#if state !== cardState.edit}
 			<div class="stats">
 				<Duration course={data.course} bind:state />
@@ -129,17 +151,22 @@
 					Delete
 				</button>
 			{:else if state === cardState.create}
+				 <!-- Display error message if it exists -->
+				
 				<button
 					class="btn btn-md btn-primary btn-icon"
 					on:click={() => {
-						if (!isEditing) {
-							console.log('add course', course);
-							course && addCourse(course);
-						} else {
-							if (courseIndex !== undefined) $activeCourse = courseIndex;
-						}
-						goto(base + '/');
-						isEditing = false;
+						if (validateCourseName($meta.name)) {
+								if (!isEditing) {
+									console.log('add course', course);
+									course && addCourse(course);
+								} else {
+									if (courseIndex !== undefined) $activeCourse = courseIndex;
+								}
+								goto(base + '/');
+								isEditing = false;
+							}
+						
 					}}
 				>
 					<div class="icon">
@@ -216,11 +243,18 @@
 					createCourse();
 				}}
 			>
-				<h3>Create course</h3>
+			<div class="icon-text">
+				
+				<h3> <Creation/></h3><h3> Create course</h3>
+			</div>
+			
 			</button>
 			<!-- svelte-ignore a11y-invalid-attribute -->
+			<div class="icon-text">
+			<p>Or</p>
+			<Upload  />
 			<p>
-				Or <label class="link">
+				 <label class="link">
 					upload a Workload Calculator file
 					<input
 						class="hidden"
@@ -230,6 +264,7 @@
 					/>
 				</label>
 			</p>
+			</div>
 		</div>
 	{/if}
 </div>
@@ -295,4 +330,12 @@
 		padding: 0 var(--card-padding);
 		@apply w-full max-w-sm max-h-full h-72 flex flex-col items-center justify-center;
 	}
+
+	.icon-text {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem; /* Adjust the gap between the icon and the text as needed */
+    }
+
+   
 </style>
