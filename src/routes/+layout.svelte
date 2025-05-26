@@ -14,6 +14,9 @@
 	import FileUpload from '@/lib/components/file-operations/fileUpload.svelte';
 	import { addCourse, deleteCourse, importCourseData, openCourse } from '$lib/../store';
 
+
+	// This can be false if you're using a fallback (i.e. SPA mode)
+	export const prerender = true;
 	const resetPrompt = () => {
 		if (
 			confirm(
@@ -70,7 +73,7 @@
 				>
 					<!-- Logo + Title -->
 					<div>
-						<img src="{base}/Group 19.svg" alt="Logo" class="mb-10 mt-4" />
+						<img src="{base}/Learning and TDT - logo.svg" alt="Logo" class="mb-10 mt-4" />
 						<h1 class="text-5xl font-bold">Student Workload Calculator</h1>
 					</div>
 					<!-- Illustration -->
@@ -131,7 +134,7 @@
 		</div>
 		<!-- <div class="footer-push" /> -->
 	</div>
-	{#if $page.url.pathname.startsWith('/courses')}
+	{#if $page.url.pathname.startsWith('/student-workload-calculator/courses')}
 			<div class="floating-buttons">
 				<div
 					class="reset-button  bg-white border border-green-600 text-green-600 px-4 py-2 rounded"

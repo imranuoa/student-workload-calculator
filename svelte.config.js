@@ -12,37 +12,22 @@ const config = {
 	],
 
 	kit: {
-		adapter: adapter({}),
+		adapter: adapter({
+			pages: 'build',
+			assets: 'build',
+			fallback: undefined,
+			precompress: false,
+			strict: true
+		}),
 		alias: {
 			'@': './src'
 		},
 		paths: {
-			base: process.env.BASE_URL || ''
+			// base: process.env.BASE_URL || ''
+			base: process.env.NODE_ENV === 'production' ? '/student-workload-calculator' : '/student-workload-calculator'
 		}
 	}
 };
 export default config;
 
 
-// import adapter from '@sveltejs/adapter-vercel';
-// import preprocess from 'svelte-preprocess';
-
-// /** @type {import('@sveltejs/kit').Config} */
-// const config = {
-//     preprocess: [
-//         preprocess({
-//             postcss: true
-//         })
-//     ],
-
-//     kit: {
-//         adapter: adapter(),
-//         alias: {
-//             '@': './src'
-//         },
-//         paths: {
-//             base: process.env.BASE_URL || ''
-//         }
-//     }
-// };
-// export default config;
