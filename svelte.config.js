@@ -23,8 +23,8 @@ const config = {
 			'@': './src'
 		},
 		paths: {
-			// base: process.env.BASE_URL || ''
-			base: process.env.NODE_ENV === 'production' ? '/student-workload-calculator' : '/student-workload-calculator'
+			base: process.env.BASE_URL || ''
+			// base: process.env.NODE_ENV === 'production' ? '/student-workload-calculator' : '/student-workload-calculator'
 		}
 	}
 };

@@ -134,7 +134,7 @@
 		</div>
 		<!-- <div class="footer-push" /> -->
 	</div>
-	{#if $page.url.pathname.startsWith('/student-workload-calculator/courses')}
+	{#if $page.url.pathname.startsWith('/courses')}
 			<div class="floating-buttons">
 				<div
 					class="reset-button  bg-white border border-green-600 text-green-600 px-4 py-2 rounded"
