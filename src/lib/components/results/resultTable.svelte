@@ -162,7 +162,7 @@
 	table {
 		@apply w-full border-collapse;
 		tr.head {
-			@apply h-10 bg-slate-700 text-white shadow;
+			@apply h-10 bg-lime-900 text-white shadow;
 			th {
 				@apply border-l border-slate-600 px-3;
 			}

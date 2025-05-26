@@ -11,6 +11,8 @@
 	import { Frequency } from '$lib/course-activities/genericActivity';
 	import { writable as storedWritable } from 'svelte-local-storage-store';
 	import { base } from '$app/paths';
+	import FileUpload from '@/lib/components/file-operations/fileUpload.svelte';
+	import { addCourse, deleteCourse, importCourseData, openCourse } from '$lib/../store';
 
 	const resetPrompt = () => {
 		if (
@@ -41,6 +43,11 @@
 
 	const noticeName = 'beta-v1.0.0';
 	const showNotice = storedWritable(`showNotice-${noticeName}`, true);
+
+	// const handleFileUpload = (content: string) => {
+	// 	console.log('File content:', content);
+	//     importCourseData(content); // Handle the uploaded file content
+	// };
 </script>
 
 <svelte:head>
@@ -55,138 +62,167 @@
 
 <div class="wrapper">
 	<div class="layout">
-		<header>
-			
-				<Logo score={$totals?.perWeek.total} {isDanger} />
-				
-				<h1 class="text-left font-display ">
-					Student Workload
-					<br />Calculator
-				</h1>
-							
-			{#if $showNotice}
-				<div class="notice-wrapper" transition:slide>
-					<div class="notice">
-						<span class="notice-header">Heads up! You're using a new tool 🛠️</span>
-						<span class="note">
-							This tool is in open beta and is available for general testing. Please report any bugs
-							or issues to <a
-								href="https://uoaprod.service-now.com/sp?id=sc_cat_item&table=sc_cat_item&sys_id=ce73ca981bfb65147f9952c91d4bcb32"
-								>Ranga Auaha Ako</a
-							>.
-						</span>
-						<div class="action">
-							<button
-								class="btn btn-icon btn-primary notice-close"
-								on:click={() => {
-									$showNotice = false;
-								}}
-							>
-								<div class="icon">
-									<Check />
-								</div>
-								Hide
-							</button>
-						</div>
-						
-						
+		<div class="layout grid grid-cols-[450px_1fr] h-screen">
+			<div class="flex min-h-screen">
+				<!-- Left Panel -->
+				<aside
+					class="left-panel aside-gradient bg-green-900 text-white p-6 flex flex-col justify-between"
+				>
+					<!-- Logo + Title -->
+					<div>
+						<img src="{base}/Group 19.svg" alt="Logo" class="mb-10 mt-4" />
+						<h1 class="text-5xl font-bold">Student Workload Calculator</h1>
 					</div>
-				</div>
-			{/if}
-			
-		</header>
+					<!-- Illustration -->
+					<img
+						src="{base}/calculator_logo.svg"
+						alt="Calculator Illustration"
+						class="self-center mt-40"
+					/>
+					<div>
+						Created by <a
+							href="https://uoaprod.service-now.com/sp?id=sc_cat_item&table=sc_cat_item&sys_id=ce73ca981bfb65147f9952c91d4bcb32"
+							target="_blank"
+							rel="noopener noreferrer">Ranga Auaha Ako</a
+						>
+					</div>
+				</aside>
+			</div>
 
-		
-		
-		<div class="page">
-			<!-- {#if !$hasLoaded}
-				<div class="absolute top-0 left-0 w-full h-full text-center flex justify-center items-center">
-					<BarLoader size="60" color="#000" unit="px" />
-				</div>
-			{/if} -->
-			
-			<div class="grid grid-cols-2 gap-1">
-				<div class="flex flex-col bg-white border shadow-sm   dark:shadow-blue-700/10">
-					<div class="bg-gray-100   py-1 px-1 md:py-[2px] md:px-4 bg-blue-900 dark:border-blue-200">
-						
-					  </div>
-					
-					<div class="p-4 md:p-5">
-						<h3 class="text-lg font-bold text-gray-800 dark:text-black">
-							About this tool
-						  </h3>
-						  <div class="uni-header"></div>
-						<p class="mt-2 text-black text-justify">
-							This planning tool is for instructors who wish to estimate the expected student time commitment in a course based on the assigned learning activities. The tool is designed to be used for courses that represent the blended learning spectrum from face-to-face to fully online. Based on the input provided, the tool calculates the total time commitment expected, and allocates activities into scheduled (set by the institution, typically live meetings) and independent (at the discretion of the student within the parameters set by course deadlines) activities.
-						</p>
-						
-					  </div>
-				</div>
-				<div class="flex flex-col bg-white border shadow-sm  dark:border-orage-700 dark:shadow-orage-700/70">
-					<div class="bg-gray-100   py-1 px-1 md:py-[2px] md:px-4 bg-blue-900 dark:border-blue-200">
-						
+			<!-- Right Panel -->
+			<main class="right-panel bg-white p-10 flex flex-col justify-between">
+				<!-- Dashboard Header and Description -->
+				<section>
+					<h2 class="text-3xl font-bold text-green-800 mb-4">Dashboard</h2>
+
+					<p class="text-gray-600 mb-6">
+						<slot />
+					</p>
+
+					<!-- <div class="flex w-full justify-center mb-10 mt-20">
+					<div class="flex w-full max-w-full items-center px-4">
+						<div class="flex-grow border-t border-gray-300"></div>
+						<span class="mx-4 text-sm text-gray-500">or</span>
+						<div class="flex-grow border-t border-gray-300"></div>
 					</div>
+				</div>
+
+
+
+				<div class="border-2 border-dashed border-green-400 p-10 text-center">
+					<p>Upload a workload <strong>calculator file</strong></p>
+					<div class="mt-4">
+					<FileUpload onFileUpload={handleFileUpload} />
 					
-					<div class="p-4 md:p-5">
-						<h3 class="text-lg font-bold text-gray-800 dark:text-black">
-							Instructions
-						  </h3>
-						  <div class="uni-header"></div>
-						<ol type="1" class="list-decimal mt-2 px-9 marker:text-black list-disc ps-5 space-y-2 text-sm text-black dark:text-black text-left">
-							<li>
-								Set your course duration (in weeks). Once any component has been added to the Workload, the course duration can not be changed.
-							</li>
-							<li>
-								Add a course component by selecting the radio button next to the component, adjusting the provided options and clicking on “Add to Workload Summary”. Note that information about each component will appear in Background panel.
-							</li>
-							<li>
-								Once a component is added, the “Workload Summary” panel will document the components and provide a summary.
-							</li>
-							<li>
-								Note that items can be removed by clicking on the x next to the component in the summary.
-							</li>
-							<li>
-								Keep adding components until complete.
-							</li>
-							<li>
-								Download a detailed workload summary by using the button provided.
-							</li>
-						  </ol>
-						
-					  </div>
+					</div>
+					<p class="text-xs text-gray-500 mt-2">Supported file format: CSV. Max size: 20MB</p>
+				</div> -->
+				</section>
+
+				<!-- Bottom Buttons -->
+				<!-- <div class="flex justify-between mt-10">
+				<button class="text-gray-500">Cancel</button>
+				<div class="reset-data flex gap-4">
+					<button class=" bg-white border border-green-600 text-green-600 px-4 py-2 rounded" on:click={() => resetPrompt()}>Reset Data</button>
+					<button class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded" on:click={() => exportCourseData()}>Export Data</button>
+				</div>
+				</div> -->
+			</main>
+		</div>
+		<!-- <div class="footer-push" /> -->
+	</div>
+	{#if $page.url.pathname.startsWith('/courses')}
+			<div class="floating-buttons">
+				<div
+					class="reset-button  bg-white border border-green-600 text-green-600 px-4 py-2 rounded"
+				>
+					<button class="text-uni-color-light-white" on:click={() => resetPrompt()}
+						>Reset Data</button
+					>
+				</div>
+				<div class="export-button bg-green-700 hover:bg-green-700 text-white-900 px-6 py-2 rounded">
+					<button on:click={() => exportCourseData()}>Export Data</button>
 				</div>
 			</div>
-			<slot />
+		{/if}
+	<!-- <div class="reset-data  bg-white border border-green-600 text-green-600 px-4 py-2 rounded">
+			<button  class="text-uni-color-light-white"  on:click={() => resetPrompt()}>Reset Data</button>
 		</div>
-		<div class="footer-push" />
-	</div>
-	<div class="footer">
-		<div class="reset-data">
-			<button on:click={() => resetPrompt()}>Reset Data</button>
-		</div>
-		<div class="send-info">
+		<div class="export-data bg-green-700 hover:bg-green-700 text-white-900 px-6 py-2 rounded">
+				<button on:click={() => exportCourseData()}>Export Data</button>
+			</div> -->
+	<!-- <div class="send-info">
 			Created by <a
 				href="https://uoaprod.service-now.com/sp?id=sc_cat_item&table=sc_cat_item&sys_id=ce73ca981bfb65147f9952c91d4bcb32"
 				>Ranga Auaha Ako</a
 			>
-		</div>
+		</div> -->
+	<!-- <footer class="footer">
 		{#if $page.url.pathname.startsWith('/courses')}
-			<div class="export-data">
-				<button on:click={() => exportCourseData()}>Export Data</button>
+			<div class="floating-buttons">
+				<div
+					class="reset-data  bg-white border border-green-600 text-green-600 px-4 py-2 rounded"
+				>
+					<button class="text-uni-color-light-white" on:click={() => resetPrompt()}
+						>Reset Data</button
+					>
+				</div>
+				<div class="export-data bg-green-700 hover:bg-green-700 text-white-900 px-6 py-2 rounded">
+					<button on:click={() => exportCourseData()}>Export Data</button>
+				</div>
 			</div>
 		{/if}
-	</div>
+	</footer> -->
 </div>
 
 <style lang="postcss">
-	.layout {
+	/* .layout {
 		@apply grid gap-5 -mb-24 min-h-screen;
 		grid-template-rows: auto 1fr auto;
 		grid-template-areas:
 			'header'
 			'page'
 			'footer';
+		display: flex; 
+		width: 100%; 
+	} */
+
+	.layout {
+		display: flex;
+		flex: 1;
+		flex-direction: row; /* Default: Left and right panels side by side */
+		width: 100%; /* Full width of the container */
 	}
+
+	.wrapper {
+		display: flex;
+		flex-direction: column; /* Stack panels vertically on smaller screens */
+		min-height: 100vh;
+	}
+
+	.left-panel {
+		flex: none; /* Prevent the left panel from resizing */
+		width: 100%; /* Fixed width for the left panel */
+		max-width: 450px; /* Optional: Set a maximum width */
+		min-width: 180px; /* Optional: Set a minimum width */
+		background: linear-gradient(135deg, #002f09, #2e4632, #6dff88); /* Gradient background */
+		color: white; /* Text color */
+		padding: 1rem; /* Add padding */
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between; /* Space out the content vertically */
+		overflow-y: auto;
+	}
+
+	.right-panel {
+		flex: 1; /* Allow the right panel to grow and shrink */
+		background-color: white; /* Background color for the right panel */
+		padding: 2rem; /* Add padding */
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start; /* Align content to the top */
+	}
+
 	header {
 		@apply flex gap-5 m-5 mb-0;
 		grid-area: header;
@@ -240,6 +276,41 @@
 				@apply text-xl text-center;
 			}
 		}
+
+		@media screen and (max-width: 768px) {
+			.layout {
+				flex-direction: column; /* Stack panels vertically */
+			}
+
+			.left-panel {
+				width: 100%; /* Full width for the left panel */
+				max-width: none; /* Remove max-width restriction */
+				padding: 1rem; /* Adjust padding */
+			}
+
+			.right-panel {
+				padding: 1rem; /* Reduce padding for smaller screens */
+			}
+		}
+
+		@media screen and (max-width: 480px) {
+			.left-panel {
+				padding: 0.5rem; /* Further reduce padding */
+			}
+
+			.right-panel {
+				padding: 0.5rem; /* Further reduce padding */
+			}
+
+			.create-course-button {
+				font-size: 1rem; /* Reduce button font size */
+				padding: 0.8rem 1.5rem; /* Adjust button padding */
+			}
+
+			.text-5xl {
+				font-size: 2rem; /* Reduce title font size */
+			}
+		}
 	}
 	.page {
 		grid-area: page;
@@ -249,17 +320,155 @@
 
 	.footer-push,
 	.footer {
-		@apply h-12;
+		@apply h-10;
 	}
 
 	.footer {
 		@apply fixed bottom-0 flex justify-end p-5 pt-0 w-full h-12 items-end gap-4;
 		.reset-data button {
-			@apply text-red-700 border-red-700;
+			@apply text-red-700;
 			@apply border-b border-dashed leading-4;
 		}
 		.export-data button {
-			@apply text-uni-color-green font-semibold;
+			@apply text-white font-semibold;
 		}
 	}
+
+	.divider-with-text {
+		@apply flex w-full justify-center;
+
+		.divider-inner {
+			@apply flex w-full max-w-full items-center px-4;
+
+			.line {
+				@apply flex-grow border-t border-gray-300;
+			}
+
+			.text {
+				@apply mx-4 text-sm text-gray-500;
+			}
+		}
+	}
+
+	.aside-gradient {
+		background: linear-gradient(
+			135deg,
+			#002f09,
+			#2e4632,
+			#6dff88
+		); /* Gradient from dark green to light green */
+		color: white; /* Ensure text remains readable */
+	}
+
+	.aside-gradient a {
+		color: #d1fae5; /* Light green for links */
+		text-decoration: underline;
+		pointer-events: auto; /* Ensure the link is clickable */
+		visibility: visible; /* Ensure the link is visible */
+		z-index: 10; /* Ensure it is above other elements */
+	}
+
+	.aside-gradient a:hover {
+		color: #a7f3d0; /* Slightly lighter green on hover */
+	}
+
+	.create-course-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 2rem;
+		margin: 2rem auto;
+		max-width: 100%;
+		text-align: center;
+	}
+
+	.create-course-button {
+		background-color: #4caf50;
+		color: white;
+		border: none;
+		padding: 1rem 2rem;
+		border-radius: 8px;
+		font-size: 1.2rem;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		transition: background-color 0.3s ease;
+	}
+
+	.create-course-button:hover {
+		background-color: #45a049;
+	}
+
+	.icon-text {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.footer {
+		background-color: #f8f9fa; /* Light background for the footer */
+		padding: 1rem 2rem; /* Add padding around the footer */
+		text-align: right; /* Center-align footer content */
+		border-top: 2px solid #ddd; /* Optional: Add a border at the top */
+		display: flex;
+		justify-content: flex-end; /* Center the buttons horizontally */
+		align-items: center; /* Align buttons vertically */
+		gap: 1rem; /* Add spacing between buttons */
+	}
+
+	.footer-buttons {
+		display: flex;
+		justify-content: flex-end;
+		gap: 1rem; /* Add spacing between the buttons */
+	}
+
+	.reset-button,
+	.export-button {
+		background-color: #4caf50; /* Green background */
+		color: white; /* White text */
+		border: none; /* Remove default border */
+		padding: 0.8rem 1.5rem; /* Add padding for consistent button size */
+		border-radius: 8px; /* Rounded corners */
+		font-size: 1rem; /* Adjust font size */
+		cursor: pointer; /* Pointer cursor on hover */
+		transition: background-color 0.3s ease; /* Smooth hover effect */
+	}
+
+	.reset-button:hover {
+		background-color: #e57373; /* Light red for reset button hover */
+	}
+
+	.export-button:hover {
+		background-color: #45a049; /* Darker green for export button hover */
+	}
+	.floating-buttons {
+    position: fixed;
+    bottom: 2rem;   /* Distance from the bottom of the viewport */
+    right: 2rem;    /* Distance from the right of the viewport */
+    display: flex;
+    gap: 1rem;
+    z-index: 1000;  /* Make sure it stays above other content */
+}
+
+.reset-button,
+.export-button {
+    background-color: #18afd4;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.reset-button:hover {
+    background-color: #e57373;
+}
+
+.export-button:hover {
+    background-color: #45a049;
+}
 </style>

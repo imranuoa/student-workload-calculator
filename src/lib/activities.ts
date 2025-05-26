@@ -14,6 +14,7 @@ import { VideoOrPodcast } from '$lib/course-activities/videoOrPodcast';
 import { WritingAssignment } from '$lib/course-activities/writingAssignment';
 import { CustomAssignment } from '$lib/course-activities/customAssignment';
 import { PracticalExperience } from '$lib/course-activities/practicalExperience';
+import { TestActivityByImran } from '$lib/course-activities/testActivityByImran';
 
 export interface calculatedResults {
 	occurences: number;
@@ -22,6 +23,7 @@ export interface calculatedResults {
 	scheduledHoursPer: number;
 	postActivityHoursPer: number;
 	weeksRunning?: boolean[];
+	codeTestActivityHoursPer: number; //Added for Code exploration by Imran
 }
 
 export interface derivedCalculated {
@@ -63,7 +65,9 @@ export const activities: ActivitySubClass[] = [
 	Tutorial,
 	VideoOrPodcast,
 	WritingAssignment,
-	CustomAssignment
+	CustomAssignment,
+	TestActivityByImran 
+	
 ];
 
 export default activities;

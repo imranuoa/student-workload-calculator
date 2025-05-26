@@ -131,11 +131,11 @@
 		</div>
 		<div class="results card">
 			<div class="stats">
-				<!-- <strong>{durationToString($totals.perCourse.total)}</strong> in course /
+				<strong>{durationToString($totals.perCourse.total)}</strong> in course /
 				<strong>
 					{durationToString($totals.perWeek.total)}
 				</strong>
-				per week -->
+				per week
 			</div>
 			<div class="more">
 				<i
@@ -185,9 +185,9 @@
 	.layout {
 		@apply w-full;
 	}
-	.card {
+	/* .card {
 		@apply p-5 shadow bg-uni-gray-100;
-	}
+	} */
 
 	.header {
 		@apply w-full flex flex-wrap gap-x-5 gap-y-2 my-2 justify-start;

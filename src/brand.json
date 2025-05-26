@@ -47,6 +47,13 @@
 		"green": "#398105",
 		"blue": "#0039A6",
 		"orange": "#BF3313"
+	},
+	"uni-color-green": {
+		 "primary": "#002F09",
+    "secondary": "#10B981",
+    "accent": "#F59E0B",
+    "custom-green": "#123456", 
+    "custom-blue": "#1E40AF"  
 	}
 }
 }

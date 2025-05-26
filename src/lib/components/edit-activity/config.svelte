@@ -42,6 +42,13 @@
 					value: $results.postActivityHoursPer,
 					formatted: durationToString($results.postActivityHoursPer, $results.occurences),
 					label: 'of time post activity'
+					
+				},
+				{
+					//Added by Imran for code testing
+					value: $results.codeTestActivityHoursPer,
+					formatted: durationToString($results.codeTestActivityHoursPer, $results.occurences),
+					label: 'to test the code'
 				}
 			
 		  ]

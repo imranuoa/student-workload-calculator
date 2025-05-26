@@ -77,16 +77,33 @@
 
 </script>
 
+ {#if data.course}
 <div
-	class="uni-card"
+	class="uni-card" 
 	class:createCard={!data.course}
 	class:expand={state === cardState.editExpanded}
 	class:create={state === cardState.create}
 	class:edit={state === cardState.edit}
 	use:autoAnimate
 >
-	{#if data.course}
+	
 		<CardHeader course={data.course} bind:state errorMessage={errorMessage}/>
+		<!-- state is {cardState[state]} -->
+		{#if state === cardState.editExpanded}
+			<div class="header">
+				<button
+					class="btn btn-text btn-icon"
+					on:click={() => {
+						state = cardState.view;
+					}}
+				>
+					<div class="icon">
+						<ArrowLeft />
+					</div>
+					Back
+				</button>
+			</div>
+		{/if}
 		{#if state !== cardState.edit}
 			<div class="stats">
 				<Duration course={data.course} bind:state />
@@ -236,20 +253,22 @@
 				</div>
 			{/if}
 		</div>
+</div>
 	{:else}
-		<div class="createInfo">
-			<button
+		<div class="create-course-container">
+			<button class="create-course-button"
 				on:click={() => {
 					createCourse();
 				}}
 			>
 			<div class="icon-text">
 				
-				<h3> <Creation/></h3><h3> Create course</h3>
+				<h3> <Creation/></h3><p> Create course</p>
 			</div>
 			
 			</button>
 			<!-- svelte-ignore a11y-invalid-attribute -->
+			<!--
 			<div class="icon-text">
 			<p>Or</p>
 			<Upload  />
@@ -265,9 +284,10 @@
 				</label>
 			</p>
 			</div>
+		-->
 		</div>
 	{/if}
-</div>
+
 
 <style lang="postcss">
 	.uni-card {
@@ -325,8 +345,9 @@
 		}
 	}
 	.createCard {
-		@apply uni-card;
-		@apply shadow-none border-dashed border-4 border-uni-blue border-opacity-20;
+		/*@apply uni-card;*/
+		/*@apply shadow-none border-dashed border-2 border-uni-color-green border-opacity-100;*/
+		@apply shadow-none;
 		padding: 0 var(--card-padding);
 		@apply w-full max-w-sm max-h-full h-72 flex flex-col items-center justify-center;
 	}
@@ -337,5 +358,66 @@
         gap: 0.5rem; /* Adjust the gap between the icon and the text as needed */
     }
 
+
+	/* Create course custome styles */
+	/* Container for the create course section */
+    .create-course-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        /* background-color: #f9f9f9;
+        border: 2px dashed #4caf50;
+        border-radius: 8px; */
+        margin: 2rem auto;
+        max-width: 100%;
+        text-align: center;
+    }
+
+    /* Button for creating a course */
+    .create-course-button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: right;
+        gap: 0.5rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .create-course-button:hover {
+        background-color: #45a049;
+    }
+
+    /* Icon and text alignment */
+    .icon-text {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* File upload section */
+    .file-upload {
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        color: #555;
+    }
+
+    .file-upload-label {
+        color: #4caf50;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    .file-input {
+        display: none; /* Hide the file input */
+    }
+
+	
    
 </style>
