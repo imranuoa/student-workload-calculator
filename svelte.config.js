@@ -22,3 +22,27 @@ const config = {
 	}
 };
 export default config;
+
+
+// import adapter from '@sveltejs/adapter-vercel';
+// import preprocess from 'svelte-preprocess';
+
+// /** @type {import('@sveltejs/kit').Config} */
+// const config = {
+//     preprocess: [
+//         preprocess({
+//             postcss: true
+//         })
+//     ],
+
+//     kit: {
+//         adapter: adapter(),
+//         alias: {
+//             '@': './src'
+//         },
+//         paths: {
+//             base: process.env.BASE_URL || ''
+//         }
+//     }
+// };
+// export default config;
