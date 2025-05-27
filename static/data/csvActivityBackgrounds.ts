@@ -40,7 +40,7 @@ export interface CsvRow {
 
 export const data: Writable<DSVParsedArray<CsvRow> | null> = writable(null);
 
-export async function loadCsvData(filePath: string = base+ '/lib/data/activity_backgrounds.csv'): Promise<void> {
+export async function loadCsvData(filePath: string = '/data/activity_backgrounds.csv'): Promise<void> {
   try {
     // Create a CSV parser instance
     const csvParser = dsvFormat(',');
