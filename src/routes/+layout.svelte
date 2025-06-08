@@ -173,6 +173,25 @@
 		.right-panel {
 			padding: 1rem;
 		}
+		 .floating-buttons {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100vw;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0;
+        background: rgba(255,255,255,0.95); /* Optional: subtle background for visibility */
+        box-shadow: 0 -2px 8px rgba(0,0,0,0.04); /* Optional: subtle shadow */
+        z-index: 1000;
+    }
+    .reset-button,
+    .export-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.95rem;
+        border-radius: 8px;
+    }
 	}
 	@media screen and (max-width: 480px) {
 		 .left-panel img.mt-40 {
