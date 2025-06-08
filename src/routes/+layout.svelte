@@ -169,6 +169,12 @@
 		}
 	}
 	@media screen and (max-width: 480px) {
+		 .left-panel img.mt-40 {
+        display: none; /* Hide large illustration */
+    }
+    .left-panel div:last-child {
+        font-size: 0.9rem;
+    }
 		.left-panel {
 			padding: 0.5rem;
 		}
