@@ -172,6 +172,7 @@
     }
 		.right-panel {
 			padding: 1rem;
+			padding-bottom: 5rem; 
 		}
 		 .floating-buttons {
         position: fixed;
@@ -217,6 +218,7 @@
     }
 		.right-panel {
 			padding: 0.5rem;
+			padding-bottom: 5rem; 
 		}
 		.text-5xl {
 			font-size: 2rem;
