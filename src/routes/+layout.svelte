@@ -154,12 +154,18 @@
 			flex-direction: column;
 		}
 		.left-panel {
+			min-height: unset;      /* Remove min-height */
+        height: auto;          /* Let it shrink to fit content */
 			width: 100%;
 			max-width: none;
 			padding: 1rem;
 			align-items: center; /* Center content horizontally */
         text-align: center;  /* Center text */
 		}
+		.flex.min-h-screen {
+        min-height: unset;      /* Remove min-height from parent */
+        height: auto;
+    }
 		.left-panel img {
         margin: 1rem auto;
         max-width: 80%;
@@ -176,8 +182,14 @@
         font-size: 0.9rem;
     }
 		.left-panel {
-			padding: 0.5rem;
-		}
+        min-height: unset;
+        height: auto;
+        padding: 0.5rem;
+    }
+    .flex.min-h-screen {
+        min-height: unset;
+        height: auto;
+    }
 		 .left-panel img {
         max-width: 60%;
     }
