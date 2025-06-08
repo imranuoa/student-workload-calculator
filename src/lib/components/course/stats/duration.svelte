@@ -26,7 +26,8 @@
 		{#if state !== cardState.view}
 			<div class="form">
 				<p class="hint">
-					Select how many weeks your course will run, and which weeks are non-teaching weeks. babababa
+					Select how many weeks your course will run, and which weeks are non-teaching weeks.
+					babababa
 				</p>
 				<RangeInput
 					colour="#D2492A"

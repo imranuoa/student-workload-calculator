@@ -29,32 +29,34 @@
 
 // src/lib/data/csvData.ts
 import { writable, type Writable } from 'svelte/store';
-import { dsvFormat } from 'd3-dsv';  // Add this import
+import { dsvFormat } from 'd3-dsv'; // Add this import
 import type { DSVParsedArray } from 'd3-dsv';
 import { base } from '$app/paths';
 
 export interface CsvRow {
-  activity: string;
-  background: string;
+	activity: string;
+	background: string;
 }
 
 export const data: Writable<DSVParsedArray<CsvRow> | null> = writable(null);
 
-export async function loadCsvData(filePath: string = '/data/activity_backgrounds.csv'): Promise<void> {
-  try {
-    // Create a CSV parser instance
-    const csvParser = dsvFormat(',');
+export async function loadCsvData(
+	filePath: string = '/data/activity_backgrounds.csv'
+): Promise<void> {
+	try {
+		// Create a CSV parser instance
+		const csvParser = dsvFormat(',');
 
-    // Fetch and parse
-    const response = await fetch(filePath);
-    if (!response.ok) throw new Error(`Failed to fetch CSV: ${response.status}`);
-    
-    const text = await response.text();
-    const parsedData = csvParser.parse(text) as DSVParsedArray<CsvRow>;
-    
-    data.set(parsedData);
-  } catch (error) {
-    console.error('Error loading CSV data:', error);
-    data.set(null);
-  }
+		// Fetch and parse
+		const response = await fetch(filePath);
+		if (!response.ok) throw new Error(`Failed to fetch CSV: ${response.status}`);
+
+		const text = await response.text();
+		const parsedData = csvParser.parse(text) as DSVParsedArray<CsvRow>;
+
+		data.set(parsedData);
+	} catch (error) {
+		console.error('Error loading CSV data:', error);
+		data.set(null);
+	}
 }

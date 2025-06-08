@@ -3,8 +3,7 @@ import type { courseMeta } from '../course';
 import { RangeInput, TextInput, CheckSelectInput, NumberInput } from '$lib/form';
 import { Activity, Frequency } from '$lib/course-activities/genericActivity';
 import type { serializedActivity, calculatedResults, derivedCalculated } from '../activities';
-import mdiAccountCog  from 'svelte-material-icons/AccountCog.svelte';
-
+import mdiAccountCog from 'svelte-material-icons/AccountCog.svelte';
 
 export class TestActivityByImran extends Activity {
 	static readonly writables = [
@@ -19,7 +18,7 @@ export class TestActivityByImran extends Activity {
 	];
 	static type = 'CodeTestActivityByImran';
 	static label = 'Code Test Actvity By Imran';
-	static icon = mdiAccountCog ;
+	static icon = mdiAccountCog;
 	//static infoIcon = infoIcon;
 	static colour: typeof Activity.colour = 'uni-color.teal-alt';
 	static description =
@@ -30,7 +29,7 @@ export class TestActivityByImran extends Activity {
 	prepLength = writable(1);
 	sessionLength = writable(1);
 	postLength = writable(1);
-    codeTestActivity = writable(1);
+	codeTestActivity = writable(1);
 	scheduled = writable(true);
 	readonly results: Readable<calculatedResults>;
 	form;
@@ -63,7 +62,13 @@ export class TestActivityByImran extends Activity {
 			})
 		];
 		this.results = derived(
-			[this.sessionsPerSem, this.prepLength, this.sessionLength, this.postLength, this.codeTestActivity],
+			[
+				this.sessionsPerSem,
+				this.prepLength,
+				this.sessionLength,
+				this.postLength,
+				this.codeTestActivity
+			],
 			([$sessionsPerSem, $prepLength, $sessionLength, $postLength, $codeTestActivity]) => {
 				return {
 					occurences: $sessionsPerSem,
@@ -72,7 +77,6 @@ export class TestActivityByImran extends Activity {
 					scheduledHoursPer: $sessionLength,
 					postActivityHoursPer: 0,
 					codeTestActivityHoursPer: $codeTestActivity
-
 				};
 			}
 		);

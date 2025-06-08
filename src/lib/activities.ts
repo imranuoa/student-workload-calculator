@@ -66,8 +66,7 @@ export const activities: ActivitySubClass[] = [
 	VideoOrPodcast,
 	WritingAssignment,
 	CustomAssignment,
-	TestActivityByImran 
-	
+	TestActivityByImran
 ];
 
 export default activities;

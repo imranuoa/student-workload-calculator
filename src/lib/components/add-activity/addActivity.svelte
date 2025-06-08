@@ -77,9 +77,8 @@
 				/* On Hover */
 				@apply transition hover:shadow-md hover:outline-2 focus:shadow-md
 focus:outline-2;
-				background-image:
-					linear-gradient(45deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
-					linear-gradient(90deg,var(--bg-color) 0%,var(--bg-color) 100%);
+				background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+					linear-gradient(90deg, var(--bg-color) 0%, var(--bg-color) 100%);
 				.icon {
 					@apply text-2xl;
 				}

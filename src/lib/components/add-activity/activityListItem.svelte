@@ -39,7 +39,7 @@
 		});
 	};
 
-	$:activityClass = getActivityClass(activity);
+	$: activityClass = getActivityClass(activity);
 </script>
 
 <label class="activity-row" class:active for="select-activity-{$instanceName}">

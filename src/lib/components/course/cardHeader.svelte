@@ -98,16 +98,25 @@
 							<!-- <span class="icon">📝</span>
 							<span>Edit</span> -->
 							<span class="icon" aria-hidden="true">
-								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Notebook -->
-    <rect x="3" y="4" width="14" height="16" rx="2" fill="#fff" stroke="#4caf50"/>
-    <line x1="7" y1="8" x2="15" y2="8" stroke="#4caf50"/>
-    <line x1="7" y1="12" x2="15" y2="12" stroke="#4caf50"/>
-    <line x1="7" y1="16" x2="13" y2="16" stroke="#4caf50"/>
-    <!-- Pencil -->
-    <path d="M16.5 7.5l4 4-7 7H9.5v-4.5l7-7z" fill="#ffc107" stroke="#ff9800"/>
-    <path d="M18.5 9.5l-2-2" stroke="#ff9800"/>
-  </svg>
+								<svg
+									width="20"
+									height="20"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="1.7"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								>
+									<!-- Notebook -->
+									<rect x="3" y="4" width="14" height="16" rx="2" fill="#fff" stroke="#4caf50" />
+									<line x1="7" y1="8" x2="15" y2="8" stroke="#4caf50" />
+									<line x1="7" y1="12" x2="15" y2="12" stroke="#4caf50" />
+									<line x1="7" y1="16" x2="13" y2="16" stroke="#4caf50" />
+									<!-- Pencil -->
+									<path d="M16.5 7.5l4 4-7 7H9.5v-4.5l7-7z" fill="#ffc107" stroke="#ff9800" />
+									<path d="M18.5 9.5l-2-2" stroke="#ff9800" />
+								</svg>
 							</span>
 							<span>Edit</span>
 						{/if}

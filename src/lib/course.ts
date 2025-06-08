@@ -132,11 +132,7 @@ export class Course {
 				};
 			}
 		);
-
-		
 	}
-
-	
 
 	static getGradeTotals(activities: Activity[]) {
 		return derived(

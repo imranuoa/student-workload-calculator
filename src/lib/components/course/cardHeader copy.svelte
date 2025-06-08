@@ -128,12 +128,9 @@
 
 			@apply text-2xl font-semibold font-display italic flex items-center gap-2;
 
-			
 			.input-wrapper {
 				@apply flex   pb-1;
 			}
-
-			
 		}
 
 		.header-toggle {

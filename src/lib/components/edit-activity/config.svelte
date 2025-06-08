@@ -8,9 +8,8 @@
 	import { getActivityClass } from '$lib/activities';
 	import Information from 'svelte-material-icons/Information.svelte';
 	import { onMount } from 'svelte';
-    import { data, loadCsvData, type CsvRow } from '$lib/data/csvActivityBackgrounds';
+	import { data, loadCsvData, type CsvRow } from '$lib/data/csvActivityBackgrounds';
 
-	
 	export let course: Course;
 	let showInfo = false;
 	$: openActivity = course.openActivity;
@@ -42,7 +41,6 @@
 					value: $results.postActivityHoursPer,
 					formatted: durationToString($results.postActivityHoursPer, $results.occurences),
 					label: 'of time post activity'
-					
 				},
 				{
 					//Added by Imran for code testing
@@ -50,7 +48,6 @@
 					formatted: durationToString($results.codeTestActivityHoursPer, $results.occurences),
 					label: 'to test the code'
 				}
-			
 		  ]
 		: [];
 	$: filteredList = resultsList.filter((item) => item.value > 0);
@@ -60,8 +57,8 @@
 	console.log($data);
 
 	onMount(async () => {
-    	await loadCsvData();
-  	});
+		await loadCsvData();
+	});
 </script>
 
 {#if activity}
@@ -72,30 +69,32 @@
 					<svelte:component this={getActivityClass(activity).icon} />
 				</span>
 				{getActivityClass(activity).label}: {$instanceName}
-				
-				<button on:click={() => showInfo = !showInfo} class="text-uni-blue" ><Information  size="30"/></button>
+
+				<button on:click={() => (showInfo = !showInfo)} class="text-uni-blue"
+					><Information size="30" /></button
+				>
 				{#if showInfo}
 					<div class="info-card">
 						<p>Background of {$instanceName}</p>
 						<!-- Add more details here based on the instance name -->
 						{#if $data.length > 0}
 							<div>
-															
 								{#each $data as item (item)}
-									{#if item.activity.trim().toUpperCase().normalize("NFC") === $instanceName.trim().toUpperCase().normalize("NFC") }
-										<div class="uni-card space-y-4  text-justify text-gray-500">{@html item.background.trim()}</div>
+									{#if item.activity.trim().toUpperCase().normalize('NFC') === $instanceName
+											.trim()
+											.toUpperCase()
+											.normalize('NFC')}
+										<div class="uni-card space-y-4  text-justify text-gray-500">
+											{@html item.background.trim()}
+										</div>
 									{/if}
-									
 								{/each}
-								
 							</div>
 						{:else if $data.length === 0}
-								<p>Loading data...</p>
+							<p>Loading data...</p>
 						{:else}
-								<p>Error loading data</p>
+							<p>Error loading data</p>
 						{/if}
-
-
 					</div>
 				{/if}
 			</h2>
@@ -151,9 +150,6 @@
 	}
 
 	list-outside {
-		@apply list-outside space-x-2 ;
+		@apply list-outside space-x-2;
 	}
-
-
-
 </style>
