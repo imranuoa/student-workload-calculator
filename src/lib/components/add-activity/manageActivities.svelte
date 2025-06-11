@@ -8,6 +8,7 @@
 	import { durationToString } from '@/lib/serialize';
 	import type { Readable } from 'svelte/store';
 	import { Frequency } from '@/lib/course-activities/genericActivity';
+	import { createEventDispatcher } from 'svelte';
 
 	export let addActivityOpen = false;
 	export let course: Course;
@@ -19,6 +20,12 @@
 	$: courseActivities = course.activities;
 	$: courseOpenActivity = course.openActivity;
 	$: totals = $courseActivities && Course.getTotal($courseActivities);
+
+	const dispatch = createEventDispatcher();
+	function goToStep(stepNumber) {
+		console.log('Dispatching stepChange', stepNumber);
+        dispatch('handleProgress', stepNumber);
+    }
 </script>
 
 <div class="activityList">
@@ -29,12 +36,14 @@
 			title="Add Activity"
 			on:click={() => {
 				addActivityOpen = !addActivityOpen;
+				
 			}}
 		>
 			<span class="icon" aria-hidden="false">+</span>
 		</button>
 	</h2>
 	{#if addActivityOpen}
+		
 		<AddActivityMenu
 			bind:hoveredActivity
 			{activities}
@@ -61,10 +70,13 @@
 					active={$courseOpenActivity === i}
 					on:delete={() => course?.removeActivity(i)}
 					on:select={() => {
-						if ($courseOpenActivity === i) course.openActivity.set(-1);
+						if ($courseOpenActivity === i) {course.openActivity.set(-1); }
 						else course.openActivity.set(i);
+						console.log('Selected activity', i);
+						//goToStep(+2);
 					}}
 				/>
+				
 			{/each}
 		</div>
 		<div class="activity-total-list" class:isDanger={$isDanger}>

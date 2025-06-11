@@ -7,7 +7,7 @@
 	import { Frequency } from '$lib/course-activities/genericActivity';
 	import { writable as storedWritable } from 'svelte-local-storage-store';
 	import { base } from '$app/paths';
-	import Stepper from '$lib/components/form-elems/stepper.svelte';
+	
 
 	// Enable static prerendering
 	export const prerender = true;
@@ -55,8 +55,13 @@
 
 
 	
-    let steps = ['Create a course', 'Add activities', 'Check analysis'];
-    let currentStep = 1; // Change this as the user progresses
+	
+    // let steps = ['Create a course', 'Add activities', 'Check analysis'], currentActive = 1, progressBar;
+    // let currentStep = 1; // Change this as the user progresses
+
+	// const handleProgress = (stepIncrement) => {
+	// 	progressBar.handleProgress(stepIncrement)
+	// }
 </script>
 
 <svelte:head>
@@ -118,6 +123,7 @@
 						<span />
 					</button>
 					<h2 class="text-3xl font-bold text-green-800 mb-4">Dashboard</h2>
+					
 				</section>
 				<div class="text-gray-600 mb-6 mt-4">
 					<slot />

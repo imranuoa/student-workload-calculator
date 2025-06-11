@@ -32,6 +32,9 @@ const notifyStore = () => {
 	courses.update((c) => c);
 };
 
+
+export const stepperActive = writable(1);
+
 export const courses: Writable<Course[]> = localStorageStore(`${storeVersion}-courses`, [], {
 	serializer
 });

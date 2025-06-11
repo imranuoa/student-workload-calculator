@@ -23,19 +23,24 @@
 		deleteCourse,
 		exportCourseData,
 		importCourseData,
-		openCourse
+		openCourse,
+		stepperActive
 	} from '$lib/../store';
 	import CardHeader from './cardHeader.svelte';
 	import ManageActivities from '../add-activity/manageActivities.svelte';
 	import { goto } from '$app/navigation';
 	import { base } from '$app/paths';
+	import ProgressBar from '$lib/components/form-elems/stepper.svelte';
+	import { get } from 'svelte/store';
+	
+	
 
 	export let course: Course | undefined = undefined;
 	export let courseIndex: number | undefined = undefined;
 	export let state: cardState = course ? cardState.view : cardState.blank;
 
 	let isEditing = false;
-	$: errorMessage = '';
+	$: errorMessage = "";
 
 	$: meta = course?.meta;
 	$: activities = course?.activities;
@@ -44,8 +49,9 @@
 	$: data = getCourseData(course, $meta, $activities, $totals);
 
 	const createCourse = () => {
-		course = new Course('Your Course', 12);
+		course = new Course('Your Course name', 12);
 		state = cardState.create;
+		console.log('Created course:', course);
 	};
 
 	const handleFileUpload = async (e: Event) => {
@@ -57,32 +63,48 @@
 		target.value = '';
 	};
 
+
 	//Course name validation
 
 	const validateCourseName = (name: string): boolean => {
-		if (name === 'Your Course' || name.trim() === '') {
-			errorMessage = 'Please enter the course name.';
-			return false;
-		} else if (name.length < 5) {
-			errorMessage = 'The course name must be at least 5 characters long.';
-			return false;
-		} else {
-			errorMessage = '';
-			return true;
-		}
-	};
+        if (name === "Your Course" || name.trim() === "") {
+            errorMessage = "Please enter the course name.";
+            return false;
+        } else if (name.length < 5) {
+            errorMessage = "The course name must be at least 5 characters long.";
+            return false;
+        } else {
+            errorMessage = "";
+            return true;
+        }
+    };
+
+	
+	let steps = ['Create', 'Add activities', 'Analyse'];
+	let progressBar;
+	//let active_step = steps[currentActive - 1];
+
+	const handleProgress = (stepIncrement) => {
+		progressBar.handleProgress(stepIncrement)
+	}
+
 </script>
 
-{#if data.course}
-	<div
-		class="uni-card"
-		class:createCard={!data.course}
-		class:expand={state === cardState.editExpanded}
-		class:create={state === cardState.create}
-		class:edit={state === cardState.edit}
-		use:autoAnimate
-	>
-		<CardHeader course={data.course} bind:state {errorMessage} />
+ {#if data.course}
+<div
+	class="uni-card" 
+	class:createCard={!data.course}
+	class:expand={state === cardState.editExpanded}
+	class:create={state === cardState.create}
+	class:edit={state === cardState.edit}
+	use:autoAnimate
+>
+	
+		<CardHeader course={data.course} bind:state errorMessage={errorMessage}/>
+		<div class="mt-4 mx-4 p-8 pb-0">
+			<ProgressBar {steps} bind:currentActive={$stepperActive} bind:this={progressBar} />
+		</div>
+		
 		<!-- state is {cardState[state]} -->
 		{#if state === cardState.editExpanded}
 			<div class="header">
@@ -118,9 +140,14 @@
 			/>
 		{/if}
 		{#if state === cardState.edit || state === cardState.editExpanded}
+		
 			<div class="body">
-				<ManageActivities course={data.course} />
+				<ManageActivities course={data.course} 
+				
+				/>
+				
 			</div>
+			
 		{/if}
 		<div class="footer">
 			{#if state === cardState.view}
@@ -163,21 +190,32 @@
 					Delete
 				</button>
 			{:else if state === cardState.create}
-				<!-- Display error message if it exists -->
-
+				 <!-- Display error message if it exists -->
+				
 				<button
 					class="btn btn-md btn-primary btn-icon"
+					disabled={$stepperActive == steps.length}
 					on:click={() => {
 						if (validateCourseName($meta.name)) {
-							if (!isEditing) {
-								console.log('add course', course);
-								course && addCourse(course);
-							} else {
-								if (courseIndex !== undefined) $activeCourse = courseIndex;
+								if (!isEditing) {
+									console.log('add course', course);
+									course && addCourse(course);
+								} else {
+									if (courseIndex !== undefined) $activeCourse = courseIndex;
+								}
+								
+								goto(base + '/');
+								 //console.log('Before:', currentActive);
+								//console.log('handleProgress result:',handleProgress(+1))
+								stepperActive.set(2);
+								//active_step=steps[currentActive-1]
+								//console.log('Active step:', active_step);
+								
+        //console.log('After:', currentActive);
+								isEditing = false;
 							}
-							goto(base + '/');
-							isEditing = false;
-						}
+							
+						
 					}}
 				>
 					<div class="icon">
@@ -247,40 +285,24 @@
 				</div>
 			{/if}
 		</div>
-	</div>
-{:else}
-	<div class="create-course-container">
-		<button
-			class="create-course-button"
-			on:click={() => {
-				createCourse();
-			}}
-		>
+</div>
+	{:else}
+		<div class="create-course-container">
+			<button class="create-course-button"
+				on:click={() => {
+					createCourse();
+				}}
+			>
 			<div class="icon-text">
-				<h3><Creation /></h3>
-				<p>Create course</p>
+				
+				<h3> <Creation/></h3><p> Create course</p>
 			</div>
-		</button>
-		<!-- svelte-ignore a11y-invalid-attribute -->
-		<!--
-			<div class="icon-text">
-			<p>Or</p>
-			<Upload  />
-			<p>
-				 <label class="link">
-					upload a Workload Calculator file
-					<input
-						class="hidden"
-						type="file"
-						accept="application/json"
-						on:change={handleFileUpload}
-					/>
-				</label>
-			</p>
-			</div>
-		-->
-	</div>
-{/if}
+			
+			</button>
+			
+		</div>
+	{/if}
+
 
 <style lang="postcss">
 	.uni-card {
@@ -346,67 +368,71 @@
 	}
 
 	.icon-text {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem; /* Adjust the gap between the icon and the text as needed */
-	}
+        display: flex;
+        align-items: center;
+        gap: 0.5rem; /* Adjust the gap between the icon and the text as needed */
+    }
+
 
 	/* Create course custome styles */
 	/* Container for the create course section */
-	.create-course-container {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		padding: 2rem;
-		/* background-color: #f9f9f9;
+    .create-course-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        /* background-color: #f9f9f9;
         border: 2px dashed #4caf50;
         border-radius: 8px; */
-		margin: 2rem auto;
-		max-width: 100%;
-		text-align: center;
-	}
+        margin: 2rem auto;
+        max-width: 100%;
+        text-align: center;
+    }
 
-	/* Button for creating a course */
-	.create-course-button {
-		background-color: #4caf50;
-		color: white;
-		border: none;
-		padding: 1rem 2rem;
-		border-radius: 8px;
-		font-size: 1.2rem;
-		cursor: pointer;
-		display: flex;
-		align-items: right;
-		gap: 0.5rem;
-		transition: background-color 0.3s ease;
-	}
+    /* Button for creating a course */
+    .create-course-button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: right;
+        gap: 0.5rem;
+        transition: background-color 0.3s ease;
+    }
 
-	.create-course-button:hover {
-		background-color: #45a049;
-	}
+    .create-course-button:hover {
+        background-color: #45a049;
+    }
 
-	/* Icon and text alignment */
-	.icon-text {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-	}
+    /* Icon and text alignment */
+    .icon-text {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
 
-	/* File upload section */
-	.file-upload {
-		margin-top: 1rem;
-		font-size: 0.9rem;
-		color: #555;
-	}
+    /* File upload section */
+    .file-upload {
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        color: #555;
+    }
 
-	.file-upload-label {
-		color: #4caf50;
-		text-decoration: underline;
-		cursor: pointer;
-	}
+    .file-upload-label {
+        color: #4caf50;
+        text-decoration: underline;
+        cursor: pointer;
+    }
 
-	.file-input {
-		display: none; /* Hide the file input */
-	}
+    .file-input {
+        display: none; /* Hide the file input */
+    }
+
+	
+   
 </style>
